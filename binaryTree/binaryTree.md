@@ -71,7 +71,9 @@ func postOrder(root *TreeNode) []int {
 借助栈数据结构，可以帮助我们实现层序遍历。
 
 ```go
+// date 2020/03/21
 // 层序遍历
+// bfs广度优先搜索
 func levelOrder(root *TreeNode) [][]int {
   res := make([][]int, 0)
   stack := make([]*TreeNode, 0)
@@ -90,6 +92,23 @@ func levelOrder(root *TreeNode) [][]int {
       res = append(res, lres)
     }
   }
+  return res
+}
+// dfs深度优先搜索
+func levelOrder(root *TreeNode) [][]int {
+  res := make([][]int, 0)
+  var dfs_ func(root *TreeNode, level int)
+  dfs_ = func(root *TreeNode, level int) {
+    if root == nil { return }
+    if level == len(res) {
+      res = append(res, make([]int, 0))
+    }
+    res[level] = append(res[level], root.Val)
+    dfs_(root.Left, level+1)
+    dfs_(root.Right, level+1)
+  }
+  
+  dfs_(root, 0)
   return res
 }
 ```
@@ -126,12 +145,21 @@ func levelOrder(root *TreeNode) [][]int {
 
 - 从中序和后序遍历序列构造二叉树[前序和中序]
 - 104 二叉树的最大深度【E】
+- 111 二叉树的最小深度【E】
 - 101 对称二叉树【E】
+- 156 上下翻转二叉树
+- 257 二叉树的所有路径
 - 270 最接近的二叉搜素树值【E】
 - 543 二叉树的直径【E】
 - 545 二叉树的边界【M】
 - 563 二叉树的坡度【E】
 - 617 合并二叉树【E】
+- 654 最大二叉树【M】
+- 655 输出二叉树【M】
+- 662 二叉树的最大宽度【M】
+- 814 二叉树剪枝【M】
+- 993 二叉树的堂兄弟节点
+- 1104 二叉树寻路【M】
 - 面试题27 二叉树的镜像
 - 路径总和
 - 不同的二叉搜索树
@@ -187,7 +215,7 @@ func buildTree(preorder, inorder []int) *TreeNode {
 
 
 
-#### 二叉树的最大深度
+#### 104 二叉树的最大深度
 
 题目要求：给定一棵二叉树，找出其最大深度。
 
@@ -235,6 +263,65 @@ func maxDepth(root *TreeNode) int {
   return depth
 }
 ```
+
+#### 111 二叉树的最小深度
+
+题目要求：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
+
+算法分析
+
+```go
+// date 2020/03/21
+// 递归算法
+func minDepth(root *TreeNode) int {
+    if root == nil { return 0 }
+    if root.Left == nil { return 1 + minDepth(root.Right) }
+    if root.Right == nil { return 1 + minDepth(root.Left) }
+    l, r := minDepth(root.Left), minDepth(root.Right)
+    if l > r { return r+1 }
+    return l+1
+}
+// bfs广度优先搜索
+func minDepth(root *TreeNode) int {
+    if root == nil { return 0 }
+    queue := make([]*TreeNode, 0)
+    queue = append(queue, root)
+    var res int
+    for len(queue) != 0 {
+        n := len(queue)
+        res += 1
+        for i := 0; i < n; i++ {
+            if queue[i].Left == nil && queue[i].Right == nil { return res }
+            if queue[i].Left != nil { queue = append(queue, queue[i].Left) }
+            if queue[i].Right != nil { queue = append(queue, queue[i].Right) }
+        }
+        queue = queue[n:]
+    }
+    return res
+}
+// dfs深度优先搜索
+func minDepth(root *TreeNode) int {
+  if root == nil { return 0 }
+  var dfs_ func(root *TreeNode, level int) int
+  dfs_ = func(root *TreeNode, level int) int {
+    // 如果该节点为空或者为叶子节点，则直接返回
+    if root == nil { return level }
+    if root.Left == nil && root.Right == nil { return level }
+    // 如果该节点的左子树为空，则在右子树中寻找结果
+    if root.Left == nil { return dfs_(root.Right, level+1) }
+    // 如果该节点的右子树为空，则在左子树中寻找结果
+    if root.Right == nil { return dfs_(root.Left, level+1) }
+    // 左子树和右子树均不为空，则返回两者较小值
+    l := dfs_(root.Left, level+1)
+    r := dfs_(root.Right, level+1)
+    if l < r { return l }
+    return r
+  }
+  return dfs_(root, 1)
+}
+```
+
+
 
 #### 对称二叉树
 
@@ -285,6 +372,79 @@ func isSymmetric(root *TreeNode) bool {
 }
 ```
 
+#### 105 从前序与中序遍历序列构造二叉树
+
+算法分析：1）从中序序列中找到根节点，递归左右子树。
+
+```go
+// date 2020/02/26
+func buildTree(preorder []int, inorder []int) *TreeNode {
+  if len(preorder) == 0 { return nil }
+  root := &TreeNode{Val: preorder[0]}
+  index := 0
+  for i, v := range inorder {
+    if v == preorder[0] {
+      index = i
+      break
+    }
+  }
+  root.Left = buildTree(preorder[1:index+1], inorder[:index])
+  root.Right = buildTree(preorder[index+1:], inorder[index+1:])
+  return root
+}
+```
+
+
+
+#### 156 上下翻转二叉树
+
+题目要求：给定一个二叉树，其中所有的右节点要么是具有兄弟节点（拥有相同父节点的左节点）的叶节点，要么为空，将此二叉树上下翻转并将它变成一棵树， 原来的右节点将转换成左叶节点。返回新的根。
+
+算法分析：
+
+```go
+// date 2020/02/25
+func upsideDownBinaryTree(root *TreeNode) *TreeNode {
+	var parent, parent_right *TreeNode
+  for root != nil {
+    // 0.保存当前left, right
+    root_left := root.Left
+    root.Left = parent_right  // 重新构建root,其left为上一论的right
+    parent_right := root.Right // 保存right
+    root.Right = parent // 重新构建root,其right为上一论的root
+    parent = root
+    root = root_left
+  }
+  return parent
+}
+```
+
+#### 199 二叉树的右视图
+
+算法分析：层序遍历的最后一个节点值。
+
+```go
+// date 2020/02/26
+func rightSideView(root *TreeNode) []int {
+  res := make([]int, 0)
+  if root == nil { return res }
+  stack := make([]*TreeNode, 0)
+  stack = append(stack, root)
+  for len(stack) != 0 {
+    n := len(stack)
+    res = append(res, stack[0].Val)
+    for i := 0; i < n; i++ {
+      if stack[i].Right != nil { stack = append(stack, stack[i].Right) }
+      if stack[i].Left != nil { stack = append(stack, stack[i].Left) }
+    }
+    stack = stack[n:]
+  }
+  return res
+}
+```
+
+
+
 #### 257 二叉树的所有路径
 
 题目要求：给定一个二叉树，返回所有从根节点到叶子节点的路径。
@@ -310,6 +470,48 @@ func binaryTreePaths(root *TreeNode) []string {
   }
   return res
 }
+```
+
+```go
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    stack<int> _stack;
+    int _min = INT_MAX;
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        if(_min >= x){
+            if(!_stack.empty()){
+                _stack.push(_min);
+            }
+            _min = x;
+        }
+        _stack.push(x);
+    }
+    
+    void pop() {
+        if(_stack.empty())
+            return;
+        if(_stack.size() == 1)
+            _min = INT_MAX;
+        else if(_min == _stack.top()){//下一个元素是下一个最小值
+            _stack.pop();
+            _min = _stack.top();
+        }
+        _stack.pop();
+    }
+    
+    int top() {
+        return _stack.top();
+    }
+    
+    int getMin() {
+        return _min;
+    }
+};
 ```
 
 
@@ -341,6 +543,27 @@ func closestValue(root *TreeNode, target float64) int {
         stack = stack[n:]
     }
     return res
+}
+```
+
+#### 538 把二叉树转换成累加树
+
+算法：逆序的中序遍历，查找。
+
+```go
+// date 2020/02/26
+func convertBST(root *TreeNode) *TreeNode {
+  var sum int
+  decOrder(root, &sum)
+  return root
+}
+
+func decOrder(root *TreeNode, sum *int) {
+  if root == nil { return }
+  decOrder(root.Right, sum)
+  *sum += root.Val
+  root.Val = *sum
+  decOrder(root.Left, sum)
 }
 ```
 
@@ -488,6 +711,226 @@ func mergeTrees(t1, t2 *TreeNode) *TreeNode {
   return t1
 }
 ```
+
+#### 654 最大二叉树
+
+题目要求：
+
+给定一个不含重复元素的整数数组。一个以此数组构建的最大二叉树定义如下：
+
+二叉树的根是数组中的最大元素。
+			左子树是通过数组中最大值左边部分构造出的最大二叉树。
+			右子树是通过数组中最大值右边部分构造出的最大二叉树。
+			通过给定的数组构建最大二叉树，并且输出这个树的根节点。
+
+算法分析：
+
+找到数组中的最大值，构建根节点，然后递归调用。
+
+```go
+// date 2020/02/25
+// 递归版
+func constructMaximumBinaryTree(nums []int) *TreeNode {
+  if len(nums) == 0 { return nil }
+  if len(nums) == 1 { return &TreeNode{Val: nums[0]} }
+  p := 0
+  for i, v := range nums {
+    if v > nums[p] { p = i }
+  }
+  root := &TreeNode{Val: nums[p]}
+  root.Left = constructMaximumBinaryTree(nums[:p])
+  root.Right = constructMaximumBinaryTree(nums[p+1:])
+  return root
+}
+```
+
+#### 655 输出二叉树
+
+题目要求：将二叉树输出到m*n的二维字符串数组中。
+
+算法思路：先构建好res，然后逐层填充。
+
+```go
+// date 2020/02/25
+func printTree(root *TreeNode) [][]string {
+  depth := findDepth(root)
+  length := 1 << depth - 1
+  res := make([][]string, depth)
+  for i := 0; i < depth; i++ {
+    res[i] = make([]string, length)
+  }
+  fill(res, root, 0, 0, length)
+}
+
+func fill(res [][]string, t *TreeNode, i, l, r int) {
+  if t == nil { return }
+  res[i][(l+r)/2] = fmt.Sprintf("%d", root.Val)
+  fill(res, t.Left, i+1, l, (l+r)/2)
+  fill(res, t.Right, i+1, (l+r+1)/2, r)
+}
+
+func findDepth(root *TreeNode) int {
+  if root == nil { return 0 }
+  l, r := findDepth(root.Left), findDepth(root.Right)
+  if l > r { return l+1 }
+  return r+1
+}
+```
+
+#### 662 二叉树的最大宽度
+
+题目要求：给定一个二叉树，编写一个函数来获取这个树的最大宽度。树的宽度是所有层中的最大宽度。这个二叉树与满二叉树（full binary tree）结构相同，但一些节点为空。
+
+每一层的宽度被定义为两个端点（该层最左和最右的非空节点，两端点间的null节点也计入长度）之间的长度。
+		链接：https://leetcode-cn.com/problems/maximum-width-of-binary-tree
+
+算法分析：使用栈stack逐层遍历，计算每一层的宽度，注意全空节点的时候要返回。时间复杂度O(n)，空间复杂度O(logn)。
+
+```go
+// date 2020/02/26
+func widthOfBinaryTree(root *TreeNode) int {
+  res := 0
+  stack := make([]*TreeNode, 0)
+  stack = append(stack, root)
+  var n, i, j int
+  var isAllNil bool
+  for 0 != len(stack) {
+    i, j, n = 0, len(stack)-1, len(stack)
+    // 去掉每一层两头的空节点
+    for i < j && stack[i] == nil { i++ }
+    for i < j && stack[j] == nil { j-- }
+    // 计算结果
+    if j-i+1 > res { res = j-i+1 }
+    // 添加下一层
+    isAllNil = true
+    for ; i <= j; i++ {
+      if stack[i] != nil {
+        stack = append(stack, stack[i].Left, stack[i].Right)
+        isAllNil = false
+      } else {
+        stack = append(stack, nil, nil)
+      }
+    }
+    if isAllNil { break }
+    stack = stack[n:]
+  }
+  return res
+}
+```
+
+
+
+#### 669 修剪二叉搜索树
+
+题目要求：给定一个二叉搜索树，同时给定最小边界L 和最大边界 R。通过修剪二叉搜索树，使得所有节点的值在[L, R]中 (R>=L) 。你可能需要改变树的根节点，所以结果应当返回修剪好的二叉搜索树的新的根节点。
+
+算法分析：
+
+```go
+// date 2020/02/25
+func trimBST(root *TreeNode, L, R int) *TreeNode {
+  if root == nil { return nil }
+  if root.Val < L { return trimBST(root.Right, L, R) }
+  if root.Val > R { return trimBST(root.Left, L, R) }
+  root.Left = trimBST(root.Left, L, R)
+  root.Right = trimBST(root.Right, L, R)
+  return root
+}
+```
+
+#### 814 二叉树剪枝
+
+题目要求：给定一个二叉树，每个节点的值要么是0，要么是1。返回移除了所有不包括1的子树的原二叉树。
+
+算法分析：
+
+使用containOne()函数判断节点以及节点的左右子树是否包含1。
+
+```go
+// date 2020/02/25
+func pruneTree(root *TreeNode) *TreeNode {
+  if containsOne(root) { return root }
+  return nil
+}
+
+func containsOne(root *TreeNode) bool {
+  if root == nil { return false }
+  l, r := containsOne(root.Left), containsOne(root.Right)
+  if !l { root.Left = nil }
+  if !r { root.Right = nil }
+  return root.Val == 1 || l || r
+}
+```
+
+#### 993 二叉树的堂兄弟节点
+
+题目要求：给定一个二叉树和两个节点元素值，判断两个节点值是否是堂兄弟节点。
+
+堂兄弟节点的定义：两个节点的深度一样，但父节点不一样。
+
+算法分析：
+
+使用findFatherAndDepth函数递归找到每个节点的父节点和深度，并进行比较。
+
+```go
+// date 2020/02/25
+func isCousins(root *TreeNode, x, y int) bool {
+  xf, xd := findFatherAndDepth(root, x)
+  yf, yd := findFatherAndDepth(root, y)
+  return xd == yd && xf != yf
+}
+func findFatherAndDepth(root *TreeNode, x int) (*TreeNode, int) {
+  if root == nil || root.Val == x { return nil, 0 }
+  if root.Left != nil && root.Left.Val == x { return root, 1 }
+  if root.Right != nil && root.Right.Val == y { return root, 1 }
+  l, lv := findFatherAndDepth(root.Left, x)
+  r, rv := findFatherAndDepth(root.Right, x)
+  if l != nil { return l, lv+1 }
+  return r, rv+1
+}
+```
+
+
+
+#### 1104 二叉树寻路
+
+题目要求：https://leetcode-cn.com/problems/path-in-zigzag-labelled-binary-tree/
+
+算法分析：
+
+```go
+// date 2020/02/25
+func pathInZigZagTree(label int) []int {
+  res := make([]int, 0)
+  for label != 1 {
+    res = append(res, label)
+    label >>= 1
+    y := highBit(label)
+    lable = ^(label-y)+y
+  }
+  res = append(res, 1)
+  i, j := 0, len(res)-1
+  for i < j {
+    t := res[i]
+    res[i] = res[j]
+    res[j] = t
+    i++
+    j--
+  }
+  return res
+}label = label ^(1 << (label.bit_length() - 1)) - 1
+
+func bitLen(x int) int {
+  res := 0
+  for x > 0 {
+    x >>= 1
+    res++
+  }
+  return res
+}
+```
+
+
 
 #### 面试题27 二叉树的镜像
 
