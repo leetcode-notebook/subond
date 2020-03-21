@@ -1,8 +1,35 @@
 ### String
 
+
+
+golang语言中字符串中所包含的类型
+
+```go
+	str := "su"
+	for i, s := range str {
+		fmt.Printf("i %T, v %T, s[i] %T\n", i, s, str[i]) // int, int32, uint8
+	}
+	for _, v := range str {
+		fmt.Printf("%T \n", v) // int32
+	}
+	for i := range str {
+		fmt.Printf("%T \n", i) // int
+	}
+byte是uint8的别名, rune是int32的别名。
+```
+
+
+
+
+
 #### 相关题目
 
 - 14 Longest Common Prefix
+- 有效的字母异位词
+- 反转字符串
+- 246 中心对称数【E】
+- 58 最后一个单词的长度
+- 521  最长特殊序列I【E】
 
 #### 14 Longest Common Prefix【最长公共前缀】
 
@@ -66,4 +93,311 @@ func findPrefix(s1, s2 string) string {
     return res
 }
 ```
+
+#### 有效的字母异位词
+
+思路分析
+
+算法1：题目中说明了只包含小写字母，因此可以用数组判断。
+
+```go
+func isAnagram(s string, t string) bool {
+  if len(s) != len(t) {return false}
+  ms, mt := [26]int{}, [26]int{}
+  for i := 0; i < len(s); i++ {
+    ms[s[i] - 'a']++
+    mt[t[i] - 'a']++
+  }
+  return ms == mt
+}
+```
+
+#### 实现strStr()
+
+思路分析
+
+算法1：找到起始点，并判断是否相同。
+
+```go
+func strStr(haystack, needle string) int {
+  if len(needle) <= 0 {return 0}
+  n1, n2 := len(haystack), len(needle)
+  for i := 0; i < n1; i++ {
+    if haystack[i] != needle[0] {
+      continue
+    }
+    if i + n2 > n1 {
+      return -1
+    }
+    if string(haystack[i:i+n]) == needle {return i}
+  }
+  return -1
+}
+```
+
+#### 反转字符串
+
+思路分析
+
+算法1：双指针
+
+```go
+func reverseStrings(s []byte) {
+  i, j := 0, len(s)-1
+  for i < j {
+    t := s[i]
+    s[i] = s[j]
+    s[j] = t
+    i++
+    j--
+  }
+}
+```
+
+算法2：递归
+
+```go
+func reverseStrings(s []byte) {
+  // basic case
+  if len(s) <= 1 {
+      return
+  } else {
+      t := s[0]
+      s[0] = s[len(s)-1]
+      s[len(s)-1] = t
+      reverseString(s[1:len(s)-1])
+  }  
+}
+```
+
+#### 246 中心对称数
+
+题目要求：https://leetcode-cn.com/problems/strobogrammatic-number/
+
+```go
+// date 2020/03/21
+func isStrobogrammatic(num string) bool {
+    m := map[byte]byte{
+        '6': '9',
+        '9': '6',
+        '8': '8',
+        '0': '0',
+        '1': '1',
+    }
+    l, r, n := 0, len(num)-1, len(num)
+    for l < r {
+        if m[num[l]] == num[r] {
+            l++
+            r--
+        } else {
+            return false
+        }
+    }
+    // 如果是奇数个元素
+    if n & 0x1 == 1 && m[num[n/2]] != num[n/2] { return false }
+    return true
+}
+```
+
+
+
+#### 58 最后一个单词的长度
+
+题目要求： 给定一个字符串，返回其最后一个单词的长度。
+
+算法: 注意字符串末尾的空字符串。
+
+```go
+// date 2020/01/19
+func lengthOfLastWord(s string) int {
+  var res int
+  for i := len(s) - 1; i >= 0; i-- {
+    if res == 0 && s[i] == ' ' {continue}
+    if s[i] == ' ' {return res}
+    res++
+  }
+  return res
+}
+```
+
+#### 67 二进制求和
+
+题目要求：给定两个二进制字符串，返回其和，结果用字符串存储。
+
+算法1：直接操作。
+
+算法2：用0补齐较短的字符串。
+
+```go
+// date 2020/01/19
+func addBinary(a, b string) string {
+  var n int
+  if len(a) < len(b) {
+    n = len(b) - len(a)
+  } else {
+    n = len(a) - len(b)
+  }
+  var res string
+  for n > 0 {
+    res += "0"
+    n--
+  }
+  
+}
+```
+
+
+
+#### 验证回文串
+
+思路分析
+
+```go
+// date 2019/12/28
+// 
+func isPalindrome(s string) bool {
+  s = strings.ToLower(s)
+  var res string
+  for i := 0; i < len(s); i++ {
+    if 'a' <= s[i] && s[i] <= 'z' || '0' <= s[i] && s[i] <= '9' {
+      res += string(s[i])
+    }
+  }
+  i, j := 0, len(res) - 1
+  for i < j {
+    if res[i] != res[j] {
+      return false
+    } else {
+      i++
+      j--
+    }
+  }
+  return true
+}
+```
+
+#### 345 反转字符串中的元音字母
+
+```go
+// date 2019/12/28
+// 双指针
+func reverseVowels(s string) {
+  vs := make([byte]int)
+  vs['a'] = 1
+  vs['e'] = 1
+  vs['i'] = 1
+  vs['o'] = 1
+  vs['u'] = 1
+  vs['A'] = 1
+  vs['E'] = 1
+  vs['I'] = 1
+  vs['O'] = 1
+  vs['U'] = 1
+  i, j := 0, len(s) - 1
+  var temp byte
+  for i < j {
+    _, ok := vs[s[i]]
+    if ok {
+      _, ok2 := vs[s[j]]
+      if ok2 {
+        temp = s[j]
+        s[j] = s[i]
+        s[i] = temp
+        i++
+        j--
+      } else {
+        j--
+      }
+    } else {
+      i++
+    }
+  }
+}
+```
+
+#### 521 最长特殊序列I
+
+题目要求：https://leetcode-cn.com/problems/longest-uncommon-subsequence-i/
+
+思路分析：题意难以理解
+
+```go
+// date 2020/03/08
+func findLUSlength(a, b string) int {
+  if a == b { return len(a) }
+  if len(a) == len(b) || len(a) > len(b) { return len(a) }
+  return len(b)
+}
+```
+
+#### 594 最长和谐子序列
+
+题目要求：https://leetcode-cn.com/problems/longest-harmonious-subsequence/
+
+算法分析
+
+```go
+// date 2020/03/08
+// 算法一：两层循环，超时
+// 算法二：利用map,时间复杂度O(N),空间复杂度O(N)
+func findLHS(nums []int) int {
+  m := make(map[int]int, 0)
+  for _, v := range nums {
+    if _, ok := m[v]; ok {
+      m[v]++
+    } else {
+      m[v] = 1
+    }
+  }
+  res := 0
+  for k, v1 := range m {
+    if v2, ok := m[k+1]; ok && v1+v2 > res { res = v1+v2 }
+  }
+  return res
+}
+// 算法三，算法二的优化版
+func findLHS(nums []int) int{
+  res, m := 0, make(map[int]int, 0)
+  for _, v := range nums {
+    if _, ok := m[v]; ok {
+      m[v]++
+    } else {
+      m[v] = 1
+    }
+    // cal
+    if v1, ok := m[v-1]; ok && m[v]+v1 > res { res = v1+m[v] }
+    if v1, ok := m[v+1]; ok && m[v]+v1 > res { res = v1+m[v] }
+  }
+  return res
+}
+```
+
+
+
+#### 674 最长连续递增序列
+
+题目要求：https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/
+
+算法分析：
+
+```go
+// date 2020/03/08
+func findLengthOfLCIS(nums []int) int {
+  if len(nums) == 0 { return 0 }
+  res, temp := 1, 1
+  for i := 0; i < len(nums)-1; i++ {
+    if nums[i+1] > nums[i] {
+      temp++
+    } else {
+      temp = 1
+    }
+    if temp > res { res = temp }
+  }
+  return res
+}
+```
+
+
+
+
 

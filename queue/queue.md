@@ -7,8 +7,8 @@
 #### 相关题目
 
 - 621 Task Scheduler【任务调度器】
-- 622 Design Circular Queue
-- 641 Design Circular Deque
+- 622 Design Circular Queue 
+- 641 Design Circular Deque【M】
 - 933 Number of Recent Calls
 
 #### 621 Task Scheduler【任务调度器】
@@ -114,7 +114,7 @@ func (this *RecentCounter) Ping(t int) int {
 
 
 
-#### 622 Design Circular Queue
+#### 622 Design Circular Queue【设计循环双端队列】【M】
 
 ```go
 type RecentCounter struct {
