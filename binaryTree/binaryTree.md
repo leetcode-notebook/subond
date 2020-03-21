@@ -225,23 +225,14 @@ func buildTree(preorder, inorder []int) *TreeNode {
 
 ```go
 // 自底向上的思想
+// 递归
 func maxDepth(root *TreeNode) int {
-  if root == nil {return 0}
-  res, left, right := 1, 0, 0
-  if root.Left != nil { left = maxDepth(root.Left) }
-  if root.Right != nil { right = maxDepth(root.Right) }
-  if left > right {
-    res = left + 1
-  } else {
-    res = right + 1
-  }
-  return res
+    if root == nil { return 0 }
+    l, r := maxDepth(root.Left), maxDepth(root.Right)
+    if l > r { return l+1 }
+    return r + 1
 }
-```
-
-算法：迭代
-
-```go
+// bfs广度优先搜索
 func maxDepth(root *TreeNode) int {
   if root == nil {return 0}
   queue := make([]*TreeNode, 0)
@@ -262,11 +253,26 @@ func maxDepth(root *TreeNode) int {
   }
   return depth
 }
+// dfs深度优先搜索
+func maxDepth(root *TreeNode) int {
+    if root == nil { return 0 }
+    var dfs_ func(root *TreeNode, level int) int 
+    dfs_ = func(root *TreeNode, level int) int {
+        if root == nil { return level }
+        if root.Left == nil && root.Right == nil { return level }
+        if root.Left == nil { return dfs_(root.Right, level+1) }
+        if root.Right == nil { return dfs_(root.Left, level+1) }
+        l, r := dfs_(root.Left, level+1), dfs_(root.Right, level+1)
+        if l > r { return l }
+        return r
+    }
+    return dfs_(root, 1)
+}
 ```
 
 #### 111 二叉树的最小深度
 
-题目要求：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
+题}要求：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
 
 算法分析
 
