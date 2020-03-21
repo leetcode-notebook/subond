@@ -144,6 +144,7 @@ func levelOrder(root *TreeNode) [][]int {
 #### 相关题目
 
 - 从中序和后序遍历序列构造二叉树[前序和中序]
+- 98 验证二叉搜索树【M】
 - 104 二叉树的最大深度【E】
 - 111 二叉树的最小深度【E】
 - 101 对称二叉树【E】
@@ -210,6 +211,71 @@ func buildTree(preorder, inorder []int) *TreeNode {
     root.Right = buildTree(preorder[index+1:], inorder[index+1:])
   }
   return root
+}
+```
+
+#### 98 验证二叉搜索树
+
+题目要求：https://leetcode-cn.com/problems/validate-binary-search-tree/
+
+算法分析：
+
+```go
+// date 2020/03/21
+// 算法1：遍历其中序遍历序列，并判断其序列是否为递增
+func isValidBST(root *TreeNode) bool {
+    nums := inOrder(root)
+    for i := 0; i < len(nums)-1; i++ {
+        if nums[i] >= nums[i+1] { return false }
+    }
+    return true
+}
+
+func inOrder(root *TreeNode) []int {
+    if root == nil { return []int{} }
+    res := make([]int, 0)
+    if root.Left != nil { res = append(res, inOrder(root.Left)...) }
+    res = append(res, root.Val)
+    if root.Right != nil { res = append(res, inOrder(root.Right)...) }
+    return res
+}
+// 算法2：递归
+// 时间复杂度O(N)
+func isValidBST(root *TreeNode) bool {
+  if root == nil { return true }
+  var isValid func(root *TreeNode, min, max float64) bool
+  isValid = func(root *TreeNode, min, max float64) bool {
+    if root == nil { return true }
+    if float64(root.Val) <= min || float64(root.Val) >= max { return false }
+    return isValid(root.Left, min, float64(root.Val)) && isValid(root.Right, float64(root.Val), max)
+  }
+  return isValid(root, math.Inf(-1), math.Inf(0))
+}
+
+// 算法3
+// 其思想是只保留中序遍历的前继节点，判断中序遍历序列是否为递增序列
+// 时间复杂度O(N)，空间复杂度O(1),最优解
+func isValidBST(root *TreeNode) bool {
+    if root == nil { return true }
+    queue := make([]*TreeNode, 0)
+    preValue := math.Inf(-1)
+
+    for len(queue) != 0 || root != nil {
+        // 将左子树全部放入队列
+        for root != nil {
+            queue = append(queue, root)
+            root = root.Left
+        }
+        // 去除最后一个节点
+        root = queue[len(queue)-1]
+        queue = queue[:len(queue)-1]
+        // 判断其是否大于前继节点
+        if float64(root.Val) <= preValue { return false }
+        // 更新前继节点和前继节点的值
+        preValue = float64(root.Val)
+        root = root.Right
+    }
+    return true
 }
 ```
 
