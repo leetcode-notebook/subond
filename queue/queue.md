@@ -8,11 +8,11 @@
 
 #### 相关题目
 
-    - 146 LRU缓冲机制
-    - 621 Task Scheduler【任务调度器】
-    - 622 Design Circular Queue 
-    - 641 Design Circular Deque【M】
-    - 933 Number of Recent Calls
+- 146 LRU缓冲机制
+- 621 Task Scheduler【任务调度器】
+- 622 Design Circular Queue 
+- 641 Design Circular Deque【M】
+- 933 Number of Recent Calls
 
 #### 621 Task Scheduler【任务调度器】
 

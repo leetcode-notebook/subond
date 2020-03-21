@@ -2,12 +2,12 @@
 
 #### 相关题目
 
-    - 8 String to Integer
-    - 9 Palindrome Number
-    - 15 三数之和
-    - 231 2的幂
-    - 149 直线上最多的点数[困难]
-    - 斐波那契数列
+- 8 String to Integer
+- 9 Palindrome Number
+- 15 三数之和
+- 231 2的幂
+- 149 直线上最多的点数[困难]
+- 斐波那契数列
 
 #### 8 String to Integer
 
