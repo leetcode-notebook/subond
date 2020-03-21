@@ -251,14 +251,15 @@ func preNodeVal(root *TreeNode) int {
 
 ### 相关题目
 
-* 98 验证二叉搜索树【M】
-* 108 将有序数组转换为二叉搜索树【M】
-* 235 二叉搜素树的最近公共祖先
-* 450 删除二叉搜索树中的节点
-* 1038 从二叉搜索树到更大和树【M】
-* 1214 查找两棵二叉搜索树之和【M】
-* 面试题 17.12 BiNode【E】
-* 面试题54 二叉搜索树的第K大节点
+    - 98 验证二叉搜索树【M】
+    - 108 将有序数组转换为二叉搜索树【M】
+    - 235 二叉搜素树的最近公共祖先
+    - 230 二叉搜索树中第K小的元素
+    - 450 删除二叉搜索树中的节点
+    - 1038 从二叉搜索树到更大和树【M】
+    - 1214 查找两棵二叉搜索树之和【M】
+    - 面试题 17.12 BiNode【E】
+    - 面试题54 二叉搜索树的第K大节点
 
 #### 98 验证二叉搜索树
 
@@ -356,6 +357,28 @@ func sortedArrayToBST(nums []int) *TreeNode {
 }
 ```
 
+#### 230 二叉搜索树中第K小的元素
+
+题目要求：给定一个二叉搜索树，返回其第K小的元素，你可以假设K总是有效的，即1<=k<=n。
+
+算法：因为是二叉搜索树，先得到其中序遍历结果，然后直接返回k-1所在的元素。
+
+```go
+// date 2020/01/11
+func kthSmallest(root *TreeNode) int {
+  data := inOrder(root)
+  if len(data) < k {return 0}
+  return data[k-1]
+}
+
+func inOrder(root *TreeNode) []int {
+  if root == nil {return nil}
+  res := make([]int, 0)
+  if root.Left != nil { res = append(res, inOrder(root.Left)...) }
+  res = append(res, root.Val)
+  if root.Right != nil { res = append(res, inOrder(root.Right)...) }
+}
+```
 
 
 #### 235 二叉搜索树的最近公共祖先

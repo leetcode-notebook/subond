@@ -2,15 +2,19 @@
 
 题目列表
 
-* 对角线遍历【M】
-
-- 27 Remove Element[两种算法]
-- 189 旋转数组
-- 从排序数组中删除重复项
-- 80 从排序数组中删除重复项 II
-- 54 螺旋矩阵
-- 整数反转
-- 118 杨辉三角【E】
+    - 对角线遍历【M】
+    - 27 Remove Element[两种算法]
+    - 189 旋转数组
+    - 从排序数组中删除重复项
+    - 80 从排序数组中删除重复项 II
+    - 54 螺旋矩阵
+    - 整数反转
+    - 118 杨辉三角【E】
+    - 寻找数组的中心索引
+    - 至少是其他数字两倍的最大数
+    - 加1
+    - 46 全排列
+    - 78 子集
 
 #### 对角线遍历二维数组
 
@@ -820,3 +824,135 @@ func numberOfBoomerangs(points [][]int) int {
 }
 ```
 
+#### 寻找数组的中心索引
+
+题目要求：给定一个数组，返回其中心索引。
+
+备注：中心索引是指其左边个元素之和等于其右边个元素之和。
+
+算法：先求和，再依次遍历。时间复杂度O(2n)
+
+```go
+// date 2020/02/01
+func pivotIndex(nums []int) int {
+  if len(nums) < 1 { return -1 }
+  total, sum := 0, 0
+  for _, v := range nums { total+= v}
+  for i := -1; i < len(nums) - 1; i++ {
+    if sum == total - nums[i+1] {return i+1}
+    sum += nums[i+1]
+    total -= nums[i+1]
+  }
+  return -1
+}
+```
+
+#### 至少是其他数字两倍的最大数
+
+题目要求：给定一个数组，如果数组最大的元素至少是其他元素的两倍，则返回其索引，否则返回-1。
+
+算法：最大元素只要大于次大元素的两倍即可。
+
+```go
+func dominantIndex(nums []int) int {
+  if len(nums) <= 1 { return len(nums)-1 }
+  res := -1
+  max1, max2 := 0, 0
+  for i, v := range nums {
+    if v > max1 {
+      max2 = max1
+      max1 = v
+      res = i
+    } else if v > max2 {
+      max2 = v
+    }
+  }
+  if max1 >= 2 * max2 { return res }
+  return -1
+}
+```
+
+#### 加1
+
+题目要求：给定一个非负整数的数组表现形式，返回其+1的值。
+
+细节题：注意进位。
+
+```go 
+func plusOne(digits []int) []int {
+  carry, temp := 1, 0
+  for i := 0; i < len(digits); i++ {
+    temp = digits[i]+carry
+    digits[i] = temp % 10
+    carry = temp / 10
+  }
+  if carry == 1 {
+    return append([]int{1}, digits...)
+  }
+  return digits...
+}
+```
+
+#### 46 全排列
+
+题目要求：给定一个**没有重复**数字的序列，返回其所有可能的全排列。
+
+算法：回溯法
+
+```go
+func permute(nums []int) [][]int {
+  res := make([][]int, 0, total(len(nums)))
+  func bt(nums, temp []int) {
+    if len(nums) == 0 {
+      res = append(res, temp)
+      return
+    }
+    for i := range nums {
+      temp = append(temp, nums[i])
+      n := make([]int, 0, len(nums)-1)
+      n = append(n, nums[:i]...)
+      n = append(n, nums[i+1:]...)
+      bt(n, temp)
+    }
+  }(nums, make([]int, 0))
+  return res
+}
+
+func total(n int) int {
+  if n <= 0 {return 0}
+  res := 1
+  for n >= 1 {
+    res *= n
+    n--
+  }
+  return res
+}
+```
+
+#### 78 子集
+
+题目要求：给定一个不含重复元素的数组，返回其所有可能的子集。
+
+算法：组合+非递归实现
+
+```go
+// date 2020/01/11
+/* 算法
+1. 外层遍历nums，内层遍历结果集，并取出中间结果集
+2. 用中间结果集+num组成新的结果集，并追加到结果中。
+*/
+func subsets(nums int) [][]int {
+  res := make([][]int, 0)
+  res = append(res, make([]int, 0))
+  for _, v := range nums {
+    n := len(res)
+    for i := 0; i < n; i++ {
+      t := make([]int, 0)
+      t = append(t, res[i]...)
+      t = append(t, v)
+      res = append(res, t)
+    }
+  }
+  return res
+}
+```

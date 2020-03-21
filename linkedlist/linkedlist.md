@@ -6,26 +6,28 @@
 
 #### 相关题目
 
-- 2 两数相加
-- 19 Remove Nth Node From End of List
-- 24 Swap Nodes in Pairs【M】
-- 61 Rotate List【旋转链表】
-- 82 Remove Duplicates From Sorted List II
-- 83 Remove Duplicates From Sorted List
-- 86 Partition List
-- 92 反转链表II【M】
-- 160 Intersection of Two Linked List【两个链表的交点】
-- 143 Reorder List【中等】143 Reorder List
-- 142 Linked List Cycle II【中等】
-- 141  Linked List Cycle
-- 147 对链表进行插入排序【M】
-- 148 排序链表【M】
-- 328 奇偶链表
-- 876 Middle of the Linked List
-- 234 回文链表
-- 206 反转链表
-- 203 移除链表元素
-- 合并两个有序链表
+    - 2 两数相加
+    - 19 Remove Nth Node From End of List
+    - 23 合并K个排序链表
+    - 24 Swap Nodes in Pairs【M】
+    - 61 Rotate List【旋转链表】
+    - 82 Remove Duplicates From Sorted List II
+    - 83 Remove Duplicates From Sorted List
+    - 86 Partition List
+    - 92 反转链表II【M】
+    - 160 Intersection of Two Linked List【两个链表的交点】
+    - 143 Reorder List【中等】143 Reorder List
+    - 142 Linked List Cycle II【中等】
+    - 141  Linked List Cycle
+    - 147 对链表进行插入排序【M】
+    - 148 排序链表【M】
+    - 328 奇偶链表
+    - 876 Middle of the Linked List
+    - 234 回文链表
+    - 206 反转链表
+    - 203 移除链表元素
+    - 合并两个有序链表
+    - 移除链表元素
 
 #### 2 两数相加
 
@@ -104,6 +106,33 @@ func mergeKLists(lists []*ListNode) *ListNode {
   }
   if p1 != nil { pre.Next = p1 }
   if p2 != nil { pre.Next = p2 }
+  return dummy.Next
+}
+
+func mergeKLists(lists []*ListNode) *ListNode {
+  // basic case
+  if len(lists) == 0 {return nil}
+  if len(lists) == 1 {return lists[0]}
+  p1 := lists[0]
+  p2 := mergeKLists(lists[1:])
+  dummy := &ListNode{Val: -1}
+  pre := dummy
+  for p1 != nil && p2 != nil {
+    if p1.Val < p2.Val {
+      pre.Next = p1
+      p1 = p1.Next
+    } else {
+      pre.Next = p2
+      p2 = p2.Next
+    }
+    pre = pre.Next
+  }
+  if p1 != nil {
+    pre.Next = p1
+  }
+  if p2 != nil {
+    pre.Next = p2
+  }
   return dummy.Next
 }
 ```
@@ -860,5 +889,34 @@ func mergeTwoLists(l1, l2 *ListNode) *ListNode {
 }
 ```
 
+#### 移除链表元素
+
+```go
+// Date 11.25
+func removeElements(head *ListNode, val int) *ListNode {
+  var newHead *ListNode
+  for head != nil {
+    if head.Val == val {
+      head = head.Next
+    } else {
+      newHead = head
+      break
+    }
+  }
+  // if the newHead == nil,return
+  if newHead == nil {return newHead}
+  pre := newHead
+  head = head.Next
+  for head != nil {
+    if head.Val != val {
+      pre.Next = head
+      pre = pre.Next
+    }
+    head = head.Next
+  }
+  pre.Next = nil
+  return newHead
+}
+```
 
 

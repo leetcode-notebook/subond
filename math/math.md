@@ -2,10 +2,12 @@
 
 #### 相关题目
 
-- 8
-- 9 Palindrome Number
-- 15 三数之和
-- 
+    - 8 String to Integer
+    - 9 Palindrome Number
+    - 15 三数之和
+    - 231 2的幂
+    - 149 直线上最多的点数[困难]
+    - 斐波那契数列
 
 #### 8 String to Integer
 
@@ -176,3 +178,108 @@ func fourSum(nums []int, target int) [][]int {
 }
 ```
 
+#### 231 2的幂
+
+题目要求：给定一个整数，判断其是否是2的幂次方。
+
+思路分析：判断这个数是否不断的被2整数，直接结果等于1。如果某一次结果为奇数，直接返回false。
+
+```go
+// date 2020/01/11
+func isPowerOfTwo(n int) bool {
+  for n > 1 {
+    if n &0x1 == 1 {return false}
+    n >>= 1
+  }
+  return n == 1
+}
+```
+
+#### 149 直线上最多的点数[困难]
+
+题目要求：给定二维平面上的n个点，求最多有多少个点在同一条直线上。
+
+算法：哈希表，欧几里得最大公约数算法
+
+```go
+// data 2020/02/01
+func maxPoints(points [][]int) int {
+  if len(points) < 3 { return len(points) }
+  n, count := len(points), make([]int, len(points))
+  size, same := 1, 0
+  for i := 0; i < n; i++ {
+    m := make(map[[2]int]int, 0)
+    count[i] = 1
+    size, same = 1, 0
+    for j := 0; j < n; j++ {
+      if i == j { continue }
+      // x坐标一样
+      if points[i][0] == points[j][0] {
+        if points[i][1] == points[j][1] {
+          same++
+        }
+        size++
+      } else {
+     // x坐标不一样 求斜率
+        dy := points[j][1] - points[i][1]
+        dx := points[j][0] - points[i][0]
+        g := gcd(dy, dx)
+        if g != 0 {
+          dy, dx = dy/g, dx/g
+        }
+        k := [2]int
+        k[0], k[1] = dy, dx
+        find := false
+        for mk, mv := range m {
+          if mk[0] == k[0] && mk[1] == k[1] {
+            find = true
+            m[mk]++
+          }
+        }
+        if !find {
+          m[k] = 1
+        }
+      }
+    }
+    for _, v := range m {
+      if v + 1 > count[i] {
+        count[i] = v + 1
+      }
+    }
+    count[i] += same
+    if count[i] < size {
+      count[i] = size
+    }
+  }
+  maxIndex := 0
+  for i := 0; i < n; i++ {
+    if count[i] > count[maxIndex] {
+      maxIndex = i
+    }
+  }
+  return count[maxIndex]
+}
+
+func gcd(x, y int) int {
+  if y == 0 { return x }
+  return gcd(y, x % y)
+}
+```
+
+#### 斐波那契数列
+
+思路分析
+
+记忆化递归
+
+```go
+func fib(N int) int {
+  if N < 2 {return N}
+  c, p1, p2 := 1, 1, 0
+  for i := 2; i <= N; i++ {
+  	c = p1+p2
+    p1, p2 = c, p1
+  }
+  return c
+}
+```

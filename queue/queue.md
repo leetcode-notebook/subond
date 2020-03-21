@@ -1,15 +1,18 @@
 ## Queue
 
+#### 基本定义
+
 队列实现的是一种先进先出（FIFO）策略的线性表。
 
 队列有队头(head)和队尾(tail)，当有一个元素入队时，放入队尾；出队时，即删除队头元素。
 
 #### 相关题目
 
-- 621 Task Scheduler【任务调度器】
-- 622 Design Circular Queue 
-- 641 Design Circular Deque【M】
-- 933 Number of Recent Calls
+    - 146 LRU缓冲机制
+    - 621 Task Scheduler【任务调度器】
+    - 622 Design Circular Queue 
+    - 641 Design Circular Deque【M】
+    - 933 Number of Recent Calls
 
 #### 621 Task Scheduler【任务调度器】
 

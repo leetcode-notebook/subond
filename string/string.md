@@ -1,7 +1,5 @@
 ### String
 
-
-
 golang语言中字符串中所包含的类型
 
 ```go
@@ -18,18 +16,17 @@ golang语言中字符串中所包含的类型
 byte是uint8的别名, rune是int32的别名。
 ```
 
-
-
-
-
 #### 相关题目
 
-- 14 Longest Common Prefix
-- 有效的字母异位词
-- 反转字符串
-- 246 中心对称数【E】
-- 58 最后一个单词的长度
-- 521  最长特殊序列I【E】
+    - 14 Longest Common Prefix
+    - 20 有效的字符串
+    - 有效的字母异位词
+    - 反转字符串
+    - 246 中心对称数【E】
+    - 58 最后一个单词的长度
+    - 521  最长特殊序列I【E】
+    - 字符串中第一个唯一的字符
+    - 翻转字符串里的单词
 
 #### 14 Longest Common Prefix【最长公共前缀】
 
@@ -91,6 +88,40 @@ func findPrefix(s1, s2 string) string {
         res += string(s1[i])
     }
     return res
+}
+```
+
+#### 20 有效的字符串
+
+思路分析：stack数据结构，压栈及出栈
+
+算法如下：时间复杂度O(n) 空间复杂度O(1)
+
+```go
+// date 2020/01/06
+/* 算法：
+ 0. 如果字符串长度为单数，直接返回false.
+ 1. 遇到左括号，入栈
+ 2. 遇到右括号，判断栈是否为空，如果为空，返回false
+ 3. 如果不为空，出栈
+ 4. 遍历结束后，判断栈是否为空。
+*/
+func isValid(s string) bool {
+  if len(s) & 0x1 == 1 {return false}
+  stack := make([]rune, 0)
+  var c rune
+  for _, v := range s {
+    if v == '(' || v == '{' || v == '[' {
+      stack = append(stack, v)
+    } else {
+      if len(stack) == 0 {return false}
+      c = stack[len(stack)-1]
+      if v == ')' && c == '(' || v == '}' && c == '{' || v == ']' && c == '[' {
+        stack = stack[:len(stack)-1]
+      }
+    }
+  }
+  return len(stack) == 0
 }
 ```
 
@@ -397,7 +428,69 @@ func findLengthOfLCIS(nums []int) int {
 }
 ```
 
+#### 字符串中第一个唯一的字符
 
+```go
+func firstUniqChar(s string) int {
+  m := make(map[uint8]int, len(s))
+  for i := 0; i < len(s); i++ {
+    if _, ok := m[s[i]]; ok {
+      m[s[i]] = -1
+    } else {
+      m[s[i]] = i
+    }
+  }
+  for i := 0; i < len(s); i++ {
+    if v, ok := m[s[i]]; ok && v != -1 {
+      return v
+    }
+  }
+  return -1
+}
+```
 
+#### 翻转字符串里的单词
 
+题目要求：给定一个字符串，返回其按单词翻转，并去除多余空格的结果。
 
+算法：从字符串的尾部遍历，找到单个单词，并翻转放入其结果，注意空格。
+
+```go
+// date 2020/02/02
+func reverseWords(s string) string {
+  res, temp := make([]byte, 0), make([]byte, 0) // 存放结果和单个单词
+  end := len(s)-1
+  for end >= 0 && s[end] == ' ' { end-- }
+  for i := end; i >= 0; i-- {
+    if s[i] != ' ' {
+      temp = append(temp, s[i])
+    } else {
+      // find the word
+      res = append(res, reverseWord(temp)...)
+      res = append(res, ' ')
+      for i >= 0 && s[i] == ' ' { i-- }
+      i++
+      temp = make([]byte, 0)
+    }
+  }
+  if 0 != len(temp) {
+    res = append(res, reverseWord(temp)...)
+  }
+  if len(res) > 0 && res[len(res)-1] == ' ' {
+    res = res[:len(res)-1]
+  }
+  return string(res[:len(res)])
+}
+func reverseWord(word []byte) []byte {
+  s, e := 0, len(word)-1
+  var t byte
+  for s < e {
+    t = word[s]
+    word[s] = word[e]
+    word[e] = t
+    s++
+    e--
+  }
+  return word
+}
+```
