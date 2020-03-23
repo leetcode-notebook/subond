@@ -1,18 +1,14 @@
 ## Queue
 
-#### 基本定义
+### 基本定义
 
 队列实现的是一种先进先出（FIFO）策略的线性表。
 
 队列有队头(head)和队尾(tail)，当有一个元素入队时，放入队尾；出队时，即删除队头元素。
 
-#### 相关题目
+### 相关题目
 
-- 146 LRU缓冲机制
-- 621 Task Scheduler【任务调度器】
-- 622 Design Circular Queue 
-- 641 Design Circular Deque【M】
-- 933 Number of Recent Calls
+[TOC]
 
 #### 621 Task Scheduler【任务调度器】
 
@@ -280,3 +276,41 @@ func (this *MyCircularDeque) IsFull() bool {
 }
 ```
 
+#### 面试题09: 用两个栈实现队列【E】
+
+题目要求：https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/
+
+思路分析：两个栈倒一次手
+
+```go
+type CQueue struct {
+    s1, s2 []int
+}
+
+
+func Constructor() CQueue {
+    return CQueue{
+        s1: make([]int, 0),
+        s2: make([]int, 0),
+    }
+}
+
+
+func (this *CQueue) AppendTail(value int)  {
+    this.s1 = append(this.s1, value)
+}
+
+
+func (this *CQueue) DeleteHead() int {
+    if len(this.s2) == 0 && len(this.s1) == 0 { return -1 }
+    if len(this.s2) == 0 {
+        for i := len(this.s1)-1; i >= 0; i-- {
+            this.s2 = append(this.s2, this.s1[i])
+        }
+        this.s1 = this.s1[:0]
+    }
+    res := this.s2[len(this.s2)-1]
+    this.s2 = this.s2[:len(this.s2)-1]
+    return res
+}
+```
