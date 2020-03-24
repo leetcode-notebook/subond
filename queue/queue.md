@@ -283,34 +283,36 @@ func (this *MyCircularDeque) IsFull() bool {
 思路分析：两个栈倒一次手
 
 ```go
+// date 2020/03/23
+// stack先入后出，queue先入先出
+// stackPush负责压入元素，stackPop负责出栈元素
+// 出队时先检查stackPop是否为空，如果为空则需要一次性从stackPush中出栈所有的元素，并入栈stackPop，从而实现先入后出到先入先出。
+// 如果两个栈stackPush和stackPop都没有元素，则表明队列为空
 type CQueue struct {
-    s1, s2 []int
+    stackPush, stackPop []int
 }
-
 
 func Constructor() CQueue {
     return CQueue{
-        s1: make([]int, 0),
-        s2: make([]int, 0),
+        stackPush: make([]int, 0),
+        stackPop: make([]int, 0),
     }
 }
-
 
 func (this *CQueue) AppendTail(value int)  {
-    this.s1 = append(this.s1, value)
+    this.stackPush = append(this.stachPush, value)
 }
 
-
 func (this *CQueue) DeleteHead() int {
-    if len(this.s2) == 0 && len(this.s1) == 0 { return -1 }
-    if len(this.s2) == 0 {
-        for i := len(this.s1)-1; i >= 0; i-- {
-            this.s2 = append(this.s2, this.s1[i])
+    if len(this.stackPop) == 0 && len(this.stackPush) == 0 { return -1 }
+    if len(this.stackPop) == 0 {
+        for i := len(this.stackPush)-1; i >= 0; i-- {
+            this.stackPop = append(this.stackPop, this.stackPush[i])
         }
-        this.s1 = this.s1[:0]
+        this.stackPush = this.stackPush[:0]
     }
-    res := this.s2[len(this.s2)-1]
-    this.s2 = this.s2[:len(this.s2)-1]
+    res := this.stackPop[len(this.stackPop)-1]
+    this.stackPop = this.stackPop[:len(this.stackPop)-1]
     return res
 }
 ```
