@@ -1,22 +1,14 @@
-#### 动态规划
+##动态规划
+
+[TOC]
 
 
+
+### 基本思想和解题步骤
 
 
 
 ### 相关题目
-- 62 不同路径
-- 64 最小路径和【M】
-- 70 爬楼梯
-- 72 编辑距离【H】
-- 121 买卖股票的最佳时机
-- 122 买卖股票的最佳时机II
-- 123 买卖股票的最佳时机III
-- 188 买卖股票的最佳时机IV
-- 746 使用最少花费爬楼梯
-- 264 丑数【M】
-- 300 最长上升子序列【M】
-
 #### 62 不同路径
 
 题目要求：给定一个二维数组m x n，返回机器人从二维数组的左上角->右下角的所有不同路径。
@@ -410,3 +402,40 @@ func lengthOfLIS(nums []int) int {
   return len(lis)
 }
 ```
+
+#### 面试题17.16 按摩师
+
+题目要求：https://leetcode-cn.com/problems/the-masseuse-lcci/
+
+思路分析：动态规划，动态递推方程`opt[i] = max(opt[i-1], num[i]+max(opt[0...i-2]))`
+
+```go
+// date 2020/03/24
+func massage(nums []int) int {
+    if len(nums) == 0 { return 0 }
+    if len(nums) == 1 { return nums[0] }
+    res, cur_res, n := 0, 0, len(nums)
+    opt := make([]int, n)
+    opt[0], opt[1] = nums[0], nums[1]
+    res = max(opt[0], opt[1])
+    for i := 2; i < n; i++ {
+        // 找到0...i-2中最大值
+        cur_res = 0
+        for j := i-2; j >= 0; j-- {
+            if nums[i] + opt[j] > cur_res {
+                cur_res = nums[i] + opt[j]
+            }
+        }
+        // 更新opt[i]
+        opt[i] = max(opt[i-1], cur_res)
+        if opt[i] > res { res = opt[i] }
+    }
+    return res
+}
+
+func max(x, y int) int {
+    if x > y { return x }
+    return y
+}
+```
+
