@@ -1,13 +1,8 @@
-### Math
+## Math
 
-#### 相关题目
+[TOC]
 
-- 8 String to Integer
-- 9 Palindrome Number
-- 15 三数之和
-- 231 2的幂
-- 149 直线上最多的点数[困难]
-- 斐波那契数列
+### 相关题目
 
 #### 8 String to Integer
 
@@ -195,7 +190,7 @@ func isPowerOfTwo(n int) bool {
 }
 ```
 
-#### 149 直线上最多的点数[困难]
+#### 149 直线上最多的点数【H】
 
 题目要求：给定二维平面上的n个点，求最多有多少个点在同一条直线上。
 
@@ -283,3 +278,81 @@ func fib(N int) int {
   return c
 }
 ```
+
+#### 914 卡牌分组
+
+题目要求：https://leetcode-cn.com/problems/x-of-a-kind-in-a-deck-of-cards/
+
+思路分析：
+
+第一种：暴力求解，先统计每个元素出现的次数C，然后对可能的X值进行两个判断，X必须是N的约数，也是C的约数。
+
+```go
+// date 2020/03/27
+func hasGroupsSizeX(deck []int) bool {
+    count := make([]int, 10000)
+    // 统计每个数出现的次数
+    for _, v := range deck {
+        count[v]++
+    }
+    value := make([]int, 0)
+    // 将出现的次数放入数组
+    for _, c := range count {
+        if c > 0 { value = append(value, c) }
+    }
+    // 暴露求解
+    n := len(deck)
+    for x := 2; x <= n; x++ {
+        // x需要是n的约数
+        if n % x == 0 {
+            ok := true
+            // 每个数字出现的次数也需要是x的倍数
+            for _, v := range value {
+                if v % x != 0 {
+                    ok = false
+                    break
+                }
+            }
+            if ok { return true }
+        }
+    }
+    return false
+}
+```
+
+第二种：统计每个元素出现的次数C，能够分组的前提就是所有C的最大公约数。
+
+```go
+// data 2020/03/27
+func hasGroupsSizeX(deck []int) bool {
+    count := make(map[int]int)
+    // 统计每个数出现的次数
+    for _, v := range deck {
+        if _, ok := count[v]; ok {
+            count[v]++
+        } else {
+            count[v] = 1
+        }
+    }
+    value := make([]int, 0)
+    // 将出现的次数放入数组
+    for _, c := range count {
+        if c > 0 { value = append(value, c) }
+    }
+    g := -1
+    for _, v := range value {
+        if g == -1 {
+            g = v
+        } else {
+            g = gcd(g, v)
+        }
+    }
+    return g >= 2
+}
+
+func gcd(x, y int) int {
+    if x == 0 { return y }
+    return gcd(y%x, x)
+}
+```
+
