@@ -1,18 +1,14 @@
 ## Queue
 
-#### 基本定义
+### 基本定义
 
 队列实现的是一种先进先出（FIFO）策略的线性表。
 
 队列有队头(head)和队尾(tail)，当有一个元素入队时，放入队尾；出队时，即删除队头元素。
 
-#### 相关题目
+### 相关题目
 
-    - 146 LRU缓冲机制
-    - 621 Task Scheduler【任务调度器】
-    - 622 Design Circular Queue 
-    - 641 Design Circular Deque【M】
-    - 933 Number of Recent Calls
+[TOC]
 
 #### 621 Task Scheduler【任务调度器】
 
@@ -280,3 +276,43 @@ func (this *MyCircularDeque) IsFull() bool {
 }
 ```
 
+#### 面试题09: 用两个栈实现队列【E】
+
+题目要求：https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/
+
+思路分析：两个栈倒一次手
+
+```go
+// date 2020/03/23
+// stack先入后出，queue先入先出
+// stackPush负责压入元素，stackPop负责出栈元素
+// 出队时先检查stackPop是否为空，如果为空则需要一次性从stackPush中出栈所有的元素，并入栈stackPop，从而实现先入后出到先入先出。
+// 如果两个栈stackPush和stackPop都没有元素，则表明队列为空
+type CQueue struct {
+    stackPush, stackPop []int
+}
+
+func Constructor() CQueue {
+    return CQueue{
+        stackPush: make([]int, 0),
+        stackPop: make([]int, 0),
+    }
+}
+
+func (this *CQueue) AppendTail(value int)  {
+    this.stackPush = append(this.stachPush, value)
+}
+
+func (this *CQueue) DeleteHead() int {
+    if len(this.stackPop) == 0 && len(this.stackPush) == 0 { return -1 }
+    if len(this.stackPop) == 0 {
+        for i := len(this.stackPush)-1; i >= 0; i-- {
+            this.stackPop = append(this.stackPop, this.stackPush[i])
+        }
+        this.stackPush = this.stackPush[:0]
+    }
+    res := this.stackPop[len(this.stackPop)-1]
+    this.stackPop = this.stackPop[:len(this.stackPop)-1]
+    return res
+}
+```
