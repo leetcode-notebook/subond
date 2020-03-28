@@ -385,6 +385,36 @@ func findLUSlength(a, b string) int {
 }
 ```
 
+#### 576 字符串的排列
+
+题目要求：https://leetcode-cn.com/problems/permutation-in-string/
+
+思路分析：
+
+```go
+// date 2020/03/28
+/*
+1. 注意题目要求，字符串问题很多都可以使用数组，好处就是golang中数组可以直接比较的
+2. 第一个字符串的排列之一是第二个字符串的子串，所以字符出现的顺序很重要
+*/
+func checkInclusion(s1 string, s2 string) bool {
+    if len(s1) > len(s2) { return false }
+    // 题目中只包含小写字母，所以使用数组更方便[26]int
+    var s1map [26]int
+    for _, c := range s1 { s1map[c - 'a']++ }
+    for i := 0; i <= len(s2)-len(s1); i++ {
+        var s2map [26]int
+        for j := 0; j < len(s1); j++ {
+            s2map[s2[i+j] - 'a']++
+        }
+        if s1map == s2map { return true }
+    }
+    return false
+}
+```
+
+
+
 #### 594 最长和谐子序列
 
 题目要求：https://leetcode-cn.com/problems/longest-harmonious-subsequence/
