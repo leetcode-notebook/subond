@@ -1,4 +1,8 @@
-### String
+## String
+
+[TOC]
+
+### Golang中的字符串
 
 golang语言中字符串中所包含的类型
 
@@ -16,16 +20,7 @@ golang语言中字符串中所包含的类型
 byte是uint8的别名, rune是int32的别名。
 ```
 
-#### 相关题目
-- 14 Longest Common Prefix
-- 20 有效的字符串
-- 有效的字母异位词
-- 反转字符串
-- 246 中心对称数【E】
-- 58 最后一个单词的长度
-- 521  最长特殊序列I【E】
-- 字符串中第一个唯一的字符
-- 翻转字符串里的单词
+### 相关题目
 
 #### 14 Longest Common Prefix【最长公共前缀】
 
@@ -493,3 +488,38 @@ func reverseWord(word []byte) []byte {
   return word
 }
 ```
+
+#### 820 单词的压缩编码
+
+题目要求：https://leetcode-cn.com/problems/short-encoding-of-words/
+
+思路分析：考察知识点，字典树
+
+如果一个单词是另一个单词的后缀，则该单词不需要重新编码。
+
+```go
+// date 2020/03/28
+func minimumLengthEncoding(words []string) int {
+  // 将单词存入哈希表，方便删除
+  set := make(map[string]string, len(words))
+  for _, w := range words {
+    set[w] = w
+  }
+  // 查找可能存在的单词后缀，并删除它，注意单词的索引从1开始
+  for _, word := range words {
+    for i := 1; i < len(word); i++ {
+      key := string(word[i:])
+      if _, ok := set[key]; ok {
+        delete(set, key)
+      }
+    }
+  }
+  // 统计并返回结果
+  var res int
+  for word := range set {
+    res += len(word)+1
+  }
+  return res
+}
+```
+
