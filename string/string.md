@@ -22,6 +22,36 @@ byte是uint8的别名, rune是int32的别名。
 
 ### 相关题目
 
+#### 3.无重复字符的最长子串
+
+题目要求：https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+
+思路分析：和最长连续递增子数组类似，算法如下：
+
+```go
+// date 2020/03/28
+/*
+1. 初始化，用map记录出现每个字符出现的最大索引，left表示第一个无重复字符的位置
+2. 遍历字符串，计算当前无重复最长子串
+3. 注意结束时，也要判断结果
+*/
+func lengthOfLongestSubstring(s string) int {
+    m, left := make(map[rune]int), 0
+    var res int
+    for i, c := range s {
+        // 如果已经存在，且大于左边界
+        if v, ok := m[c]; ok && v >= left {
+            if i - left > res { res = i - left }
+            // 更新左边界
+            left = v+1
+        }
+        m[c] = i 
+    }
+    if len(s) - left > res { res = len(s) - left }
+    return res
+}
+```
+
 #### 14 Longest Common Prefix【最长公共前缀】
 
 思路分析：
