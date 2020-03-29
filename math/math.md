@@ -86,6 +86,10 @@ func isPalindrome(x int) bool {
 
 #### 15 三数之和
 
+题目要求：给你一个包含 *n* 个整数的数组 `nums`，判断 `nums` 中是否存在三个元素 *a，b，c ，*使得 *a + b + c =* 0 ？请你找出所有满足条件且不重复的三元组。
+
+**注意：**答案中不可以包含重复的三元组。
+
 思路分析
 
 算法：时间复杂度O(n2)
@@ -101,34 +105,36 @@ func isPalindrome(x int) bool {
 5-sum = 0, nums[r] == nums[r-1] 重复元素，跳过
 
 ```go
+// date 2020/03/29
 func threeSum(nums []int) [][]int {
-  sort.Slice(nums, func(i, j int) bool {
-    return nums[i] < nums[j]
-  })
-  res, n, sum := make([][]int, 0), len(nums), -1
-  l, r := 0, n-1
-  for i := 0; i < n; i++ {
-    if nums[i] > 0 {break}
-    if i > 0 && nums[i] == nums[i-1] {continue}
-    l, r = i+1, n-1
-    for l < r {
-      sum = nums[i] + nums[l] + nums[r]
-      if sum == 0 {
-        t := make([]int, 0)
-        t = append(t, nums[i], nums[l], nums[r])
-        res = append(res, t)
-        for l < r && nums[l] == nums[l+1] {l++}
-        for l < r && nums[r] == nums[r-1] {r--}
-        l++
-        r--
-      } else if sum < 0 {
-        l++
-      } else {
-        r--
-      }
+    sort.Slice(nums, func(i, j int) bool {
+        return nums[i] < nums[j]
+    })
+    res, n, sum := make([][]int, 0), len(nums), -1
+    left, right := 0, n-1
+    for i := 0; i < n; i++ {
+        // 升序排列，大于零则退出
+        if nums[i] > 0 { break }
+        // 去重
+        if i > 0 && nums[i] == nums[i-1] { continue }
+        left, right = i+1, n-1
+        for left < right {
+            sum = nums[i] + nums[left] + nums[right]
+            if sum < 0 {
+                left++
+            } else if sum > 0 {
+                right--
+            } else if sum == 0 {
+                res = append(res, []int{nums[i], nums[left], nums[right]})
+                // 去重
+                for left < right && nums[left] == nums[left+1] { left++ }
+                for left < right && nums[right] == nums[right-1] { right-- }
+                left++
+                right--
+            }
+        }
     }
-  }
-  return res
+    return res
 }
 ```
 
