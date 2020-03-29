@@ -8,7 +8,9 @@
 
 #### 2 两数相加
 
-思路分析
+题目要求：https://leetcode-cn.com/problems/add-two-numbers/
+
+思路分析：
 
 算法1：直接计算。将结果存入其中一个链表。
 
@@ -52,7 +54,68 @@ func addTwoNumbers(l1, l2 *ListNode) *ListNode {
   }
   return l1
 }
+// date 2020/03/29
+// 算法二：直接计算，并先开辟空间存储结果
+// 这个解法更好
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    dummy := &ListNode{Val:-1}
+    pre := dummy
+    temp_res, n1, n2, carry := 0, 0, 0, 0
+    for l1 != nil || l2 != nil || carry > 0 {
+        n1, n2 = 0, 0
+        if l1 != nil {
+            n1 = l1.Val
+            l1 = l1.Next
+        }
+        if l2 != nil {
+            n2 = l2.Val
+            l2 = l2.Next
+        }
+        temp_res = n1 + n2 + carry
+        carry = temp_res / 10
+        pre.Next = &ListNode{Val: temp_res%10}
+        pre = pre.Next
+    }
+    return dummy.Next
+}
 ```
+
+#### 21 合并两个有序链表
+
+题目要求：https://leetcode-cn.com/problems/merge-two-sorted-lists/
+
+思路分析：利用哑结点
+
+```go
+// date 2020/03/29
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    if l1 == nil { return l2 }
+    if l2 == nil { return l1 }
+    dummy := &ListNode{Val:-1}
+    pre := dummy
+    for l1 != nil || l2 != nil {
+        if l1 == nil {
+            pre.Next = l2
+            break
+        }
+        if l2 == nil {
+            pre.Next = l1
+            break
+        }
+        if l1.Val < l2.Val {
+            pre.Next = l1
+            l1 = l1.Next
+        } else {
+            pre.Next = l2
+            l2 = l2.Next
+        }
+        pre = pre.Next
+    }
+    return dummy.Next
+}
+```
+
+
 
 #### 23 合并K个排序链表
 
@@ -726,6 +789,8 @@ func isPalindrome(head *ListNode) bool {
 
 
 #### 206 反转链表
+
+题目要求：
 
 思路分析：
 
