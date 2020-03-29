@@ -93,7 +93,7 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
     - 四数相加II
     - 常数时间插入，删除和获取
     - 146 LRU缓存机制【M】
-        
+      
 ## 数学题目
 
 [数学](math/math.md)        
@@ -205,8 +205,9 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 
 ### 广度优先搜索
 
-
 ### 深度优先搜索
+
+[bfs](bfs/bfs.md)
 
 
 ### 动态规划

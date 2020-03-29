@@ -1,20 +1,10 @@
 ## Array【线性表】
 
-题目列表
+[TOC]
 
-- 对角线遍历【M】
-- 27 Remove Element[两种算法]
-- 189 旋转数组
-- 从排序数组中删除重复项
-- 80 从排序数组中删除重复项 II
-- 54 螺旋矩阵
-- 整数反转
-- 118 杨辉三角【E】
-- 寻找数组的中心索引
-- 至少是其他数字两倍的最大数
-- 加1
-- 46 全排列
-- 78 子集
+
+
+### 相关题目
 
 #### 对角线遍历二维数组
 
@@ -554,43 +544,92 @@ func sortColors(nums []int) {
 }
 ```
 
-#### 数组中的第K个最大元素
+#### 215 数组中的第K个最大元素
+
+题目要求：https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
+
+思路分析：降序的快排。把任务切分成小任务swap。
 
 ```go
+// date 2020/03/29
 func findKthLargest(nums []int, k int) int {
-  if k > len(nums) {return}
-  return nums[QuickSort(nums, 0, len(nums)-1, k)]
+    if k > len(nums) {return -1}
+    // 快排排序
+    QuickSort(nums, 0, len(nums)-1, k-1)
+    return nums[k-1]
 }
 
-func QuickSort(nums []int, l, r, k) int {
-  if l >= r {return l}
-  p := partition(nums, l, r)
-  if p+1 == k {
-    return p
-  }
-  if p+1 > k {
-    return QuickSort(nums, l, p-1, k)
-  } else {
+func QuickSort(nums []int, l, r, k int) int {
+    p := partition(nums, l, r)
+    // 如果已经部分有序，且找到k则返回，减少排序次数
+    if p == k {
+        return p
+    } else if p > k {
+        // 左边继续排序
+        return QuickSort(nums, l, p-1, k)
+    }
+    // 右边继续排序
     return QuickSort(nums, p+1, r, k)
-  }
 }
 
 func partition(nums []int, l, r int) int {
-  v, i, j := nums[l], l, l+1
-  var temp int
-  for j <= r {
-    if nums[j] >= v {
-	    temp = nums[i+1]
-      nums[i+1] = nums[j]
-      nums[j] = temp
-      i++
+    // v基值,i维护大于等于基值的索引，j遍历数组
+    v, i, j := nums[l], l, l+1
+    for j <= r {
+        // 如果元素大于基值，则进行交换
+        if nums[j] >= v {
+            swap(nums, i+1, j)
+            i++
+        }
+        j++
     }
-    j++
-  }
-  temp = nums[i]
-  nums[i] = v
-  nums[l] = temp
-  return i
+    swap(nums, i, l)
+    return i
+}
+
+func swap(nums []int, x, y int) {
+    t := nums[x]
+    nums[x] = nums[y]
+    nums[y] = t
+}
+// 进化版
+func findKthLargest(nums []int, k int) int {
+    if k > len(nums) {return -1}
+    // 快排排序
+    var swap func(i, j int)
+    var partition func(left, right int) int
+    var quickSort func(left, right, k int)
+    swap = func(i, j int) {
+        t := nums[i]
+        nums[i] = nums[j]
+        nums[j] = t
+    }
+    partition = func(left, right int) int {
+        v, i, j := nums[left], left, left+1
+        for j <= right {
+            if nums[j] >= v {
+                swap(i+1, j)
+                i++
+            }
+            j++
+        }
+        swap(i, left)
+        return i
+    }
+    
+    quickSort = func(left, right, k int) {
+        p := partition(left, right)
+        if p == k {
+            return
+        } else if p > k {
+            quickSort(left, p-1, k)
+        } else {
+            quickSort(p+1, right, k)
+        }
+    }
+    
+    quickSort(0, len(nums)-1, k-1)
+    return nums[k-1]
 }
 ```
 
@@ -956,3 +995,42 @@ func subsets(nums int) [][]int {
   return res
 }
 ```
+
+#### 674 最长连续递增序列
+
+题目要求：https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/
+
+思路分析：
+
+```go
+// date 2020/03/29
+// 算法1
+func findLengthOfLCIS(nums []int) int {
+    if len(nums) < 1 { return 0 }
+    // res记录结果，left记录连续递增序列中最左边的元素
+    res, left := 1, 0
+    for i := 1; i < len(nums); i++ {
+        if nums[i] <= nums[i-1] {
+            if res < i - left { res = i - left }
+            left = i
+        }
+    }
+    if res < len(nums) - left { res = len(nums) - left }
+    return res
+}
+// 算法2:记录当前最大
+func findLengthOfLCIS(nums []int) int {
+  if len(nums) < 1 { return 0 }
+  res, cur_max := 1, 1
+  for i := 0; i < len(nums)-1; i++ {
+    if nums[i] < nums[i+1] {
+      cur_max++
+    } else {
+      cur_max = 1
+    }
+    if res < cur_max { res = cur_max }
+  }
+  return res
+}
+```
+

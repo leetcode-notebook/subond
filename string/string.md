@@ -22,6 +22,36 @@ byte是uint8的别名, rune是int32的别名。
 
 ### 相关题目
 
+#### 3.无重复字符的最长子串
+
+题目要求：https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+
+思路分析：和最长连续递增子数组类似，算法如下：
+
+```go
+// date 2020/03/28
+/*
+1. 初始化，用map记录出现每个字符出现的最大索引，left表示第一个无重复字符的位置
+2. 遍历字符串，计算当前无重复最长子串
+3. 注意结束时，也要判断结果
+*/
+func lengthOfLongestSubstring(s string) int {
+    m, left := make(map[rune]int), 0
+    var res int
+    for i, c := range s {
+        // 如果已经存在，且大于左边界
+        if v, ok := m[c]; ok && v >= left {
+            if i - left > res { res = i - left }
+            // 更新左边界
+            left = v+1
+        }
+        m[c] = i 
+    }
+    if len(s) - left > res { res = len(s) - left }
+    return res
+}
+```
+
 #### 14 Longest Common Prefix【最长公共前缀】
 
 思路分析：
@@ -119,6 +149,75 @@ func isValid(s string) bool {
 }
 ```
 
+#### 43 字符串相乘
+
+题目要求：
+
+思路分析：任务拆解，把大任务拆解成一个一个的小任务。
+
+```go
+// date 2020/03/28
+/*
+1. 先实现两个字符串相加；2.实现单个数字的相乘，3.实现零的追加。
+*/
+func multiply(num1 string, num2 string) string {
+    if len(num1) == 0 { return num2 }
+    if len(num2) == 0 { return num1 }
+    if len(num1) == 1 && num1[0] == '0' { return "0" }
+    if len(num2) == 1 && num2[0] == '0' { return "0" }
+    var res string
+    for i := len(num2)-1; i >= 0; i-- {
+        t := product(num1, num2[i])
+        t = appendZeros(t, len(num2)-1-i)
+        res = addString(res, t)
+    }
+    return res
+}
+
+func appendZeros(s string, c int) string {
+    if c <= 0 { return s }
+    for c > 0 {
+        s += fmt.Sprintf("%d", 0)
+        c--
+    }
+    return s
+}
+
+func product(s1 string, s2 byte) string {
+    var res string
+    var carry, n1, t int
+    i, n2 := len(s1)-1, int(s2 - '0')
+    for i >= 0 || carry > 0 {
+        n1 = 0
+        if i >= 0 { n1 = int(s1[i]-'0') }
+        t = n1 * n2 + carry
+        carry = t / 10
+        res = fmt.Sprintf("%d", t%10) + res
+        i--
+    }
+    return res
+}
+
+func addString(s1, s2 string) string {
+    var res string
+    var carry, n1, n2, t int
+    i, j := len(s1)-1, len(s2)-1
+    for i >= 0 || j >= 0 || carry > 0 {
+        n1, n2 = 0, 0
+        if i >= 0 { n1 = int(s1[i] - '0') }
+        if j >= 0 { n2 = int(s2[j] - '0') } 
+        t = n1 + n2 + carry
+        carry = t / 10
+        res = fmt.Sprintf("%d", t%10) + res
+        i--
+        j--
+    }
+    return res
+}
+```
+
+
+
 #### 有效的字母异位词
 
 思路分析
@@ -194,6 +293,61 @@ func reverseStrings(s []byte) {
   }  
 }
 ```
+
+#### 151 翻转字符串里的单词
+
+题目要求：
+
+思路分析：
+
+```go
+// date 2020/03/29
+/*
+1. 从字符串尾部开始遍历，依次翻转每个单词
+2. 遍历字符串的时候主要去掉多余空格，最后的结果也需要去掉多余的空格
+*/
+func reverseWords(s string) string {
+  res, word_res := make([]byte, 0), make([]byte, 0)
+  end := len(s)-1
+  // 去掉尾部多余的空格
+  for end >= 0 && s[end] == ' ' { end-- }
+  for i := end; i >= 0; i-- {
+    if s[i] != ' ' {
+      word_res = append(word_res, s[i])
+    } else {
+      // 找到一个单词
+      res = append(res, reverseWord(word_res)...)
+      res = append(res, ' ')
+      // 去掉中间多余的空格
+      for i >= 0 && s[i] == ' ' { i-- }
+      i++
+      word_res = word_res[:0]
+    }
+  }
+  if len(word_res) > 0 {
+    res = append(res, reverseWord(word_res)...)
+  }
+  if len(res) > 0 && res[len(res)-1] == ' ' {
+    res = res[:len(res)-1]
+  }
+  return string(res)
+}
+
+func reverseWord(word []byte) []byte {
+  i, j := 0, len(word)-1
+  var c byte
+  for i < j {
+    c = word[i]
+    word[i] = word[j]
+    word[j] = c
+    i++
+    j--
+  }
+  return word
+}
+```
+
+
 
 #### 246 中心对称数
 
@@ -340,6 +494,32 @@ func reverseVowels(s string) {
 }
 ```
 
+#### 415 字符串相加
+
+题目要求：https://leetcode-cn.com/problems/add-strings/
+
+思路分析：思路并不难，关键是如何让自己的代码更优雅
+
+```go
+// date 2020/03/28
+func addStrings(num1 string, num2 string) string {
+    var res string
+    var carry, n1, n2, t int
+    i, j := len(num1)-1, len(num2)-1
+    for i >= 0 || j >= 0 || carry > 0 {
+        n1, n2 = 0, 0
+        if i >= 0 { n1 = int(num1[i] - '0') }
+        if j >= 0 { n2 = int(num2[j] - '0') } 
+        t = n1 + n2 + carry
+        carry = t / 10
+        res = fmt.Sprintf("%d", t%10) + res
+        i--
+        j--
+    }
+    return res
+}
+```
+
 #### 521 最长特殊序列I
 
 题目要求：https://leetcode-cn.com/problems/longest-uncommon-subsequence-i/
@@ -354,6 +534,36 @@ func findLUSlength(a, b string) int {
   return len(b)
 }
 ```
+
+#### 576 字符串的排列
+
+题目要求：https://leetcode-cn.com/problems/permutation-in-string/
+
+思路分析：
+
+```go
+// date 2020/03/28
+/*
+1. 注意题目要求，字符串问题很多都可以使用数组，好处就是golang中数组可以直接比较的
+2. 第一个字符串的排列之一是第二个字符串的子串，所以字符出现的顺序很重要
+*/
+func checkInclusion(s1 string, s2 string) bool {
+    if len(s1) > len(s2) { return false }
+    // 题目中只包含小写字母，所以使用数组更方便[26]int
+    var s1map [26]int
+    for _, c := range s1 { s1map[c - 'a']++ }
+    for i := 0; i <= len(s2)-len(s1); i++ {
+        var s2map [26]int
+        for j := 0; j < len(s1); j++ {
+            s2map[s2[i+j] - 'a']++
+        }
+        if s1map == s2map { return true }
+    }
+    return false
+}
+```
+
+
 
 #### 594 最长和谐子序列
 

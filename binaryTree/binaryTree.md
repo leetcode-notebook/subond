@@ -1,12 +1,14 @@
-### 二叉树
+## 二叉树
 
-#### 什么是二叉树
+[TOC]
+
+
+
+### 什么是二叉树
 
 树是一种数据结构，树中的每个节点都包含一个键值和所有子节点的列表，对于二叉树来说，每个节点最多有两个子树结构，分别称为左子树和右子树。
 
-
-
-#### 二叉树的遍历
+### 二叉树的遍历
 
 根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。
 
@@ -113,9 +115,7 @@ func levelOrder(root *TreeNode) [][]int {
 }
 ```
 
-
-
-#### 递归解决树的问题
+### 递归解决树的问题
 
 递归通常是解决树的相关问题最有效和最常用的方法之一，分为**自顶向下**和**自底向上**两种。
 
@@ -139,31 +139,7 @@ func levelOrder(root *TreeNode) [][]int {
 
 当然也可以这样思考：对于树中的任意一个节点，如果你知道它子节点的结果，你能计算出该节点的答案吗？如果答案是肯定的，可以尝试使用自底向上的递归来解决问题。
 
-
-
-#### 相关题目
-
-- 从中序和后序遍历序列构造二叉树[前序和中序]
-- 98 验证二叉搜索树【M】
-- 104 二叉树的最大深度【E】
-- 111 二叉树的最小深度【E】
-- 101 对称二叉树【E】
-- 156 上下翻转二叉树
-- 257 二叉树的所有路径
-- 270 最接近的二叉搜素树值【E】
-- 543 二叉树的直径【E】
-- 545 二叉树的边界【M】
-- 563 二叉树的坡度【E】
-- 617 合并二叉树【E】
-- 654 最大二叉树【M】
-- 655 输出二叉树【M】
-- 662 二叉树的最大宽度【M】
-- 814 二叉树剪枝【M】
-- 993 二叉树的堂兄弟节点
-- 1104 二叉树寻路【M】
-- 面试题27 二叉树的镜像
-- 路径总和
-- 不同的二叉搜索树
+### 相关题目
 
 ####  从中序和后序遍历序列构造二叉树[前序和中序]
 
@@ -512,6 +488,27 @@ func rightSideView(root *TreeNode) []int {
     stack = stack[n:]
   }
   return res
+}
+```
+
+#### 二叉树的最近公共祖先
+
+题目要求：https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/
+
+思路分析：
+
+```go
+// date 2020/03/29
+// 递归
+// 在左右子树中分别查找p,q结点
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+     if root == nil || root == p || root == q { return root }
+     if p == q { return p }
+     left := lowestCommonAncestor(root.Left, p, q)
+     right := lowestCommonAncestor(root.Right, p, q)
+     if left != nil && right != nil { return root }
+     if left != nil { return left }
+     return right
 }
 ```
 
