@@ -294,6 +294,61 @@ func reverseStrings(s []byte) {
 }
 ```
 
+#### 151 翻转字符串里的单词
+
+题目要求：
+
+思路分析：
+
+```go
+// date 2020/03/29
+/*
+1. 从字符串尾部开始遍历，依次翻转每个单词
+2. 遍历字符串的时候主要去掉多余空格，最后的结果也需要去掉多余的空格
+*/
+func reverseWords(s string) string {
+  res, word_res := make([]byte, 0), make([]byte, 0)
+  end := len(s)-1
+  // 去掉尾部多余的空格
+  for end >= 0 && s[end] == ' ' { end-- }
+  for i := end; i >= 0; i-- {
+    if s[i] != ' ' {
+      word_res = append(word_res, s[i])
+    } else {
+      // 找到一个单词
+      res = append(res, reverseWord(word_res)...)
+      res = append(res, ' ')
+      // 去掉中间多余的空格
+      for i >= 0 && s[i] == ' ' { i-- }
+      i++
+      word_res = word_res[:0]
+    }
+  }
+  if len(word_res) > 0 {
+    res = append(res, reverseWord(word_res)...)
+  }
+  if len(res) > 0 && res[len(res)-1] == ' ' {
+    res = res[:len(res)-1]
+  }
+  return string(res)
+}
+
+func reverseWord(word []byte) []byte {
+  i, j := 0, len(word)-1
+  var c byte
+  for i < j {
+    c = word[i]
+    word[i] = word[j]
+    word[j] = c
+    i++
+    j--
+  }
+  return word
+}
+```
+
+
+
 #### 246 中心对称数
 
 题目要求：https://leetcode-cn.com/problems/strobogrammatic-number/
