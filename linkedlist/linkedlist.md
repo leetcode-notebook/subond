@@ -469,6 +469,10 @@ func reverseBetween(head *ListNode, m int, n int) *ListNode {
 
 #### 160 Intersection of Two Linked List【两个链表的交点】
 
+题目要求：https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
+
+思路分析：
+
 ```go
 // 算法：双指针 len a + b = b + a
 func getIntersectionNode(headA, headB *ListNode) *ListNode {
@@ -488,9 +492,29 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
     }
     return pa
 }
+// date 2020/03/29
+// 第二版
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    if headA == nil || headB == nil { return nil }
+    var res *ListNode
+    p1, p2 := headA, headB
+    for p1 != nil || p2 != nil {
+        if p1 == nil {
+            p1 = headB
+        }
+        if p2 == nil {
+            p2 = headA
+        }
+        if p1 == p2 {
+            res = p1
+            break
+        }
+        p1 = p1.Next
+        p2 = p2.Next
+    }
+    return res
+}
 ```
-
-
 
 #### 143 Reorder List 
 
