@@ -267,6 +267,32 @@ func gcd(x, y int) int {
 }
 ```
 
+#### 338 比特位计数
+
+题目要求：https://leetcode-cn.com/problems/counting-bits/
+
+思路分析：
+
+```go
+// date 2020/03/30
+/*
+递推，二进制的表示
+如果当前为奇数，则在上一个偶数的基础上加一；如果当前为偶数，则和上一个偶数保持一致
+*/
+func countBits(num int) []int {
+    res := make([]int, num+1)
+    res[0] = 0
+    for i := 1; i <= num; i++ {
+        if i & 0x1 == 1 {
+            res[i] = res[i-1]+1
+        } else {
+            res[i] = res[i>>1]
+        }
+    }
+    return res
+}
+```
+
 #### 斐波那契数列
 
 思路分析
