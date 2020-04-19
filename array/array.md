@@ -1034,3 +1034,28 @@ func findLengthOfLCIS(nums []int) int {
 }
 ```
 
+#### 485 最大连续1的个数[简单]
+
+题目要求：https://leetcode.com/problems/max-consecutive-ones/
+
+思路分析：
+
+```go
+// date 2020/04/19
+func findMaxConsecutiveOnes(nums []int) int {
+    cur_max, res := 0, 0
+    for _, v := range nums {
+        if v == 1 {
+            cur_max++
+        } else {
+            cur_max = 0
+        }
+        if cur_max > res { res = cur_max }
+    }
+    
+    return res
+}
+```
+
+
+
