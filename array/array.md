@@ -266,6 +266,39 @@ func removeDuplicates2(nums []int) int {
 }
 ```
 
+#### 88 合并两个有序数组[简单]
+
+题目要求：https://leetcode.com/problems/merge-sorted-array/
+
+思路分析：
+
+```go
+// date 2020/04/19
+func merge(nums1 []int, m int, nums2 []int, n int)  {
+    ia, ib, icurr := m-1, n-1, m+n-1
+    for ia >= 0 || ib >= 0 {
+        if ia < 0 {
+            nums1[icurr] = nums2[ib]
+            ib--
+            continue
+        }
+        if ib < 0 {
+            nums1[icurr] = nums1[ia]
+            ia--
+            continue
+        }
+        if nums1[ia] > nums2[ib] {
+            nums1[icurr] = nums1[ia]
+            ia--
+        } else {
+            nums1[icurr] = nums2[ib]
+            ib--
+        }
+        icurr--
+    }
+}
+```
+
 #### 54 螺旋矩阵
 
 题目要求：给定一个m * n的二维矩阵，顺时针打印。
@@ -1057,7 +1090,7 @@ func findMaxConsecutiveOnes(nums []int) int {
 }
 ```
 
-#### 977 排序数组的平方
+#### 977 排序数组的平方[简单]
 
 题目要求：https://leetcode.com/problems/squares-of-a-sorted-array/
 
@@ -1088,7 +1121,32 @@ func square(x int) int {
 }
 ```
 
-#### 1295 找出具有偶数位数字的个数
+#### 1089 重复零[简单]
+
+题目分析：https://leetcode.com/problems/duplicate-zeros/
+
+思路分析：
+
+```go
+// date 2020/04/19
+func duplicateZeros(arr []int)  {
+    n := len(arr)
+    j := 0
+    for i := 0; i < n; i++ {
+        if arr[i] == 0 {
+            j = n - 2
+            for j > i {
+                arr[j+1] = arr[j]
+                j--
+            }
+            arr[j+1] = 0
+            i++
+        }
+    }
+}
+```
+
+#### 1295 找出具有偶数位数字的个数[简单]
 
 题目要求：https://leetcode.com/problems/find-numbers-with-even-number-of-digits/
 
@@ -1116,5 +1174,36 @@ func isEvenDigitsOfNumber(num int) bool {
 }
 ```
 
+#### 88 合并两个有序数组[简单]
 
+题目要求：https://leetcode.com/problems/merge-sorted-array/
+
+思路分析：
+
+```go
+// date 2020/04/19
+func merge(nums1 []int, m int, nums2 []int, n int)  {
+    ia, ib, icurr := m-1, n-1, m+n-1
+    for ia >= 0 || ib >= 0 {
+        if ia < 0 {
+            nums1[icurr] = nums2[ib]
+            ib--
+            continue
+        }
+        if ib < 0 {
+            nums1[icurr] = nums1[ia]
+            ia--
+            continue
+        }
+        if nums1[ia] > nums2[ib] {
+            nums1[icurr] = nums1[ia]
+            ia--
+        } else {
+            nums1[icurr] = nums2[ib]
+            ib--
+        }
+        icurr--
+    }
+}
+```
 
