@@ -1057,5 +1057,64 @@ func findMaxConsecutiveOnes(nums []int) int {
 }
 ```
 
+#### 977 排序数组的平方
+
+题目要求：https://leetcode.com/problems/squares-of-a-sorted-array/
+
+思路分析：双指针
+
+```go
+// date 2020/04/19
+func sortedSquares(A []int) []int {
+    left, right := 0, len(A)-1
+    res := make([]int, len(A))
+    index, x, y := len(A)-1, 0, 0
+    for left <= right {
+        x, y = square(A[left]), square(A[right])
+        if x > y {
+            res[index] = x
+            left++
+        } else {
+            res[index] = y
+            right--
+        }
+        index--
+    }
+    return res
+}
+
+func square(x int) int {
+    return x * x
+}
+```
+
+#### 1295 找出具有偶数位数字的个数
+
+题目要求：https://leetcode.com/problems/find-numbers-with-even-number-of-digits/
+
+思路分析：
+
+```go
+// date 2020/04/19
+func findNumbers(nums []int) int {
+    res := 0
+    for _, v := range nums {
+        if isEvenDigitsOfNumber(v) {
+            res++
+        }
+    }
+    return res
+}
+
+func isEvenDigitsOfNumber(num int) bool {
+    digits := 0 
+    for num > 0 {
+        digits++
+        num /= 10
+    }
+    return digits & 0x1 == 0
+}
+```
+
 
 
