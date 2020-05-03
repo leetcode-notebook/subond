@@ -64,15 +64,16 @@ func findDiagonalOrder(matrix [][]int) []int {
 
 ```go
 // date 2019/12/28
+// date 2020/05/02
 func removeElement(nums []int, val int) int {
-  index := -1
-  for i := 0; i < len(nums); i++ {
-    if nums[i] != val {
-      index++
-      nums[index] = nums[i]
+    index, n := 0, len(nums) - 1
+    for i := 0; i <= n; i++ {
+        if nums[i] != val {
+            nums[index] = nums[i]
+            index++
+        }
     }
-  }
-  return index+1
+    return index
 }
 ```
 
@@ -280,11 +281,13 @@ func merge(nums1 []int, m int, nums2 []int, n int)  {
         if ia < 0 {
             nums1[icurr] = nums2[ib]
             ib--
+            icurr--
             continue
         }
         if ib < 0 {
             nums1[icurr] = nums1[ia]
             ia--
+            icurr--
             continue
         }
         if nums1[ia] > nums2[ib] {
@@ -296,6 +299,33 @@ func merge(nums1 []int, m int, nums2 []int, n int)  {
         }
         icurr--
     }
+}
+```
+
+#### 53 最大子序和
+
+题目链接：https://leetcode-cn.com/problems/maximum-subarray/
+
+题目要求：给定一个整数数组，找到一个具有最大和的连续子数组，并返回其值。
+
+思路分析：
+
+```go
+// date 2020/05/03
+func maxSubArray(nums []int) int {
+    if len(nums) == 0 { return 0 }
+    res := nums[0]
+    var temp, cur_max int
+    for _, v := range nums {
+        temp = cur_max + v
+        if v > temp {
+            cur_max = v
+        } else {
+            cur_max += v
+        }
+        if cur_max > res { res = cur_max }
+    }
+    return res
 }
 ```
 
@@ -524,29 +554,6 @@ func merge(nums1 []int, m int, nums2 []int, n int) {
     nums1[icurr] = nums2[ib]
     ib--
     icurr--
-  }
-}
-```
-
-#### 移动零
-
-题目要求：给定一个数组nums，将其所有的零移动至数组的末尾，其他非零元素保持相对位置不变。
-
-思路分析：
-
-维护好非零元素应该使用的索引，遍历数组，将非零元素放在其索引。
-
-```go
-func moveZeros(nums []int) {
-  index_nzero := 0
-  for i := 0; i < len(nums); i++ {
-    if nums[i] != 0 {
-      if index_nzero < i {
-        nums[index_nzero] = nums[i]
-        nums[i] = 0
-      }
-      index_nzero++
-    }
   }
 }
 ```
@@ -1173,37 +1180,3 @@ func isEvenDigitsOfNumber(num int) bool {
     return digits & 0x1 == 0
 }
 ```
-
-#### 88 合并两个有序数组[简单]
-
-题目要求：https://leetcode.com/problems/merge-sorted-array/
-
-思路分析：
-
-```go
-// date 2020/04/19
-func merge(nums1 []int, m int, nums2 []int, n int)  {
-    ia, ib, icurr := m-1, n-1, m+n-1
-    for ia >= 0 || ib >= 0 {
-        if ia < 0 {
-            nums1[icurr] = nums2[ib]
-            ib--
-            continue
-        }
-        if ib < 0 {
-            nums1[icurr] = nums1[ia]
-            ia--
-            continue
-        }
-        if nums1[ia] > nums2[ib] {
-            nums1[icurr] = nums1[ia]
-            ia--
-        } else {
-            nums1[icurr] = nums2[ib]
-            ib--
-        }
-        icurr--
-    }
-}
-```
-
