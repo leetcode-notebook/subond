@@ -42,3 +42,60 @@ func validMountainArray(A []int) bool {
 }
 ```
 
+#### 485 最大连续1的个数【简单】
+
+题目要求：给定一个只包含1和0的数组，返回其中最大连续1的个数。
+
+算法：双指针
+
+```go
+// date 2020/02/02
+func findMaxConsecutiveOnes(nums []int) int {
+  res, n := 0, len(nums)
+  start, end := 0, 0
+  for start < n && nums[start] == 0 { start++ }
+  end = start
+  for end < n {
+    // find the first 0
+    if nums[end] != 1 {
+      if res < (end-start) {
+        res = end - start
+      }
+      for end < n && nums[end] == 0 {end++}
+      start = end
+    }
+    end++
+  }
+  if res < (end - start) {
+    res = end - start
+  }
+  return res
+}
+```
+
+#### 盛最多水的容器
+
+思路分析:双指针
+
+```go
+// date 2019/12/28
+// 双指针
+func maxArea(height []int) int {
+  var res, temp int
+  i, j := 0, len(height) - 1
+  for i < j {
+    if height[i] < height[j] {
+      temp = height[i] * (j-i)
+      i++
+    } else {
+      temp = height[j] * (j-i)
+      j--
+    }
+    if temp > res {
+      res = temp
+    }
+  }
+  return res
+}
+```
+
