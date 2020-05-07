@@ -293,6 +293,26 @@ func countBits(num int) []int {
 }
 ```
 
+#### 476 数字的补数
+
+题目链接：https://leetcode-cn.com/problems/number-complement/
+
+题目要求：给定一个正整数，输出它的补数。补数是对该数的二进制表示取反。
+
+思路分析：
+
+```go
+// date 2020/05/04
+// 找到第一个比这个数大的二进制整数，进而求得全F,然后减去这个数即可
+func findComplement(num int) int {
+    x := 1
+    for x <= num {
+        x <<= 1
+    }
+    return x - 1 - num
+}
+```
+
 #### 斐波那契数列
 
 思路分析
