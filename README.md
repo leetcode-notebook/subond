@@ -4,7 +4,9 @@
 
 题目完成度：[263/500]
 
--- -
+[TOC]
+
+---
 
 # 一、基本数据结构
 
@@ -12,9 +14,7 @@
 
 数组属于线性表的一种，底层使用连续的空间进行存储，因此在声明数组的时候需要指定数组的大小，即需要申请多大的内存空间。
 
-[数组](array/array.md)
-
-- 相关题目
+### 相关题目
    - 27 Remove Element[两种算法]
    - 189 旋转数组
    - 从排序数组中删除重复项
@@ -28,9 +28,7 @@
 
 链表也属于线性表的一种，底层使用非连续的空间进行存储，因此在声明链表的时候不需要指定链表大小。
 
-[链表](linkedlist/linkedlist.md)
-
-- 相关题目
+### 相关题目
     - 2 两数相加
     - 19 Remove Nth Node From End of List
     - 24 Swap Nodes in Pairs【M】
@@ -54,10 +52,8 @@
 
 ## [队列Queue](queue/queue.md)
 
-[队列](queue/queue.md)
-
-- 基本定义
-- 相关题目
+### 基本定义
+### 相关题目
     - 621 Task Scheduler【任务调度器】
     - 622 Design Circular Queue 
     - 641 Design Circular Deque【M】
@@ -65,16 +61,14 @@
 
 ## [栈Stack](stack/stack.md)
 
-[栈](stack/stack.md)
+
 
 
 ## [字符串String](string/string.md)
 
-[字符串](string/string.md)
-
 golang语言中byte是uint8的别名，rune是int32的别名，字符串中的单个字符有byte表示。
 
-- 相关题目
+### 相关题目
     - 14 Longest Common Prefix
     - 有效的字母异位词
     - 反转字符串
@@ -84,12 +78,10 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 
 ## [哈希表HashTable](hashTable/hashTable.md)
 
-[哈希表](hashTable/hashTable.md)
-
-- 哈希表的原理
-- 哈希集合的设计
-- 哈希映射的设计
-- 相关题目
+### 哈希表的原理
+### 哈希集合的设计
+### 哈希映射的设计
+### 相关题目
     - 1 两数之和
     - 202 快乐数
     - 36 有效的数独
@@ -103,9 +95,7 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 
 ## [数学题目](math/math.md)
 
-[数学](math/math.md)
-
-- 相关题目
+### 相关题目
     - 8 String to Integer
     - 9 Palindrome Number
     - 15 三数之和
@@ -120,10 +110,10 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 
 [堆](heap/heap.md)
 
-- 堆的定义
-- 堆的算法
-- 堆的排序
-- 相关题目
+### 堆的定义
+### 堆的算法
+### 堆的排序
+### 相关题目
     - 912 排序数组【M】
     - 1046 最后一块石头的重量
     - 215 数组中第K个最大元素
@@ -136,10 +126,10 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 
 [二叉树](binaryTree/binaryTree.md)
 
-- 什么是二叉树
-- 二叉树的遍历
-- 递归解决二叉树问题
-- 相关题目
+### 什么是二叉树
+### 二叉树的遍历
+### 递归解决二叉树问题
+### 相关题目
     - 从中序和后序遍历序列构造二叉树[前序和中序]
     - 98 验证二叉搜索树【M】
     - 104 二叉树的最大深度【E】
@@ -167,8 +157,8 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 
 [二叉搜索树](binaryTree/bst.md)
 
-- 什么是二叉搜索树
-- 二叉搜索树的基本操作
+### 什么是二叉搜索树
+### 二叉搜索树的基本操作
     - 查询
     - 最小关键字元素
     - 最大关键字元素
@@ -176,7 +166,7 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
     - 后继节点
     - 插入
     - 删除
-- 相关题目
+### 相关题目
     - 98 验证二叉搜索树【M】
     - 108 将有序数组转换为二叉搜索树【M】
     - 235 二叉搜素树的最近公共祖先
@@ -186,51 +176,43 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
     - 面试题 17.12 BiNode【E】
     - 面试题54 二叉搜索树的第K大节点
 
----
-
-## 三、基本算法理论
+# 三、基本算法理论
 
 算法不仅仅是一种解决问题的思路，更是一种思想。
 
-### 排序算法
+## 排序算法
 
+## [二分查找](binarySearch/binarySearch.md)
 
-### [二分查找](binarySearch/binarySearch.md)
-
-[二分查找](binarySearch/binarySearch.md)
-
-- 相关题目
+### 相关题目
     - 704 二分查找
     - 162 寻找峰值
     - 658 找到K个最接近的元素 
 
-### [贪心算法](greedy/greed_algorithm.md)
+## [贪心算法](greedy/greed_algorithm.md)
 
-[贪心算法](greedy/greedy_algorithm.md)
-
-- 算法介绍
-- 相关题目
+### 算法介绍
+### 相关题目
     - 55 跳跃游戏
     - 45 跳远游戏II
 
-### 递归
+## 递归思想
 
 
 
-### [广度优先搜索](bfs/bfs.md)
+## [广度优先搜索](bfs/bfs.md)
 
 
 
-### [深度优先搜索](dfs/dfs.md)
+## [深度优先搜索](dfs/dfs.md)
 
 
-### [动态规划](dynamicProgramming/dp.md)
 
-[动态规划](dynamicProgramming/dp.md)
+## [动态规划](dynamicProgramming/dp.md)
 
-- 算法介绍
-- 解题思路
-- 相关题目
+### 算法介绍
+### 解题思路
+### 相关题目
     - 64 最小路径和【M】
     - 70 爬楼梯
     - 72 编辑距离【H】
@@ -242,13 +224,11 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
     - 264 丑数【M】
     - 300 最长上升子序列【M】
 
-### 剪枝
+## 剪枝思想
 
 剪枝是搜索算法的优化手段，目的是为了去掉不必要的搜索。
 
-## [其他题目](others.md)
-
-[其他题目](others.md)
+# [其他题目](others.md)
 
 - 位1的个数
 - 汉明距离
