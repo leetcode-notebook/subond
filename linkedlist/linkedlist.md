@@ -6,7 +6,11 @@
 
 #### 快慢指针
 
-在数组章节我们学习的双指针技巧，通常是两个指针从前后一起遍历，向中间逼近；或者读写指针维护不同的数据元素；而在链表的运用中，由于单向链表只能单向遍历，通过调整两个指针的遍历速度完成某种特定任务，因此也称为”快慢指针“技巧。参见题目[141 Linked List Cycle](#141 Linked List Cycle)和[142 Linked List Cycle II](#142 Linked List Cycle II)
+在数组章节我们学习的双指针技巧，通常是两个指针从前后一起遍历，向中间逼近；或者读写指针维护不同的数据元素；而在链表的运用中，由于单向链表只能单向遍历，通过调整两个指针的遍历速度完成某种特定任务，因此也称为”快慢指针“技巧。
+
+参见题目19, 141, 142, 160。
+
+回顾：运用双指针技巧的几点注意事项，1）在运用Next节点时一定要判断节点是否为空，举例`fast.Next.Next`一定要判断`fast != nil && fast.Next != nil`；2）注意循环结束的条件。
 
 ### 相关题目
 
@@ -231,7 +235,7 @@ func swapPairs(head *ListNode) *ListNode {
 }
 ```
 
-#### 19 Remove Nth Node From End of List
+#### 19 Remove Nth Node From End of List【M】
 
 题目链接：https://leetcode.com/problems/remove-nth-node-from-end-of-list/
 
@@ -482,6 +486,9 @@ func reverseBetween(head *ListNode, m int, n int) *ListNode {
 
 ```go
 // 算法1：快慢指针
+// 时间复杂度分析
+// 如果链表中不存在环，则fast指针最多移动N/2次；如果链表中存在环，则fast指针需要移动M次才能与slow指针相遇，M为环的元素个数。
+// 总体来讲，时间复杂度为O(N)
 func hasCycle(head *ListNode) bool {
     slow, fast := head, head
     for fast != nil && fast.Next != nil {
@@ -704,7 +711,7 @@ func merge(h1, h2 *ListNode) *ListNode {
 }
 ```
 
-#### 160 Intersection of Two Linked List【两个链表的交点】
+#### 160 Intersection of Two Linked List【E】
 
 题目要求：https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
 
