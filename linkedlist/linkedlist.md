@@ -2,6 +2,12 @@
 
 ## Linked List[链表]
 
+### 常用技巧
+
+#### 快慢指针
+
+在数组章节我们学习的双指针技巧，通常是两个指针从前后一起遍历，向中间逼近；或者读写指针维护不同的数据元素；而在链表的运用中，由于单向链表只能单向遍历，通过调整两个指针的遍历速度完成某种特定任务，因此也称为”快慢指针“技巧。参见题目[141 Linked List Cycle](#141 Linked List Cycle)和[142 Linked List Cycle II](#142 Linked List Cycle II)
+
 ### 相关题目
 
 [TOC]
@@ -516,6 +522,70 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 }
 ```
 
+#### 141 Linked List Cycle【E】
+
+题目链接：https://leetcode.com/problems/linked-list-cycle/
+
+题目要求：给定一个单向链表，判断链表中是否存在环。
+
+思路分析：通过快慢指针是否相遇来判断链表中是否存在环。
+
+```go
+// 算法1：快慢指针
+func hasCycle(head *ListNode) bool {
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow, fast = slow.Next, fast.Next.Next
+        if slow == fast {return true}
+    }
+    return false
+}
+```
+
+#### 142 Linked List Cycle II【M】
+
+题目链接：https://leetcode.com/problems/linked-list-cycle-ii/
+
+题目要求：给定一个单向链表，判断链表是否存在环，如果存在，则返回环开始的节点，否则返回空。
+
+思路分析：
+
+```go
+// 算法1：利用额外空间，时间复杂度和空间复杂度均为O(n)
+func detectCycle(head *ListNode) *ListNode {
+  visited := make(map[*ListNode]struct{})
+  for head != nil {
+    if _, ok := visited[head]; ok {
+      return head
+    }
+    visited[head] = struct{}{}
+    head = head.Next
+  }
+  return nil
+}
+// 算法2：Floyd算法
+/*
+假设：环外有F个元素，环上C个元素
+快慢指针判断是否有相遇，相遇(h节点)时，快指多走一个环【F+a+b+a】；慢指针走了【F+a】；因为2(F+a) = F+a+b+a,所以f=b
+因此，相遇节点和头节点同时走f步，即是环的入口
+*/
+func detectCycle(head *ListNode) *ListNode {
+  slow, fast := head, head
+  for fast != nil && fast.Next != nil {
+    slow, fast = slow.Next, fast.Next.Next
+    if slow == fast {
+      break
+    }
+  }
+  if fast == nil || fast.Next == nil {return nil}
+  fast = head
+  for fast != slow {
+    slow, fast = slow.Next, fast.Next
+  }
+  return fast
+}
+```
+
 #### 143 Reorder List 
 
 **注意**：要对每一段代码很熟悉，要精确的知道每段代码的结果是什么样子；然后大问题拆成小问题去解决。
@@ -556,58 +626,6 @@ func reorder(head *ListNode) {
     pre = preN
     slow = slowN
   }
-}
-```
-
-#### 141 Linked List Cycle
-
-```go
-// 算法1：快慢指针
-func hasCycle(head *ListNode) bool {
-    slow, fast := head, head
-    for fast != nil && fast.Next != nil {
-        slow, fast = slow.Next, fast.Next.Next
-        if slow == fast {return true}
-    }
-    return false
-}
-```
-
-#### 142 Linked List Cycle II
-
-```go
-// 算法1：利用额外空间，时间复杂度和空间复杂度均为O(n)
-func detectCycle(head *ListNode) *ListNode {
-  visited := make(map[*ListNode]struct{})
-  for head != nil {
-    if _, ok := visited[head]; ok {
-      return head
-    }
-    visited[head] = struct{}{}
-    head = head.Next
-  }
-  return nil
-}
-// 算法2：Floyd算法
-/*
-假设：环外有F个元素，环上C个元素
-快慢指针判断是否有相遇，相遇(h节点)时，快指多走一个环【F+a+b+a】；慢指针走了【F+a】；因为2(F+a) = F+a+b+a,所以f=b
-因此，相遇节点和头节点同时走f步，即是环的入口
-*/
-func detectCycle(head *ListNode) *ListNode {
-  slow, fast := head, head
-  for fast != nil && fast.Next != nil {
-    slow, fast = slow.Next, fast.Next.Next
-    if slow == fast {
-      break
-    }
-  }
-  if fast == nil || fast.Next == nil {return nil}
-  fast = head
-  for fast != slow {
-    slow, fast = slow.Next, fast.Next
-  }
-  return fast
 }
 ```
 
