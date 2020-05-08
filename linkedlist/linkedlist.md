@@ -471,57 +471,6 @@ func reverseBetween(head *ListNode, m int, n int) *ListNode {
 }
 ```
 
-
-
-#### 160 Intersection of Two Linked List【两个链表的交点】
-
-题目要求：https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
-
-思路分析：
-
-```go
-// 算法：双指针 len a + b = b + a
-func getIntersectionNode(headA, headB *ListNode) *ListNode {
-    if headA == nil || headB == nil {return nil}
-    pa, pb := headA, headB
-    for pa != pb {
-        pa, pb = pa.Next, pb.Next
-        if pa == nil && pb == nil {
-            return nil
-        }
-        if pa == nil {
-            pa = headB
-        }
-        if pb == nil {
-            pb = headA
-        }
-    }
-    return pa
-}
-// date 2020/03/29
-// 第二版
-func getIntersectionNode(headA, headB *ListNode) *ListNode {
-    if headA == nil || headB == nil { return nil }
-    var res *ListNode
-    p1, p2 := headA, headB
-    for p1 != nil || p2 != nil {
-        if p1 == nil {
-            p1 = headB
-        }
-        if p2 == nil {
-            p2 = headA
-        }
-        if p1 == p2 {
-            res = p1
-            break
-        }
-        p1 = p1.Next
-        p2 = p2.Next
-    }
-    return res
-}
-```
-
 #### 141 Linked List Cycle【E】
 
 题目链接：https://leetcode.com/problems/linked-list-cycle/
@@ -754,7 +703,54 @@ func merge(h1, h2 *ListNode) *ListNode {
 }
 ```
 
+#### 160 Intersection of Two Linked List【两个链表的交点】
 
+题目要求：https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
+
+思路分析：两个指针走过相同的节点数，如果能够相遇，则即为交点。
+
+```go
+// 算法：双指针 len a + b = b + a
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    if headA == nil || headB == nil {return nil}
+    pa, pb := headA, headB
+    for pa != pb {
+        pa, pb = pa.Next, pb.Next
+        if pa == nil && pb == nil {
+            return nil
+        }
+        if pa == nil {
+            pa = headB
+        }
+        if pb == nil {
+            pb = headA
+        }
+    }
+    return pa
+}
+// date 2020/03/29
+// 第二版
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    if headA == nil || headB == nil { return nil }
+    var res *ListNode
+    p1, p2 := headA, headB
+    for p1 != nil || p2 != nil {
+        if p1 == nil {
+            p1 = headB
+        }
+        if p2 == nil {
+            p2 = headA
+        }
+        if p1 == p2 {
+            res = p1
+            break
+        }
+        p1 = p1.Next
+        p2 = p2.Next
+    }
+    return res
+}
+```
 
 #### 328 奇偶链表
 
@@ -1005,7 +1001,7 @@ func removeElements(head *ListNode, val int) *ListNode {
 }
 ```
 
-#### 707 设计链表
+#### 707 设计链表【M】
 
 题目链接：https://leetcode-cn.com/problems/design-linked-list/
 
