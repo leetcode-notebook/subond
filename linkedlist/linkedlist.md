@@ -231,9 +231,11 @@ func swapPairs(head *ListNode) *ListNode {
 }
 ```
 
-
-
 #### 19 Remove Nth Node From End of List
+
+题目链接：https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+
+题目要求：
 
 思路分析：
 
@@ -247,12 +249,13 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
         fast = fast.Next
         n--
     }
-    // 如果n不一定有效，加个判断更好
-	  if n != 0 {return head}  // 如果n大于链表长度，不做任何操作
-    // remove the head
+    // 保护逻辑，如果n大于零，说明欲要删除的节点超过链表长度
+    if n > 0 { return head }
+    // fast走到链表的尾部，则n刚好为链表的长度，即删除头节点
     if fast == nil {
         return head.Next
     }
+    // fast指针继续走到链表的尾部，则slow指针刚好为欲要删除的节点的前继节点
     for fast.Next != nil {
         slow, fast = slow.Next, fast.Next
     }
@@ -260,8 +263,6 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
     return head
 }
 ```
-
-
 
 #### 61 Rotate List【旋转链表】
 
