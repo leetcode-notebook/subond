@@ -12,6 +12,14 @@
 
 回顾：运用双指针技巧的几点注意事项，1）在运用Next节点时一定要判断节点是否为空，举例`fast.Next.Next`一定要判断`fast != nil && fast.Next != nil`；2）注意循环结束的条件。
 
+#### 哑结点
+
+哑结点，也称为哨兵结点，主要应用与某些头节点不明确的场景，例如题目21合并两个有序链表。
+
+#### 经典题目
+
+关于的链表的经典问题，主要包括题目206反转链表，203移除链表元素，234回文链表和328奇偶链表。
+
 ### 相关题目
 
 [TOC]
@@ -25,44 +33,45 @@
 算法1：直接计算。将结果存入其中一个链表。
 
 ```go
-func addTwoNumbers(l1, l2 *ListNode) *ListNode {
-  if l1 == nil {return l2}
-  if l2 == nil {return l1}
-  carry := 0
-  p1 := l1
-  for p1 != nil && l2 != nil {
-    temp := p1.Val + l2.Val + carry
-    p1.Val = temp % 10
-    carry = temp / 10
-    // len(l1) = len(l2)
-    if p1.Next == nil && l2.Next == nil {
-      if carry == 1 {
-        p1.Next = &ListNode{Val:1}
-      }
-      return l1
+// 算法1
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    if l1 == nil { return l2 }
+    if l2 == nil { return l1 }
+    h1, h2 := l1, l2
+    var temp, carry int
+    for h1 != nil && h2 != nil {
+        temp = h1.Val + h2.Val + carry
+        carry = temp / 10
+        h1.Val = temp % 10
+        // 两个链表同时走到尾部，查看进位
+        if h1.Next == nil && h2.Next == nil {
+            if carry == 1 {
+                h1.Next = &ListNode{Val: 1}
+            }
+            return l1
+        }
+        // 默认l1走到尾部，查看l2的剩余结点
+        if h1.Next == nil && h2.Next != nil {
+            h1.Next = h2.Next
+            h1 = h1.Next
+            break
+        }
+        h1 = h1.Next
+        h2 = h2.Next
     }
-    // len(l1) < len(l2), replace p1 with l2
-    if p1.Next == nil && l2.Next != nil {
-      p1.Next = l2.Next
-      p1 = p1.Next
-      break
+    for h1 != nil {
+        temp = h1.Val + carry
+        carry = temp / 10
+        h1.Val = temp % 10
+        if h1.Next == nil {
+            if carry == 1 {
+                h1.Next = &ListNode{Val: 1}
+            }
+            return l1
+        }
+        h1 = h1.Next
     }
-    p1 = p1.Next
-    l2 = l2.Next
-  }
-  for p1 != nil {
-    temp := p1.Val + carry
-    p1.Val = temp % 10
-    carry = temp / 10
-    if p1.Next == nil {
-      if carry == 1 {
-        p1.Next = &ListNode{Val: 1}
-      }
-      return l1
-    }
-    p1 = p1.Next
-  }
-  return l1
+    return l1
 }
 // date 2020/03/29
 // 算法二：直接计算，并先开辟空间存储结果
@@ -97,11 +106,15 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 思路分析：利用哑结点
 
 ```go
-// date 2020/03/29
+// date 2020/03/29 2020/05/08
 func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
-    if l1 == nil { return l2 }
-    if l2 == nil { return l1 }
-    dummy := &ListNode{Val:-1}
+    if l1 == nil {
+        return l2
+    }
+    if l2 == nil {
+        return l1
+    }
+    dummy := &ListNode{Val: -1}
     pre := dummy
     for l1 != nil || l2 != nil {
         if l1 == nil {
@@ -124,8 +137,6 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
     return dummy.Next
 }
 ```
-
-
 
 #### 23 合并K个排序链表
 
@@ -760,33 +771,6 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 }
 ```
 
-#### 328 奇偶链表
-
-算法分析
-
-算法1：利用哑结点，时间复杂度O(n)
-
-```go
-func oddEventList(head *ListNode) *ListNode {
-  if head == nil || head.Next == nil {return head}
-  d1, d2 := &ListNode{Val: -1}, &ListNode{Val: -1}
-  p1, p2, p2 := d1, d2, head
-  for p != nil {
-    p1.Next = p
-    p1 = p1.Next
-    if p.Next == nil {break}
-    p2.Next = p.Next
-    p2 = p2.Next
-    p = p.Next.Next
-  }
-  p2.Next = nil
-  p2.Next = d2.Next
-  return d1.Next
-}
-```
-
-
-
 #### 876 Middle of the Linked List
 
 题目要求：https://leetcode-cn.com/problems/middle-of-the-linked-list/
@@ -806,74 +790,9 @@ func middleNode(head *ListNode) *ListNode {
 }
 ```
 
-#### 234 回文链表
+#### 203 移除链表元素【E】
 
-```go
-// 算法：快慢指针，找到中间点；反转前半段的链表
-func isPalindrome(head *ListNode) bool {
-  if head == nil || head.Next == nil { return true }
-  pre, slow, fast := head, head, head
-  var tail *ListNode
-  for fast != nil && fast.Next != nil {
-    pre, slow, fast = slow, slow.Next, fast.Next.Next
-    pre.Next = tail
-    tail = pre
-  }
-  // the last one
-  if fast != nil {
-    slow = slow.Next
-  }
-  for pre != nil && slow != nil {
-    if pre.Val != slow.Val { return false }
-    pre = pre.Next
-    slow = slow.Next
-  }
-  return true
-}
-```
-
-
-
-#### 206 反转链表
-
-题目要求：
-
-思路分析：
-
-直接迭代，时间复杂度O(n)，空间复杂度O(1)。
-
-```go
-// 算法1：迭代
-func reverseList(head *ListNode) *ListNode {
-  var pre *ListNode
-  for head != nil {
-    after := head.Next
-    head.Next = pre
-    pre = head
-    head = after
-  }
-  return pre
-}
-```
-
-算法2：假设链表为n1->n2->...->nk-1->nk->nk+1->...nm；如果从节点nk+1到结点nm均已经反转，即
-
-n1->n2->...->nk-1->nk->nk+1<-...<-nm那么nk的操作则需要nk.Next.Next = nk
-
-时间复杂度O(n)，空间复杂度O(n)，因为递归会达到n层。
-
-```go
-// 算法2：递归
-func reverseList(head *ListNode) *ListNode {
-  if head == nil || head.Next == nil {return head}
-  pre := reverseList(head.Next)
-  head.Next.Next = head
-  head.Next = nil
-  return pre
-}
-```
-
-#### 203 移除链表元素
+题目链接：https://leetcode.com/problems/remove-linked-list-elements/
 
 思路分析：
 
@@ -903,16 +822,18 @@ func removeElements(head *ListNode, val int) *ListNode {
 // 算法2
 func removeElements(head *ListNode, val int) *ListNode {
     var newHead *ListNode
+    // 找到新的头结点
     for head != nil {
         if head.Val != val {
             newHead = head
+            head = head.Next
             break
         }
         head = head.Next
     }
-    if newHead == nil {return nil}
+    // 如果头结点为空，表示没有找到符合条件的头结点，直接返回空
+    if newHead == nil { return newHead }
     pre := newHead
-    head = head.Next
     for head != nil {
         if head.Val != val {
             pre.Next = head
@@ -922,6 +843,111 @@ func removeElements(head *ListNode, val int) *ListNode {
     }
     pre.Next = nil
     return newHead
+}
+```
+
+#### 206 反转链表【E】
+
+题目要求：https://leetcode.com/problems/reverse-linked-list/
+
+思路分析：
+
+直接迭代，时间复杂度O(n)，空间复杂度O(1)。
+
+```go
+// 算法1：迭代
+func reverseList(head *ListNode) *ListNode {
+    var pre, after *ListNode
+    for head != nil {
+        after = head.Next
+        head.Next = pre
+        pre, head = head, after
+    }
+    return pre
+}
+```
+
+算法2：假设链表为n1->n2->...->nk-1->nk->nk+1->...nm；如果从节点nk+1到结点nm均已经反转，即
+
+n1->n2->...->nk-1->nk->nk+1<-...<-nm那么nk的操作则需要nk.Next.Next = nk
+
+时间复杂度O(n)，空间复杂度O(n)，因为递归会达到n层。
+
+```go
+// 算法2：递归
+func reverseList(head *ListNode) *ListNode {
+  if head == nil || head.Next == nil {return head}
+  pre := reverseList(head.Next)
+  head.Next.Next = head
+  head.Next = nil
+  return pre
+}
+```
+
+#### 234 回文链表【E】
+
+题目要求：https://leetcode.com/problems/palindrome-linked-list/
+
+思路分析：快慢指针，找到中间结点，反转前半段链表
+
+```go
+// 算法：快慢指针，找到中间点；反转前半段的链表
+func isPalindrome(head *ListNode) bool {
+    if head == nil || head.Next == nil { return true }
+    pre, slow, fast := head, head, head
+    // 反转前半段链表
+    var tail *ListNode
+    for fast != nil && fast.Next != nil {
+        pre = slow
+        slow = slow.Next
+        fast = fast.Next.Next
+        pre.Next = tail
+        tail = pre
+    }
+    // 奇数个结点
+    if fast != nil {
+        slow = slow.Next
+    }
+    for pre != nil && slow != nil {
+        if pre.Val != slow.Val {return false }
+        pre = pre.Next
+        slow = slow.Next
+    }
+    return true
+}
+```
+
+#### 328 奇偶链表【M】
+
+题目链接：https://leetcode.com/problems/odd-even-linked-list/
+
+算法分析
+
+算法1：利用哑结点，时间复杂度O(n)
+
+```go
+func oddEvenList(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {return head}
+    // 两个哑结点，分别记录奇数和偶数的结点
+    d1 := &ListNode{Val: -1}
+    d2 := &ListNode{Val: -1}
+    p1, p2, p := d1, d2, head
+    for p != nil {
+        // 奇数结点
+        p1.Next = p
+        p1 = p1.Next
+        if p.Next == nil {
+            break
+        }
+        // 偶数结点
+        p = p.Next
+        p2.Next = p
+        p2 = p2.Next
+        p = p.Next
+    }
+    p2.Next = nil
+    p1.Next = d2.Next
+    return d1.Next
 }
 ```
 
@@ -976,36 +1002,6 @@ func mergeTwoLists(l1, l2 *ListNode) *ListNode {
     pre.Next = l2
   }
   return newHead.Next
-}
-```
-
-#### 移除链表元素
-
-```go
-// Date 11.25
-func removeElements(head *ListNode, val int) *ListNode {
-  var newHead *ListNode
-  for head != nil {
-    if head.Val == val {
-      head = head.Next
-    } else {
-      newHead = head
-      break
-    }
-  }
-  // if the newHead == nil,return
-  if newHead == nil {return newHead}
-  pre := newHead
-  head = head.Next
-  for head != nil {
-    if head.Val != val {
-      pre.Next = head
-      pre = pre.Next
-    }
-    head = head.Next
-  }
-  pre.Next = nil
-  return newHead
 }
 ```
 
