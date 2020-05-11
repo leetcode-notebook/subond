@@ -28,6 +28,28 @@ func preOrder(root *TreeNode) []int {
   }
   return res
 }
+// 迭代版
+func preorderTraversal(root *TreeNode) []int {
+    res := make([]int, 0)
+    if root == nil { return res }
+    queue := make([]*TreeNode, 0)
+    for root != nil || len(queue) != 0 {
+        // find root and left
+        for root != nil {
+            res = append(res, root.Val)
+            queue = append(queue, root)
+            root = root.Left
+        }
+        // find the right
+        if len(queue) != 0 {
+            root = queue[len(queue)-1]
+            queue = queue[:len(queue)-1]
+            root = root.Right
+        }
+    }
+    
+    return res
+}
 ```
 
 **中序遍历**
@@ -46,6 +68,28 @@ func inOrder(root *TreeNode) []int {
   }
   return res
 }
+// 迭代版
+func inorderTraversal(root *TreeNode) []int {
+    if root == nil {return nil}
+    queue := make([]*TreeNode, 0)
+    res := make([]int, 0)
+    for root != nil || len(queue) != 0 {
+        // find the left
+        for root != nil {
+            queue = append(queue, root)  // 把当前结点添加进去
+            root = root.Left
+        }
+        // 取出最后一个结点
+        if len(queue) != 0 {
+            root = queue[len(queue)-1]
+            // 追加根节点
+            res = append(res, root.Val)
+            queue = queue[:len(queue)-1]
+            root = root.Right
+        }
+    }
+    return res
+}
 ```
 
 **后序遍历**
@@ -63,6 +107,30 @@ func postOrder(root *TreeNode) []int {
     res = append(res, root.Val)
   }
   return res
+}
+// 迭代版
+func postorderTraversal(root *TreeNode) []int {
+    if root == nil {return nil}
+    res := make([]int, 0)
+    queue := make([]*TreeNode, 0)
+    queue = append(queue, root)
+    var pre, cur *TreeNode
+    for len(queue) != 0 {
+        cur = queue[len(queue)-1]
+        if cur.Left == nil && cur.Right == nil || pre != nil && (pre == cur.Left || pre == cur.Right) {
+            res = append(res, cur.Val)
+            queue = queue[:len(queue)-1]
+            pre = cur
+        } else {
+            if cur.Right != nil {
+                queue = append(queue, cur.Right)
+            }
+            if cur.Left != nil {
+                queue = append(queue, cur.Left)
+            }
+        }
+    }
+    return res
 }
 ```
 
