@@ -10,7 +10,7 @@
 
 ### 二叉树的遍历
 
-根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。
+根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想还是很好写的；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈。
 
 **前序遍历**
 
@@ -29,6 +29,7 @@ func preOrder(root *TreeNode) []int {
   return res
 }
 // 迭代版
+// 前序遍历：root->left->right
 func preorderTraversal(root *TreeNode) []int {
     res := make([]int, 0)
     if root == nil { return res }
@@ -36,9 +37,9 @@ func preorderTraversal(root *TreeNode) []int {
     for root != nil || len(queue) != 0 {
         // find root and left
         for root != nil {
-            res = append(res, root.Val)
-            queue = append(queue, root)
-            root = root.Left
+            res = append(res, root.Val)  // 先将根节点加入结果集
+            queue = append(queue, root)  // 将遍历过的结点加入栈，后序出栈依次访问结点的右子树
+            root = root.Left             // 遍历当前结点的左子树
         }
         // find the right
         if len(queue) != 0 {

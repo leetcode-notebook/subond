@@ -140,6 +140,8 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 
 #### 23 合并K个排序链表
 
+题目链接：https://leetcode.com/problems/merge-k-sorted-lists/submissions/
+
 题目要求：给定K个有序链表，返回合并后的排序链表。
 
 思路分析：复习递归算法，掌握自底向上和自上向下的递归方法。
@@ -149,52 +151,31 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 ```go
 // date 2020/01/06; 2020/02/21
 func mergeKLists(lists []*ListNode) *ListNode {
-  if len(lists) == 0 { return nil }
-  if len(lists) == 1 { return lists[0] }
-  p1 := lists[0]
-  p2 := mergeKLists(lists[1:])
-  dummy := &ListNode{Val: -1}
-  pre := dummy
-  for p1 != nil && p2 != nil {
-    if p1.Val < p2.Val {
-      pre.Next = p1
-      p1 = p1.Next
-    } else {
-      pre.Next = p2
-      p2 = p2.Next
+    if len(lists) == 0 { return nil }
+    if len(lists) == 1 { return lists[0] }
+    l1, l2 := mergeKLists(lists[:len(lists)-1]), lists[len(lists)-1]
+    dummy := &ListNode{Val: -1}
+    pre := dummy
+    for l1 != nil || l2 != nil {
+        if l1 == nil {
+            pre.Next = l2
+            break
+        }
+        if l2 == nil {
+            pre.Next = l1
+            break
+        }
+        if l1.Val < l2.Val {
+            pre.Next = l1
+            l1 = l1.Next
+        } else {
+            pre.Next = l2
+            l2 = l2.Next
+        }
+        
+        pre = pre.Next
     }
-    pre = pre.Next
-  }
-  if p1 != nil { pre.Next = p1 }
-  if p2 != nil { pre.Next = p2 }
-  return dummy.Next
-}
-
-func mergeKLists(lists []*ListNode) *ListNode {
-  // basic case
-  if len(lists) == 0 {return nil}
-  if len(lists) == 1 {return lists[0]}
-  p1 := lists[0]
-  p2 := mergeKLists(lists[1:])
-  dummy := &ListNode{Val: -1}
-  pre := dummy
-  for p1 != nil && p2 != nil {
-    if p1.Val < p2.Val {
-      pre.Next = p1
-      p1 = p1.Next
-    } else {
-      pre.Next = p2
-      p2 = p2.Next
-    }
-    pre = pre.Next
-  }
-  if p1 != nil {
-    pre.Next = p1
-  }
-  if p2 != nil {
-    pre.Next = p2
-  }
-  return dummy.Next
+    return dummy.Next
 }
 ```
 
@@ -356,8 +337,6 @@ func rotateRight(head *ListNode, k int) *ListNode {
   return head
 }
 ```
-
-
 
 #### 82 Remove Duplicates From Sorted List II
 
