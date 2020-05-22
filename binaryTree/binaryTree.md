@@ -293,6 +293,7 @@ func inOrder(root *TreeNode) []int {
     return res
 }
 // 算法2：递归
+// 递归判断当前结点的值是否位于上下边界之中
 // 时间复杂度O(N)
 func isValidBST(root *TreeNode) bool {
   if root == nil { return true }
@@ -310,19 +311,19 @@ func isValidBST(root *TreeNode) bool {
 // 时间复杂度O(N)，空间复杂度O(1),最优解
 func isValidBST(root *TreeNode) bool {
     if root == nil { return true }
-    queue := make([]*TreeNode, 0)
+    stack := make([]*TreeNode, 0)
     preValue := math.Inf(-1)
 
-    for len(queue) != 0 || root != nil {
-        // 将左子树全部放入队列
+    for len(stack) != 0 || root != nil {
+        // 将左子树全部放入栈
         for root != nil {
-            queue = append(queue, root)
+            stack = append(stack, root)
             root = root.Left
         }
-        // 去除最后一个节点
-        root = queue[len(queue)-1]
-        queue = queue[:len(queue)-1]
-        // 判断其是否大于前继节点
+        // 出栈，即取出左子树的最后一个节点
+        root = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        // 判断其是否大于前继结点
         if float64(root.Val) <= preValue { return false }
         // 更新前继节点和前继节点的值
         preValue = float64(root.Val)
