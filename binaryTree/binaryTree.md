@@ -10,9 +10,9 @@
 
 ### 二叉树的遍历
 
-根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想还是很好写的；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈。
+根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想还是很好写的；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈
 
-**前序遍历**
+#### 前序遍历
 
 前序遍历是指先访问root节点，然后左子树，最后是右子树。
 
@@ -53,7 +53,7 @@ func preorderTraversal(root *TreeNode) []int {
 }
 ```
 
-**中序遍历**
+#### 中序遍历
 
 前序遍历是指访问左子树，然后root节点，最后是右子树。
 
@@ -93,7 +93,7 @@ func inorderTraversal(root *TreeNode) []int {
 }
 ```
 
-**后序遍历**
+#### 后序遍历
 
 前序遍历是指先访问左子树，然后右子树，最后是root节点。
 
@@ -135,11 +135,11 @@ func postorderTraversal(root *TreeNode) []int {
 }
 ```
 
-**层序遍历**
+#### 层序遍历
 
 层序遍历是指逐层遍历树的结构，也称为广度优先搜索，算法从一个根节点开始，先访问根节点，然后遍历其相邻的节点，其次遍历它的二级、三级节点。
 
-借助栈数据结构，可以帮助我们实现层序遍历。
+借助队列数据结构，先入先出的顺序，实现层序遍历。
 
 ```go
 // date 2020/03/21
@@ -147,40 +147,46 @@ func postorderTraversal(root *TreeNode) []int {
 // bfs广度优先搜索
 func levelOrder(root *TreeNode) [][]int {
   res := make([][]int, 0)
-  stack := make([]*TreeNode, 0)
-  stack = append(stack, root)
-  for len(stack) != 0 {
-    lres, n := make([]int, 0), len(stack)
+  queue := make([]*TreeNode, 0)
+  // 将根结点入队
+  queue = append(queue, root)
+  var n int
+  for len(queue) != 0 {
+    lres := make([]int, 0)
+    n = len(queue)
+    // 出队 计算每层结点，并检查其左右结点
     for i := 0; i < n; i++ {
-      if stack[i] != nil {
-        stack = append(stack, stack[i].Left)
-        stack = append(stack, stack[i].Right)
-        lres = append(lres, stack[i].Val)
+      lres = append(lres, queue[i].Val)
+      if queue[i].Left != nil {
+        queue = append(queue, stack[i].Left)
+      }
+      if queue[i].Right != nil {
+        queue = append(queue, stack[i].Right)
       }
     }
-    stack = stack[n:]
-    if len(lres) > 0 {
-      res = append(res, lres)
-    }
+    queue = queue[n:]
+    res = append(res, lres)
   }
   return res
 }
 // dfs深度优先搜索
 func levelOrder(root *TreeNode) [][]int {
-  res := make([][]int, 0)
-  var dfs_ func(root *TreeNode, level int)
-  dfs_ = func(root *TreeNode, level int) {
-    if root == nil { return }
-    if level == len(res) {
-      res = append(res, make([]int, 0))
+    res := make([][]int, 0)
+    if root == nil {return nil}
+    var dfs_ func(root *TreeNode, level int)
+    dfs_ = func(root *TreeNode, level int) {
+        if root == nil { return }
+        // 如果没有当前层的结果集，则增加一个
+        if level == len(res) {
+            res = append(res, make([]int, 0))
+        }
+        // 向当前层的结果集合追加元素
+        res[level] = append(res[level], root.Val)
+        dfs_(root.Left, level+1)
+        dfs_(root.Right, level+1)
     }
-    res[level] = append(res[level], root.Val)
-    dfs_(root.Left, level+1)
-    dfs_(root.Right, level+1)
-  }
-  
-  dfs_(root, 0)
-  return res
+    dfs_(root, 0)
+    return res
 }
 ```
 
@@ -208,7 +214,9 @@ func levelOrder(root *TreeNode) [][]int {
 
 当然也可以这样思考：对于树中的任意一个节点，如果你知道它子节点的结果，你能计算出该节点的答案吗？如果答案是肯定的，可以尝试使用自底向上的递归来解决问题。
 
-### 相关题目
+
+
+## 相关题目
 
 ####  从中序和后序遍历序列构造二叉树[前序和中序]
 
