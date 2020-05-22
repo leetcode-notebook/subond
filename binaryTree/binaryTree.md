@@ -344,14 +344,15 @@ func isValidBST(root *TreeNode) bool {
 算法：递归，递归调用分别得到左子树和右子树的深度，然后比较取最大值，并+1返回结果
 
 ```go
-// 自底向上的思想
-// 递归
+// 算法一: 递归，采用自底向上的递归思想
 func maxDepth(root *TreeNode) int {
     if root == nil { return 0 }
     l, r := maxDepth(root.Left), maxDepth(root.Right)
     if l > r { return l+1 }
     return r + 1
 }
+
+// 算法二
 // bfs广度优先搜索
 func maxDepth(root *TreeNode) int {
   if root == nil {return 0}
@@ -373,6 +374,8 @@ func maxDepth(root *TreeNode) int {
   }
   return depth
 }
+
+// 算法三
 // dfs深度优先搜索
 func maxDepth(root *TreeNode) int {
     if root == nil { return 0 }
