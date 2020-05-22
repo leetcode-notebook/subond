@@ -99,6 +99,39 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 }
 ```
 
+#### 19 Remove Nth Node From End of List【M】
+
+题目链接：https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+
+题目要求：
+
+思路分析：
+
+双指针slow和fast，fast快指针先走n步(n有效，所以最坏的情况是快指针走到表尾，即是删除表头元素)；然后slow指针和fast指针同走，当fast指针走到最后一个元素时，因为slow与fast慢指针差n步，slow刚好为欲删除节点的前驱节点。
+
+```go
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    if head == nil {return nil}
+    slow, fast := head, head
+    for n > 0 && fast != nil {
+        fast = fast.Next
+        n--
+    }
+    // 保护逻辑，如果n大于零，说明欲要删除的节点超过链表长度
+    if n > 0 { return head }
+    // fast走到链表的尾部，则n刚好为链表的长度，即删除头节点
+    if fast == nil {
+        return head.Next
+    }
+    // fast指针继续走到链表的尾部，则slow指针刚好为欲要删除的节点的前继节点
+    for fast.Next != nil {
+        slow, fast = slow.Next, fast.Next
+    }
+    slow.Next = slow.Next.Next
+    return head
+}
+```
+
 #### 21 合并两个有序链表
 
 题目要求：https://leetcode-cn.com/problems/merge-two-sorted-lists/
@@ -137,6 +170,29 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
     return dummy.Next
 }
 ```
+
+算法二：递归版
+
+每个节点只会访问一次，因此时间复杂度为O(n+m)；只有到达l1或l2的底部，递归才会返回，所以空间复杂度为O(n+m)
+
+```go
+// 递归版
+func mergeTwoLists(l1, l2 *ListNode) *ListNode {
+  if l1 == nil {return l2}
+  if l2 == nil {return l1}
+  var newHead *ListNode
+  if l1.Val < l2.Val {
+    newHead = l1
+    newHead.Next = mergeTwoLists(l1.Next, l2)
+  } else {
+    newHead = l2
+    newHead.Next = mergeTwoLists(l1, l2.Next)
+  }
+  return newHead
+}
+```
+
+
 
 #### 23 合并K个排序链表
 
@@ -224,39 +280,6 @@ func swapPairs(head *ListNode) *ListNode {
     head.Next = swapPairs(n)
   }
   return nHead
-}
-```
-
-#### 19 Remove Nth Node From End of List【M】
-
-题目链接：https://leetcode.com/problems/remove-nth-node-from-end-of-list/
-
-题目要求：
-
-思路分析：
-
-双指针slow和fast，fast快指针先走n步(n有效，所以最坏的情况是快指针走到表尾，即是删除表头元素)；然后slow指针和fast指针同走，当fast指针走到最后一个元素时，因为slow与fast慢指针差n步，slow刚好为欲删除节点的前驱节点。
-
-```go
-func removeNthFromEnd(head *ListNode, n int) *ListNode {
-    if head == nil {return nil}
-    slow, fast := head, head
-    for n > 0 && fast != nil {
-        fast = fast.Next
-        n--
-    }
-    // 保护逻辑，如果n大于零，说明欲要删除的节点超过链表长度
-    if n > 0 { return head }
-    // fast走到链表的尾部，则n刚好为链表的长度，即删除头节点
-    if fast == nil {
-        return head.Next
-    }
-    // fast指针继续走到链表的尾部，则slow指针刚好为欲要删除的节点的前继节点
-    for fast.Next != nil {
-        slow, fast = slow.Next, fast.Next
-    }
-    slow.Next = slow.Next.Next
-    return head
 }
 ```
 
@@ -750,25 +773,6 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 }
 ```
 
-#### 876 Middle of the Linked List
-
-题目要求：https://leetcode-cn.com/problems/middle-of-the-linked-list/
-
-思路分析：快慢指针
-
-```go
-// 算法1：快慢指针
-func middleNode(head *ListNode) *ListNode {
-  if head == nil {return head}
-  slow, fast := head, head
-  for fast != nil && fast.Next != nil {
-    slow = slow.Next
-    fast = fast.Next.Next
-  }
-  return slow
-}
-```
-
 #### 203 移除链表元素【E】
 
 题目链接：https://leetcode.com/problems/remove-linked-list-elements/
@@ -930,60 +934,6 @@ func oddEvenList(head *ListNode) *ListNode {
 }
 ```
 
-#### 合并两个有序链表
-
-思路分析
-
-算法1：递归版
-
-每个节点只会访问一次，因此时间复杂度为O(n+m)；只有到达l1或l2的底部，递归才会返回，所以空间复杂度为O(n+m)
-
-```go
-// 递归版
-func mergeTwoLists(l1, l2 *ListNode) *ListNode {
-  if l1 == nil {return l2}
-  if l2 == nil {return l1}
-  var newHead *ListNode
-  if l1.Val < l2.Val {
-    newHead = l1
-    newHead.Next = mergeTwoLists(l1.Next, l2)
-  } else {
-    newHead = l2
-    newHead.Next = mergeTwoLists(l1, l2.Next)
-  }
-  return newHead
-}
-```
-
-算法2：迭代版
-
-```go
-// 迭代
-func mergeTwoLists(l1, l2 *ListNode) *ListNode {
-  if l1 == nil {return l2}
-  if l2 == nil {return l1}
-  newHead := &ListNode{Val: -1}
-  pre := newHead
-  for l1 != nil && l2 != nil {
-    if l1.Val < l2.Val {
-      pre.Next = l1
-      l1, = l1.Next
-    } else {
-      pre.Next = l2
-      l2 = l2.Next
-    }
-    pre = pre.Next
-  }
-  if l1 != nil {
-    pre.Next = l1
-  }
-  if l2 != nil {
-    pre.Next = l2
-  }
-  return newHead.Next
-}
-```
-
 #### 707 设计链表【M】
 
 题目链接：https://leetcode-cn.com/problems/design-linked-list/
@@ -1111,5 +1061,24 @@ func (this *MyLinkedList) DeleteAtIndex(index int)  {
  * obj.AddAtIndex(index,val);
  * obj.DeleteAtIndex(index);
  */
+```
+
+#### 876 Middle of the Linked List
+
+题目要求：https://leetcode-cn.com/problems/middle-of-the-linked-list/
+
+思路分析：快慢指针
+
+```go
+// 算法1：快慢指针
+func middleNode(head *ListNode) *ListNode {
+  if head == nil {return head}
+  slow, fast := head, head
+  for fast != nil && fast.Next != nil {
+    slow = slow.Next
+    fast = fast.Next.Next
+  }
+  return slow
+}
 ```
 
