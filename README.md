@@ -10,7 +10,7 @@
 
 # 一、基本数据结构
 
-**线性表**(Linear List)是由N(N>=0)个数据元素组成的有限序列，一般记为`a[0], a[1], ..., a[n-1]`。
+**[线性表](linear_list.md)**(Linear List)是由N(N>=0)个数据元素组成的有限序列，一般记为`a[0], a[1], ..., a[n-1]`。
 
 其中，表中的数据元素个数N定义为表的长度，当N=0称为空表。
 
@@ -40,7 +40,6 @@
 
 ### 相关题目
 - 2 两数相加
-
 - 19 Remove Nth Node From End of List【M】
 - 21 合并两个有序链表
 - 23 合并K个排序链表
@@ -62,6 +61,9 @@
 - 328 奇偶链表【M】
 - 707 设计链表【M】
 - 876 Middle of the Linked List
+
+### 单向链表的排序
+[单向链表的排序](linkedlist/linkedlist_sort.md)
 
 ## [队列Queue](queue/queue.md)
 
@@ -193,6 +195,16 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 - 1214 查找两棵二叉搜索树之和【M】
 - 面试题 17.12 BiNode【E】
 - 面试题54 二叉搜索树的第K大节点
+
+## [二叉索引树Binary Index Tree](binaryTree/BinaryIndexedTree.md)
+
+  - 1.结构介绍
+  - 2.问题定义
+  - 3.表面形式
+    - 3.1更新操作
+    - 3.2求和操作
+  - 4.工作原理
+  - 5.代码实现
 
 # 三、基本算法理论
 
