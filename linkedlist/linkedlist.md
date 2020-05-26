@@ -1,6 +1,8 @@
-
-
 ## Linked List[链表]
+
+[TOC]
+
+### [基本操作](linkedlist_basic.md)
 
 ### 常用技巧
 
@@ -21,8 +23,6 @@
 关于的链表的经典问题，主要包括题目206反转链表，203移除链表元素，234回文链表和328奇偶链表。
 
 ### 相关题目
-
-[TOC]
 
 #### 2 两数相加
 
@@ -1081,4 +1081,6 @@ func middleNode(head *ListNode) *ListNode {
   return slow
 }
 ```
+
+### [关于链表的其他问题](linkedlist_others.md)
 
