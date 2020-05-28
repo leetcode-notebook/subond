@@ -369,3 +369,47 @@ func (this *MinStack) GetMin() int {
     return this.stackMin[len(this.stackMin)-1]
 }
 ```
+
+#### 二叉搜索树的前序序列判断
+
+问题描述
+
+给定一个数组，判断其是否为一个二叉搜索树的前序遍历，并且要求时间复杂度为O(n)。
+
+提示：左节点的值 小于 根节点的值 小于或等于 右节点的值，满足二叉搜索树的特征。
+
+算法分析
+
+这个问题与NGE问题类似，可以采用栈进行求解。算法如下：
+
+```
+1. 创建一个空栈
+2. 初始化root = INT_MIN
+3. 遍历每一个节点pre[i]
+  a) If pre[i] is smaller than current root, return false.
+  b) Keep removing elements from stack while pre[i] is greater than stack top.
+     Make the last removed item as new root.
+     At this point, pre[i] is greater than the removed root.
+  c) push pre[i] to stack (All elements in stack are in decreasing order.
+```
+
+算法实现
+
+```cpp
+bool BSTCheck(int pre[], int n) {
+  stack<int> s;
+  int root = INT_MIN;
+  for(int i = 0; i < n; i++) {
+    if(pre[i] < root)
+      return false;
+    while(!s.empty() && s.top() < pre[i]) {
+      // 进入到while(),则说明存在右子树
+      root = s.top();
+      s.pop();
+    }
+    // 压入左子树的根节点
+    s.push(pre[i]);
+  }
+  return true;
+}
+```
