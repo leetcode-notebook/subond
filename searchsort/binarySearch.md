@@ -1,89 +1,97 @@
-## 二分查找
+## Binary Search \[二分查找\]
 
-二分查找描述了在有序集合中查找特定值的过程。
+  * 1.[问题定义](#问题定义)
+  * 2.[复杂度分析](#复杂度分析)
+  * 3.[算法流程](#算法流程)
+  * 4.[代码实现](#代码实现)
+    * 4.1[递归实现](#二分查找的递归实现)
+    * 4.2[迭代实现](#二分查找的迭代实现)
 
+### 问题定义
 
+给定一个具有n个元素的有序序列，实现一个能够查找元素x的函数。
 
-### 相关题目
-- 704 二分查找
-- 162 寻找峰值
-- 658 找到K个最接近的元素 
+### 复杂度分析
 
-#### 704 二分查找
+最简单的方法是**线性搜索**，即依次比较每个元素，其时间复杂度为O(n)。而二分查找利用序列有序的特性，将时间复杂度降为O(Logn)。
 
-题目要求：给定一个非降序数组和一个目标值，如果数组中存在目标值则返回其索引，否则返回-1。
+### 算法流程
 
-算法：二分查找
+二分查找是指在已排序的序列中查看数据，每次查找均将排序序列分为一半的有序序列。查找的初始为整个序列，如果搜索的关键字小于或等于序列的中间值，则对前半序列继续搜索；否则对后半序列继续搜索。
 
-```go
-func search(nums []int, target int) int {
-  left, right := 0, len(nums)-1
-  var mid int
-  for left <= right {
-    mid = left + (right-left) / 2
-    if nums[mid] == target { return mid }
-    if nums[mid] > target {
-      right = mid-1
-    } else {
-      left = mid+1
+在每一次的比较中，几乎可以筛选出一半的元素是否符合预期值。
+
+1. 比较x与序列中间值
+2. 如果x等于中间值，则返回中间值的索引
+3. 如果x大于中间值，则x落在中间值的右半个子序列，进而对右半子序列进行查找
+4. 如果x小于中间值，则x落在中间值的左半个子序列，进而对左半子序列进行查找
+
+### 代码实现
+
+#### 二分查找的递归实现
+
+* C++
+
+```cpp
+int BinarySearch(int arry[], int l, int r, int x) {
+    if(l <= r) {
+        int mid = l + (r - 1) / 2;
+        if(x == arry[mid])
+            return mid;
+        if(x < arry[mid])
+            return BinarySearch(arry, l, mid - 1, x);
+        else
+            return BinarySearch(arry, mid + 1, r, x);
     }
-  }
-  return -1
+    return -1;
 }
 ```
 
-#### 162 寻找峰值
+* Python
 
-题目要求：给定一个数组，返回其峰值的索引。
-
-算法1：遍历法，分为升序，降序和峰值在某一点。
-
-```go
-// date 2020/02/02
-func findPeakElement(nums []int) int {
-  for i := 0; i < len(nums)-1; i++ {
-    if nums[i] > nums[i+1] { return i }
-  }
-  return len(nums)-1
-}
+```python
+def BinarySearch(arry, l, r, x)
+    if l <= r:
+        mid = l + (r - 1)/2
+        if x == arry[mid]:
+            return mid
+        if x < arry[mid]:
+            return BinarySearch(arry, l, mid - 1, x)
+        else:
+            return BinayrSearch(arry, mid + 1, r, x)
+    else:
+        return -1
 ```
 
-算法2：递归二分查找
+### 二分查找的迭代实现
 
-时间复杂度O(logN)，空间复杂度O(logN)
+* C++
 
-```go
-func findPeakElement(nums []int) int {
-  return search(nums, 0, len(nums)-1)
-}
-func search(nums []int, l, r int) int {
-  if l == r { return l }
-  mid := (l+r)/2
-  if nums[mid] > nums[mid+1] {
-    return search(nums, l, mid)
-  }
-  return search(nums, mid+1, r)
-}
-```
-
-算法3：迭代二分查找
-
-时间复杂度O(logN)，空间复杂度O(1)
-
-```go
-func findPeakElement(nums []int) int {
-  l, r := 0, len(nums)-1
-  var mid int
-  for l < r {
-    mid = (l+r) / 2
-    if nums[mid] > nums[mid+1] {
-      r = mid
-    } else {
-      l = mid+1
+```cpp
+int BinarySearch(int arry[], int l, int r, int x) {
+    while(l <= r) {
+        if(x == arry[mid])
+            return mid;
+        if(x < arry[mid])
+            r = mid - 1;
+        else
+            l = mid + 1;
     }
-  }
-  return l
+    return -1;
 }
 ```
 
-#### 658 找到K个最接近的元素
+* Python
+
+```python
+def BinarySearch(arry, l, r, x)
+    while l <= r:
+        mid = l + (r - 1)/2
+        if x== arry[mid]:
+            return mid
+        elif x < arry[mid]:
+            r = mid - 1
+        else:
+            l = mid + 1
+    return -1
+```
