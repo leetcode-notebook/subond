@@ -166,6 +166,7 @@ func postorderTraversal(root *TreeNode) []int {
 // date 2020/03/21
 // 层序遍历
 // bfs广度优先搜索
+// 算法一：使用队列，逐层遍历
 func levelOrder(root *TreeNode) [][]int {
   res := make([][]int, 0)
   queue := make([]*TreeNode, 0)
@@ -210,6 +211,10 @@ func levelOrder(root *TreeNode) [][]int {
     return res
 }
 ```
+
+**注意**
+
+**注意**，从上面两种实现的方式来看，层序遍历既可以使用广度优先搜索，也可以使用深度优先搜索。
 
 ### 递归解决树的问题
 
