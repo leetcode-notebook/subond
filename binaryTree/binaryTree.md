@@ -2,17 +2,15 @@
 
 [TOC]
 
-
-
 ### 什么是二叉树
 
 树是一种数据结构，树中的每个节点都包含一个键值和所有子节点的列表，对于二叉树来说，每个节点最多有两个子树结构，分别称为左子树和右子树。
 
 ### 二叉树的遍历
 
-根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想还是很好写的；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈
+根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想就很好写；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈。
 
-从广度和深度的角度来讲，层序遍历属于广度优先搜索，而前序，中序，后序遍历均为深度优先搜索。
+从广度搜索和深度搜索的角度来讲，层序遍历属于广度优先搜索，而前序，中序，后序遍历均为深度优先搜索。
 
 #### 前序遍历
 
@@ -23,9 +21,12 @@
 // 递归版
 func preOrder(root *TreeNode) []int {
   res := make([]int, 0)
-  if root != nil {
-    res = append(res, root.Val)
+  if root == nil { return res }
+  res = append(res, root.Val)
+  if root.Left != nil {
     res = append(res, preOrder(root.Left)...)
+  }
+  if root.Right != nil {
     res = append(res, preOrder(root.Right)...)
   }
   return res
@@ -35,22 +36,21 @@ func preOrder(root *TreeNode) []int {
 func preorderTraversal(root *TreeNode) []int {
     res := make([]int, 0)
     if root == nil { return res }
-    queue := make([]*TreeNode, 0)
-    for root != nil || len(queue) != 0 {
+    stack := make([]*TreeNode, 0)
+    for root != nil || len(stack) != 0 {
         // find root and left
         for root != nil {
             res = append(res, root.Val)  // 先将根节点加入结果集
-            queue = append(queue, root)  // 将遍历过的结点加入栈，后序出栈依次访问结点的右子树
+            stack = append(stack, root)  // 将遍历过的结点加入栈，后序出栈依次访问结点的右子树
             root = root.Left             // 遍历当前结点的左子树
         }
         // find the right
         if len(queue) != 0 {
-            root = queue[len(queue)-1]
-            queue = queue[:len(queue)-1]
+            root = stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
             root = root.Right
         }
     }
-    
     return res
 }
 ```
@@ -335,7 +335,28 @@ func isValidBST(root *TreeNode) bool {
 }
 ```
 
+#### 101 平衡二叉树
 
+题目要求：给定一个二叉树，判断其是否为高度平衡二叉树。【一个二叉树的每个节点的左右两个子树的高度差的绝对值不超过1，视为高度平衡二叉树】
+
+算法一：递归
+
+```go
+// date 2020/02/18
+func isBalanced(root *TreeNode) bool {
+  if root == nil { return true }
+  if !isBalanced(root.Left) || !isBalanced(root.Right) { return false }
+  if Math.Abs(float64(getHeight(root.Left)-getHeight(root.Right))) > float64(1) { return false }
+  return true
+}
+func getHeight(root *TreeNode) int {
+  if root == nil { return 0 }
+  if root.Left == nil && root.Right == nil { return 1 }
+  l, r := getHeight(root.Left), getHeight(root.Right)
+  if l > r { return l+1 }
+  return r+1
+}
+```
 
 #### 104 二叉树的最大深度
 
@@ -1187,31 +1208,6 @@ func generateTreesWithNode(start end int) []*TreeNode {
     }
     return res
   }
-```
-
-
-
-#### 101 平衡二叉树
-
-题目要求：给定一个二叉树，判断其是否为高度平衡二叉树。【一个二叉树的每个节点的左右两个子树的高度差的绝对值不超过1，视为高度平衡二叉树】
-
-算法一：递归
-
-```go
-// date 2020/02/18
-func isBalanced(root *TreeNode) bool {
-  if root == nil { return true }
-  if !isBalanced(root.Left) || !isBalanced(root.Right) { return false }
-  if Math.Abs(float64(getHeight(root.Left)-getHeight(root.Right))) > float64(1) { return false }
-  return true
-}
-func getHeight(root *TreeNode) int {
-  if root == nil { return 0 }
-  if root.Left == nil && root.Right == nil { return 1 }
-  l, r := getHeight(root.Left), getHeight(root.Right)
-  if l > r { return l+1 }
-  return r+1
-}
 ```
 
 #### 703 数据流中第K大元素
