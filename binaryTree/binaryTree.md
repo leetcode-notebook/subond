@@ -17,15 +17,17 @@
 前序遍历是指先访问root节点，然后左子树，最后是右子树。
 
 ```go
-// 前序遍历的伪代码
 // 递归版
 func preOrder(root *TreeNode) []int {
   res := make([]int, 0)
   if root == nil { return res }
+  // 先访问根结点
   res = append(res, root.Val)
+  // 后访问左子树
   if root.Left != nil {
     res = append(res, preOrder(root.Left)...)
   }
+  // 最后访问右子树
   if root.Right != nil {
     res = append(res, preOrder(root.Right)...)
   }
@@ -60,34 +62,38 @@ func preorderTraversal(root *TreeNode) []int {
 前序遍历是指访问左子树，然后root节点，最后是右子树。
 
 ```go
-// 前序遍历的伪代码
 // 递归版
 func inOrder(root *TreeNode) []int {
   res := make([]int, 0)
-  if root != nil {
-    res = append(res, inOrder(root.Left)...)
-    res = append(res, root.Val)
-    res = append(res, inOrder(root.Right)...)
+  if root == nil { return res }
+  // 先访问左子树
+  if root.Left != nil {
+    res = append(res, preOrder(root.Left)...)
+  }
+  // 后访问根结点
+  res = append(res, root.Val)
+  // 最后访问右子树
+  if root.Right != nil {
+    res = append(res, preOrder(root.Right)...)
   }
   return res
 }
 // 迭代版
 func inorderTraversal(root *TreeNode) []int {
     if root == nil {return nil}
-    queue := make([]*TreeNode, 0)
+    stack := make([]*TreeNode, 0)
     res := make([]int, 0)
-    for root != nil || len(queue) != 0 {
+    for root != nil || len(stack) != 0 {
         // find the left
         for root != nil {
-            queue = append(queue, root)  // 把当前结点添加进去
+            stack = append(stack, root)  // 把当前结点添加进去
             root = root.Left
         }
         // 取出最后一个结点
-        if len(queue) != 0 {
-            root = queue[len(queue)-1]
-            // 追加根节点
+        if len(stack) != 0 {
+            root = queue[len(stack)-1]
             res = append(res, root.Val)
-            queue = queue[:len(queue)-1]
+            stack = stack[:len(stack)-1]
             root = root.Right
         }
     }
@@ -104,35 +110,48 @@ func inorderTraversal(root *TreeNode) []int {
 // 递归版
 func postOrder(root *TreeNode) []int {
   res := make([]int, 0)
-  if root != nil {
-    res = append(res, postOrder(root.Left)...)
-    res = append(res, postOrder(root.Right)...)
-    res = append(res, root.Val)
+  if root == nil { return res }
+  // 先访问左子树
+  if root.Left != nil {
+    res = append(res, preOrder(root.Left)...)
   }
+  // 后访问右子树
+  if root.Right != nil {
+    res = append(res, preOrder(root.Right)...)
+  }
+  // 最后访问根结点
+  res = append(res, root.Val)
   return res
 }
 // 迭代版
 func postorderTraversal(root *TreeNode) []int {
     if root == nil {return nil}
     res := make([]int, 0)
-    queue := make([]*TreeNode, 0)
-    queue = append(queue, root)
-    var pre, cur *TreeNode
-    for len(queue) != 0 {
-        cur = queue[len(queue)-1]
-        if cur.Left == nil && cur.Right == nil || pre != nil && (pre == cur.Left || pre == cur.Right) {
+    stack := make([]*TreeNode, 0)
+    stack = append(stack, root)
+    var pre, cur *TreeNode   // 记录前驱节点和当前节点
+    for len(stack) != 0 {
+        // 出栈 当前结点
+        cur = stack[len(stack)-1]
+        // 如果当前结点为叶子结点，则直接加入结果集
+        // 如果当前结点不是叶子结点，但是前驱结点为当前结点的左右子树时(说明当前结点的左右子树已经处理完毕)，也加入结果集
+        if cur.Left == nil && cur.Right ==  nil || pre != nil && (pre == cur.Left || pre == cur.Right) {
             res = append(res, cur.Val)
-            queue = queue[:len(queue)-1]
+            // 出栈，继续检查
+            stack = stack[:len(stack)-1]
             pre = cur
         } else {
+            // 因为在出栈的时候检查结点，并追加到结果中
+            // 所以，先入栈右子树，后入栈左子树
             if cur.Right != nil {
-                queue = append(queue, cur.Right)
+                stack = append(stack, cur.Right)
             }
             if cur.Left != nil {
-                queue = append(queue, cur.Left)
+                stack = append(stack, cur.Left)
             }
         }
     }
+    
     return res
 }
 ```
