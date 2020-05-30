@@ -251,7 +251,6 @@ func preNodeVal(root *TreeNode) int {
 
 ### 相关题目
 
-- 98 验证二叉搜索树【M】
 - 108 将有序数组转换为二叉搜索树【M】
 - 235 二叉搜素树的最近公共祖先
 - 230 二叉搜索树中第K小的元素
@@ -260,57 +259,6 @@ func preNodeVal(root *TreeNode) int {
 - 1214 查找两棵二叉搜索树之和【M】
 - 面试题 17.12 BiNode【E】
 - 面试题54 二叉搜索树的第K大节点
-
-#### 98 验证二叉搜索树
-
-题目要求：给定一个二叉树，判断其是否为二叉搜索树，其规则如下：1）节点的左子树只包含小于当前节点的数；2）节点的右子树只包含大于当前节点的数。
-
-思路分析：因为要判断当前的节点的值，需要传入上下界。math包中无穷大，无穷小的处理。
-
-算法一：递归
-
-```go
-// date 2020/02/17
-func isValidBST(root *TreeNode) bool {
-  return isOk(root, math.Inf(-1), math.Inf(0))
-}
-
-func isOk(root *TreeNode, left, right float64) bool {
-  if root == nil {return true}
-  val := float64(root.Val)
-  if val <= left || val >= right { return false }
-  if !isOk(root.Left, left, val) { return false }
-  if !isOK(root.Right, val, right) { return false }
-  return true
-}
-```
-
-算法二：利用中序遍历序列，判断是否为二叉搜索树；不用保存中序遍历序列，因为压栈进去的值就可以判断。
-
-```go
-// date 2020/02/17
-func isValidBST(root *TreeNode) bool {
-  stack := make([]*TreeNode, 0)
-  inorder = math.Inf(-1)
-  for len(stack) != 0 || root != nil {
-    // 将当前节点的所有左子树压入栈
-    for root != nil {
-      stack = append(stack, root)
-      root = root.Left
-    }
-    // 取出栈顶元素
-    root = stack[len(stack)-1]
-    stack = stack[:len(stack)-1]
-    // 如果栈顶元素小于或等于中序遍历序列，则返回false
-    if float64(root.Val) <= inorder { return false }
-    // 更新中序遍历序列的最后一个值
-    inorder = float64(root.Val)
-    // 查看当前节点的右子树
-    root = root.Right
-  }
-  return false
-}
-```
 
 #### 108 将有序数组转换为二叉搜索树
 

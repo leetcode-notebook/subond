@@ -234,7 +234,7 @@ golang语言中byte是uint8的别名，rune是int32的别名，字符串中的�
 - 面试题 17.12 BiNode【E】
 - 面试题54 二叉搜索树的第K大节点
 
-## [二叉索引树Binary Index Tree](binaryTree/BinaryIndexedTree.md)
+## [二叉索引树Binary Index Tree](binaryTree/bit.md)
 
   - 1.结构介绍
   - 2.问题定义
