@@ -177,6 +177,7 @@ func isSymmetric(root *TreeNode) bool {
 ```go
 // 算法一: 递归，采用自底向上的递归思想
 // 时间复杂度O(N)，空间复杂度O(NlogN)
+// 自底向上的递归
 func maxDepth(root *TreeNode) int {
     if root == nil { return 0 }
     l, r := maxDepth(root.Left), maxDepth(root.Right)
@@ -210,6 +211,7 @@ func maxDepth(root *TreeNode) int {
 
 // 算法三 dfs深度优先搜索
 // 时间复杂度O(N)，空间复杂度O(NlogN)
+// 自顶向下的递归
 func maxDepth(root *TreeNode) int {
     // dfs
     var dfs func(root *TreeNode, level int) int
@@ -385,7 +387,7 @@ func minDepth(root *TreeNode) int {
 }
 ```
 
-#### 112 路径总和【简单】
+#### 112 路径总和Path Sum【简单】
 
 思路分析
 

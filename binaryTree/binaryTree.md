@@ -224,11 +224,32 @@ func levelOrder(root *TreeNode) [][]int {
 
 **自顶向下**的解决方案
 
-自顶向下意味着在每个递归层级，需要先计算一些值，然后递归调用并将这些值传递给子节点，视为前序遍历。参见题目【二叉树的最大深度】
+自顶向下意味着在每个递归层级，需要先计算一些值，然后递归调用并将这些值传递给子节点，视为**前序遍历**。参见题目【二叉树的最大深度】
+
+```go
+// 通用的框架，自顶向下
+1. return specific value for null node
+2. update the answer if needed                      // answer <-- params
+3. left_ans = top_down(root.left, left_params)      // left_params <-- root.val, params
+4. right_ans = top_down(root.right, right_params)   // right_params <-- root.val, params 
+5. return the answer if needed                      // answer <-- left_ans, right_ans
+```
+
+
 
 **自底向上**的解决方案
 
-自底向上意味着在每个递归层级，需要先对子节点递归调用函数，然后根据返回值和根节点本身得到答案。
+自底向上意味着在每个递归层级，需要先对子节点递归调用函数，然后根据返回值和根节点本身得到答案，视为**后序遍历**。
+
+```go
+// 通用的框架，自底向上
+1. return specific value for null node
+2. left_ans = bottom_up(root.left)          // call function recursively for left child
+3. right_ans = bottom_up(root.right)        // call function recursively for right child
+4. return answers                           // answer <-- left_ans, right_ans, root.val
+```
+
+
 
 **总结**：
 
@@ -240,7 +261,13 @@ func levelOrder(root *TreeNode) [][]int {
 
 如果答案是肯定的，那么可以尝试使用自顶向下的递归来解决问题。
 
-当然也可以这样思考：对于树中的任意一个节点，如果你知道它子节点的结果，你能计算出该节点的答案吗？如果答案是肯定的，可以尝试使用自底向上的递归来解决问题。
+当然也可以这样思考：
+
+> 对于树中的任意一个节点，如果你知道它子节点的结果，你能计算出该节点的答案吗？
+
+如果答案是肯定的，可以尝试使用自底向上的递归来解决问题。
+
+
 
 ### 平衡二叉树
 
