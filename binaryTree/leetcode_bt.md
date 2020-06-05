@@ -493,9 +493,11 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
      if p == q { return p }
      left := lowestCommonAncestor(root.Left, p, q)
      right := lowestCommonAncestor(root.Right, p, q)
+     // 左右均不为空，表示p,q分别位于左右子树中
      if left != nil && right != nil { return root }
-     if left != nil { return left }
-     return right
+     // 左为空，表示p,q位于右子树,否则位于左子树
+     if left == nil { return right }
+     return left
 }
 ```
 
