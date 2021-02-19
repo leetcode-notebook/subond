@@ -115,7 +115,7 @@ func findPrefix(s1, s2 string) string {
 }
 ```
 
-#### 20 有效的字符串
+#### 20 有效的字符串/有效的括号
 
 思路分析：stack数据结构，压栈及出栈
 
@@ -142,6 +142,8 @@ func isValid(s string) bool {
       c = stack[len(stack)-1]
       if v == ')' && c == '(' || v == '}' && c == '{' || v == ']' && c == '[' {
         stack = stack[:len(stack)-1]
+      } else {
+        return false
       }
     }
   }

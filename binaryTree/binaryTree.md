@@ -72,30 +72,33 @@ func inOrder(root *TreeNode) []int {
   if root == nil { return res }
   // 先访问左子树
   if root.Left != nil {
-    res = append(res, preOrder(root.Left)...)
+    res = append(res, inOrder(root.Left)...)
   }
   // 后访问根结点
   res = append(res, root.Val)
   // 最后访问右子树
   if root.Right != nil {
-    res = append(res, preOrder(root.Right)...)
+    res = append(res, inOrder(root.Right)...)
   }
   return res
 }
 // 迭代版
+// 需要stack结构
 func inorderTraversal(root *TreeNode) []int {
-    if root == nil {return nil}
-    stack := make([]*TreeNode, 0)
-    res := make([]int, 0)
-    for root != nil || len(stack) != 0 {
-        // find the left
-        for root != nil {
-            stack = append(stack, root)  // 把当前结点添加进去
+    if root == nil { return nil }
+    // 初始化队列
+    stack := make([]*TreeNode, 0, 16)
+    res := make([]int, 0, 16)
+    for root != nil || 0 != len(stack) {
+        // 先把左子树全部放入队列
+        if root != nil {
+            stack = append(stack, root)
             root = root.Left
+            continue
         }
-        // 取出最后一个结点
-        if len(stack) != 0 {
-            root = queue[len(stack)-1]
+        // 去除当前结点，查看其右子树
+        if 0 != len(stack) {
+            root = stack[len(stack)-1]
             res = append(res, root.Val)
             stack = stack[:len(stack)-1]
             root = root.Right
