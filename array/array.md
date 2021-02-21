@@ -32,13 +32,65 @@ Array[数组]是用于在相邻位置存储均匀元素的数据结构。 必须
 
 ### 相关题目
 
-#### 两数之和
+#### 1两数之和
+
+题目要求：给定一个整数数组 `nums` 和一个整数目标值 `target`，请你在该数组中找出 **和为目标值** 的那 **两个** 整数，并返回它们的数组下标。
+
+```golang
+// date 2021/02/21
+// 解法一：直接两层循环
+func twoSum(nums []int, target int) []int {
+    res := make([]int, 2, 2)
+    n := len(nums)
+    for i := 0; i < n; i++ {
+        for j := i+1; j < n; j++ {
+            if nums[i] + nums[j] == target {
+                res[0], res[1] = i, j
+                return res
+            }
+        }
+    }
+    return res
+}
+// 解法二：因为题目中有提到每种输入只会对应一种输出，所以可以用map存储已经遍历过的元素和脚标，从而达到O(1)的查找
+func twoSum(nums []int, target int) []int {
+    res := make([]int, 2, 2)
+    set := make(map[int]int, len(nums))
+    n := len(nums)
+    for i := 0; i < n; i++ {
+        if j, ok := set[target-nums[i]]; ok {
+            res[0], res[1] = j, i
+            return res
+        } else {
+            set[nums[i]] = i
+        }
+    }
+    return res
+}
+```
 
 #### 扩展题目：两数之和
 
-**问题延伸：给定一个无序且元素可重复的数组a[],以及一个数sum，求a[]中是否存在两个元素的和等于sum，并输出这两个元素的下标。**
+**问题延伸：给定一个无序且元素可重复的数组a[],以及一个数sum，求a[]中是否存在两个元素的和等于sum，并输出这两个元素的下标。答案可能不止一种，请输出所有可能的答案结果集。**
 
 这是VMware面试中的一道题，以下是个人的解法。这个算法的时间复杂度为O(n)，但是需要辅助空间。
+
+```golang
+// data 2021/02/21
+// 解法一：两层循环
+func twoSum(nums []int, target int) [][]int {
+  res := make([][]int, 0, 16)
+  n := len(nums)
+  for i := 0; i < n; i++ {
+    for j := i+1; j < n; j++ {
+      if nums[i] + nums[j] == target {
+        res = append(res, []int{i,j})
+      }
+    }
+  }
+  return res
+}
+```
 
 #### 对角线遍历二维数组
 
@@ -103,12 +155,14 @@ func maxSubArray(nums []int) int {
     res := nums[0]
     var temp, cur_max int
     for _, v := range nums {
-        temp = cur_max + v
-        if v > temp {
+        cur_max + v
+        // 如果当前结果小于零，则重新计算;否则将当前元素加入结果集
+        if 0 > cur_max {
             cur_max = v
         } else {
             cur_max += v
         }
+        // 当前结果集大于最终结果集时，更新最终结果集
         if cur_max > res { res = cur_max }
     }
     return res

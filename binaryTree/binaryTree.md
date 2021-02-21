@@ -84,6 +84,7 @@ func inOrder(root *TreeNode) []int {
 }
 // 迭代版
 // 需要stack结构
+// left->root->right
 func inorderTraversal(root *TreeNode) []int {
     if root == nil { return nil }
     // 初始化队列

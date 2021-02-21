@@ -325,10 +325,6 @@ func rotateRight(head *ListNode, k int) *ListNode {
     pre.Next = nil
     return head
 }
-
-// 算法2：线形成环，同时计算出len
-// 新表尾 n - k - 1;新表头 n - k
-
 ```
 
 思路分析：
@@ -349,11 +345,13 @@ func rotateRight(head *ListNode, k int) *ListNode {
   }
   k = k % l
   // 将链表形成环，然后表头走Len-k-1步到达新的尾部，然后断开。
+  // -1是因为当前节点也算一个
   pre.Next = head
-  step := l - k - 1
   pre = head
-  for i := 0; i < step; i++ {
+  step := l - k - 1
+  for step > 0 {
     pre = pre.Next
+    step--
   }
   head = pre.Next
   pre.Next = nil
