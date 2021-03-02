@@ -64,7 +64,7 @@ int fib(int n) {
 
 **如果一个问题的最优解可以通过其子问题的最优解获得，那么称这个问题具有最优子结构属性**。例如，最短路径问题就具有最优子结构属性：
 
-假设节点x位于起始节点u与目的节点v之间的最短路径上，那么u-v之间的最短路径就包含了u-x间的最短路径和x-v间的最短路径。所有的两点之间的最短路径算法，像Floyd–Warshall和Bellman–Ford都是典型的动态规划。
+假设节点x位于起始节点u与目的节点v之间的最短路径上，那么u-v之间的最短路径就包含了u-x间的最短路径和x-v间的最短路径。所有的两点之间的最短路径算法，像 Floyd–Warshall 和 Bellman–Ford (贝尔曼-福特算法) 都是典型的动态规划。
 
 相反，最长路径问题就没有最优子结构。这里的最长路径是指两点之间最长的简单路径（不包含环）。
 
@@ -74,7 +74,19 @@ int fib(int n) {
 
 ### 基本思想和解题步骤
 
+动态规划解决的关键是状态定义，状态的转移，初始化和边界条件。
 
+**状态定义**：
+
+**状态的转移**：
+
+**初始化**：
+
+**边界条件：**
+
+**边界条件**：
+
+**边界条件**：
 
 ### 相关题目
 
@@ -84,20 +96,20 @@ int fib(int n) {
 
 算法1：排列组合 res = f(m+n-2)/f(m-1)/f(n-1)  f为阶乘
 
-算法2：递归
+算法2：该问题具有**重复子问题**和**最优子结构**，问题的解可以由子问题的解构成，所以可以用动态规划解决
 
 ```go
 // date 2020/01/11
 /* 算法2：递归方程为dp[i][j] = dp[i-1][j] + dp[i][j-1]
-   当i == 0 || j == 0; dp[i][j] = 1
+   边界条件：当i == 0 || j == 0; dp[i][j] = 1
 */
 func uniquePaths(m, n int) int {
   dp := make([][]int, m)
   for i := 0; i < m; i++ {
     dp[i] = make([]int, n)
   }
-  for i := 0; i < n; i++ {dp[0][i] = 1}
-  for i := 0; i < m; i++ {dp[i][0] = 1}
+  for i := 0; i < n; i++ {dp[0][i] = 1}  // 第0行，只能一直向右走，所以均为1
+  for i := 0; i < m; i++ {dp[i][0] = 1}  // 第0列，只能一直向下走，所以均为1
   for i := 1; i < m; i++ {
     for j := 1; j < n; j++ {
       dp[i][j] = dp[i-1][j] + dp[i][j-1]
@@ -111,9 +123,13 @@ func uniquePaths(m, n int) int {
 
 题目要求：https://leetcode-cn.com/problems/minimum-path-sum/
 
+给定一个包含非负整数的 `m x n` 网格 `grid` ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+**说明：**每次只能向下或者向右移动一步。
+
 思路分析：自底向上递推
 
-递推公式：`opt[i, j] += min(opt[i+1][j], opt[i][j+1])`，注意边界情况
+递推公式：`opt[i, j] = grid[i][j] + min(opt[i+1][j], opt[i][j+1])`，注意边界情况
 
 ```go
 // date 2020/03/08
@@ -126,11 +142,7 @@ func minPathSum(grid [][]int) int {
         for j := n-1; j >= 0; j-- {
             // 如果存在右节点和下节点，选择其中最小的那个
             if i + 1 < m && j + 1 < n {
-                if grid[i+1][j] < grid[i][j+1] {
-                    grid[i][j] += grid[i+1][j]
-                } else {
-                    grid[i][j] += grid[i][j+1]
-                }
+                grid[i][j] += min(grid[i+1][j], grid[i][j+1])
             // 如果只有右节点，则选择右节点
             } else if j + 1 < n {
                 grid[i][j] += grid[i][j+1]
@@ -142,13 +154,22 @@ func minPathSum(grid [][]int) int {
     }
     return grid[0][0]
 }
+
+func min(x, y int) int {
+  if x < y { return x }
+  return y
+}
 ```
-
-
 
 #### 70 爬楼梯
 
 题目要求：https://leetcode-cn.com/problems/climbing-stairs/
+
+*假设你正在爬楼梯。需要 n 阶你才能到达楼顶。*
+
+*每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？*
+
+*注意：给定 n 是一个正整数。*
 
 思路分析：这个问题和斐波那契数列很像，可以有三种解法，一个比一个更优。
 
@@ -183,8 +204,7 @@ func climbStairs(n int) int {
   res := 0
   for i := 3; i <= n; i++ {
     res = first + second
-    first = second
-    second = res
+    first, second = second, res
   }
   return res
 }
@@ -319,6 +339,49 @@ func maxProfitOnce(prices []int) int {
 
 思路分析：
 
+#### 322 Coin Change \[零钱兑换\]
+
+题目链接：https://leetcode-cn.com/problems/coin-change/
+
+给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+
+你可以认为每种硬币的数量是无限的。
+
+题目分析：
+
+问题关键是如果用最少个数的硬币凑成目标值，所以该问题具有最优子结构，设目标值值target，目标值对应的最优解为opt[target]，则其递推公式为`opt[target] = min(opt[target], 1+opt[target-coin])`
+
+同时，需要边界条件，当无法找到解时，需要返回-1。
+
+```golang
+func coinChange(coins []int, amount int) int {
+    opt := make([]int, amount+1)
+    for i := 0; i <= amount; i++ { opt[i] = amount+1 }
+    opt[0] = 0
+    for target := 0; target <= amount; i++ {
+        for _, coin := range coins {
+            if target < coin { continue }
+            // 递推公式
+            opt[target] = min(opt[target], 1 + opt[target-coin])
+        }
+    }
+    // 判断是否有解
+    if opt[amount] == amount+1 { return -1 }
+    return opt[amount]
+}
+
+func min(x, y int) int {
+    if x < y { return x }
+    return y
+}
+```
+
+变相问题：
+
+给定一个int数组A，数组中元素互不重复，给定一个数x，求所有求和能得到x的数字组合，组合中的元素来自A，可重复使用 【字节面试题】
+
+思路分析：类似零钱兑换，求其有多少种可能。
+
 #### 746 使用最小花费爬楼梯
 
 题目要求：
@@ -407,14 +470,15 @@ func min(x, y int) int {
 
 #### 300 最长上升子序列
 
-题目要求：https://leetcode-cn.com/problems/longest-increasing-subsequence/
+给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
 
-思路分析：
+子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的子序列。
+链接：https://leetcode-cn.com/problems/longest-increasing-subsequence
 
 ```
+算法一：动态规划，
 定义dp方程，dp[i]表示包含nums[i]元素的最长上升子序列
-dp[i] = maxvalue + 1
-maxvalue = 0 <= j < i && nums[i] > nums[j]; max(maxvalue, dp[j])
+dp[i] = max(dp[j]) + 1; 0 <= j < i && nums[j] < nums[i]
 具体算法如下：
 ```
 
@@ -422,46 +486,53 @@ maxvalue = 0 <= j < i && nums[i] > nums[j]; max(maxvalue, dp[j])
 // date 2020/03/14
 // 时间复杂度O(N^2),空间复杂度O(N)
 func lengthOfLIS(nums []int) int {
-  if len(nums) == 0 { return 0 }
-  n, res, maxvalue := len(nums), 1, 1
-  dp := make([]int, n)
-  dp[0] = 1
-  for i := 1; i < n; i++ {
-    // 找到nums[i]所满足的最长上升子序列
-    maxvalue = 0 // 初值为0
-    for j := 0; j < i; j++ {
-      if nums[i] > nums[j] { maxvalue = max(maxvalue, dp[j]) }
+    if len(nums) == 0 { return 0 }
+    res, cur_max, n := 1, 0, len(nums)
+    dp := make([]int, n)
+    dp[0] = 1
+    for i := 1; i < len(nums); i++ {
+        // 找到[0,i]之间最大的最长上升子序列
+        cur_max = 0
+        for j := 0; j < i; j++ {
+            if nums[i] > nums[j] {
+                cur_max = max(cur_max, dp[j])
+            }
+        }
+        dp[i] = cur_max + 1  // 如果cur_max为0，+1表示只包含nums[i]自己
+        // 否则即为[0,i]的结果集
+        res = max(res, dp[i])
     }
-    // 更新dp[i]
-    dp[i] = maxvalue + 1
-    res = max(res, dp[i])
-  }
-  return res
+    return res
 }
 
 func max(x, y int) int {
-  if x > y { return x }
-  return y
+    if x > y { return x }
+    return y
 }
 ```
 
+```
+算法二：
 思路分析：维护一个最长上升子序列数组lis，然后每次更新它，最后数组lis的长度就是结果。
-
 更新有序数组可以用二分查找，时间复杂度为O(logN)。
+需要知道的是最后的lis结果并不一定是真正的结果，但其长度是所要的结果。
+```
 
 ```go
 // date 2020/03/16
 func lengthOfLIS(nums []int) int {
   if len(nums) == 0 { return 0}
-  lis := make([]int, 0)
+  n := len(nums)
+  lis := make([]int, 0, n)
   lis = append(lis, nums[0])
-  for i := 1; i < len(nums); i++ {
+  for i := 1; i < n; i++ {
     // 在lis数组找到第一个比nums[i]大的元素，并替换它，否则进行追加
-    if nums[i] > lis[len(lis)-1] {
+    m := len(lis)
+    if nums[i] > lis[m-1] {
       lis = append(lis, nums[i])
       continue
     }
-    for j := 0; j < len(lis); j++ {
+    for j := 0; j < m; j++ {
       if nums[i] <= lis[j] {
         lis[j] = nums[i]
         break

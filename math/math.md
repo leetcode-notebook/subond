@@ -84,7 +84,7 @@ func isPalindrome(x int) bool {
 
 思路学习：算法2对于判断链表同样适用。参考题目234https://leetcode.com/problems/palindrome-linked-list/
 
-#### 15 三数之和
+#### 15 三数之和【M】
 
 题目要求：给你一个包含 *n* 个整数的数组 `nums`，判断 `nums` 中是否存在三个元素 *a，b，c ，*使得 *a + b + c =* 0 ？请你找出所有满足条件且不重复的三元组。
 
@@ -179,7 +179,7 @@ func fourSum(nums []int, target int) [][]int {
 }
 ```
 
-#### 231 2的幂
+#### 231 2的幂【E】
 
 题目要求：给定一个整数，判断其是否是2的幂次方。
 
