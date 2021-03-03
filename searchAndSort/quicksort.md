@@ -3,7 +3,6 @@
   * 1.[算法介绍](#算法介绍)
   * 2.[复杂度分析](#复杂度分析)
   * 3.[算法流程](#算法流程)
-  * 4.[代码实现](#代码实现)
 
 ### 算法介绍
 
@@ -58,94 +57,44 @@ quicksort(arry[], low, high) {
 
 partition()函数实现序列的划分，其逻辑是总是选取最左边的元素作为基准值x(也可以选取其他元素最为基准值)，然后追踪小于基准值x的索引i；遍历整个序列，若当前元素小于基准值x，则交换当前值值与i所在的值，否则忽略当前值。其伪代码如下：
 
-```
-// 函数选取最后一个值作为基准值，然后将所有小于等于基准值的元素放在基准值的左边，将所有大于基准值的元素放在基准值的右边，
-// 即在排序的序列中给基准值找到正确的位置
-
-partition(arry[], low, high) {
-  pi = arry[high];
-  i = low - 1;
-  for(j = low; j <= high - 1; j++) {
-    if(arry[j] <= pi) {
-      i++;
-      swap arry[i] and arry[j];
+```golang
+// 函数选取最后一个值作为基准值
+// 将所有小于等于基准值的元素放在基准值的左边，将所有大于基准值的元素放在基准值的右边
+// index表示元素应该被放在的位置,for循环之后区间[left, index]均小于基准值,区间[index+1, right]均大于基准值,再交换一次swap(index+1, right)
+// 则index+1为基准值,区间[index+2, right]为大于等于基准值
+// 最后返回基准值的位置index+1
+partition(nums []int, left, right int) {
+  p := nums[right]
+  index := left - 1
+  for left <= right-1 {
+    if nums[left] <= p {
+      index++
+      swap(nums, index, left)
     }
+    left++
   }
-  swap arry[i + 1] and arry[high]
-  return i + 1;
+  swap(nums, index+1, rigth)
+  return index+1
 }
 ```
 
-### 代码实现
-
-* C++
-
-```cpp
-// 第一种
-void swap(int* a, int* b) {
-  int t = *a;
-  *a = *b;
-  *b = t;
+```golang
+// 另一种实现方式
+func quickSort(nums []int, left, right int) {
+  p := division(nums, left, right)
+  quickSort(nums, left, p-1)
+  quickSort(nums, p+1, right)
 }
 
-int partition(int arry[], int low, int high) {
-  int p = arry[high];
-  int i = low - 1;
-  for(int j = low; j <= high - 1; j++) {
-    if(arry[j] <= p) {
-      i++;
-      swap(arry[i], arry[j]);
-    }
+func division(nums []int, left, right int) int {
+  base := nums[left]
+  for left < right {
+    for left < right && nums[right] >= base { right-- }
+    nums[left] = nums[right]
+    for left < right && nums[left] <= base { left++ }
+    nums[right] = nums[left]
+    nums[left] = base
   }
-  swap(arry[i + 1], arry[high]);
-  return (i + 1);
+  return left
 }
-
-void QuickSort(int arry[], int low, int high) {
-  if(low < high) {
-    int pi = partition(arry, low, high);
-    QuickSort(arry, low, pi - 1);
-    QuickSort(arry, pi + 1, high);
-  }
-}
-
-// 第二种
-int division(vector<int> &data, int low, int high) {
-  int base = data[low];
-  while(low < high) {
-    while(low < high && data[high] >= base) high--;
-    data[low] = data[high];
-    while(low < high && data[low] <= base) low++;
-    data[high] = data[low];
-    data[low] = base;
-  }
-  return low;
-}
-void quicksort(vector<int> &data, int low, int high) {
-  if(low < high) {
-    int mid = division(data, low, high);
-    quicksort(data, low, mid - 1);
-    quicksort(data, mid + 1, high);
-  }
-}
-```
-* python
-
-```python
-def partition(arry, low, high):
-    i = low - 1
-    pivot = arry[high]
-    for j in range(low, high):
-        if arry[j] <= pivot:
-            i = i + 1
-            arry[i], arry[j] = arry[j], arry[i]
-
-    arry[i+1], arry[high] = arry[high], arry[i+1]
-    return (i+1)
-
-def QuickSort(arry, low, high):
-    if low < high:
-        pi = partition(arry, low, high)
-        QuickSort(arry, low, pi - 1)
-        QuickSort(arry, pi + 1, high)
 ```
