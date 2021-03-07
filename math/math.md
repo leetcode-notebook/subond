@@ -138,6 +138,34 @@ func threeSum(nums []int) [][]int {
 }
 ```
 
+#### 89 格雷编码
+
+题目要求：给定一个格雷编码的总位数n，输出器格雷编码序列（格雷编码序列：相邻的两个数字只有一位不同）。
+
+算法：镜像反射法
+
+```go
+// date 2020/01/11
+/* 算法：G(n) = G(n-1) + R(n-1)  // R(n-1)为G(n-1)反序+head
+0 0 00
+  1 01
+    11
+    10
+*/
+func grayCode(n int) []int {
+  res, head := make([]int, 0), 1
+  res = append(res, 0)
+  for i := 0; i < n; i++ {
+    n := len(res) - 1
+    for j = n; j >= 0; j-- {
+      res = append(res, head + res[j])
+    }
+    head <<= 1
+  }
+  return res
+}
+```
+
 #### 四数求和
 
 思路分析
@@ -179,20 +207,22 @@ func fourSum(nums []int, target int) [][]int {
 }
 ```
 
-#### 231 2的幂【E】
+#### 191 位1的个数【简单】
 
-题目要求：给定一个整数，判断其是否是2的幂次方。
+题目链接：https://leetcode-cn.com/problems/number-of-1-bits/
 
-思路分析：判断这个数是否不断的被2整数，直接结果等于1。如果某一次结果为奇数，直接返回false。
+编写一个函数，输入是一个无符号整数（以二进制串的形式），返回其二进制表达式中数字位数为 '1' 的个数（也被称为[汉明重量](https://baike.baidu.com/item/汉明重量)）。
 
-```go
-// date 2020/01/11
-func isPowerOfTwo(n int) bool {
-  for n > 1 {
-    if n &0x1 == 1 {return false}
-    n >>= 1
-  }
-  return n == 1
+思路分析：
+
+```golang
+func hammingWeight(num uint32) int {
+    var c int
+    for num > 0 {
+        c += int(num & 0x1)
+        num >>= 1
+    }
+    return c
 }
 ```
 
@@ -267,6 +297,37 @@ func gcd(x, y int) int {
 }
 ```
 
+#### 231 2的幂【E】
+
+题目要求：给定一个整数，判断其是否是2的幂次方。
+
+思路分析：判断这个数是否不断的被2整数，直接结果等于1。如果某一次结果为奇数，直接返回false。
+
+```golang
+// date 2020/01/11
+func isPowerOfTwo(n int) bool {
+  for n > 1 {
+    if n &0x1 == 1 {return false}
+    n >>= 1
+  }
+  return n == 1
+}
+```
+
+#### 292 Nim游戏
+
+算法思路：只要是4的倍数，你一定输。
+
+```go
+// date 2020/01/09
+func canWinNim(n int) bool {
+  if n % 4 == 0 {
+    return false
+  }
+  return true
+}
+```
+
 #### 338 比特位计数
 
 题目要求：https://leetcode-cn.com/problems/counting-bits/
@@ -290,6 +351,31 @@ func countBits(num int) []int {
         }
     }
     return res
+}
+```
+
+#### 461 汉明距离【简单】
+
+题目链接：https://leetcode-cn.com/problems/hamming-distance/
+
+两个整数之间的[汉明距离](https://baike.baidu.com/item/汉明距离)指的是这两个数字对应二进制位不同的位置的数目。
+
+给出两个整数 `x` 和 `y`，计算它们之间的汉明距离。
+
+思路分析：
+
+```golang
+func hammingDistance(x int, y int) int {
+    return hammingWeight(x^y)
+}
+
+func hammingWeight(num int) int {
+    var c int
+    for num > 0 {
+        c += num & 0x1
+        num >>= 1
+    }
+    return c
 }
 ```
 
