@@ -132,6 +132,7 @@ func postOrder(root *TreeNode) []int {
   return res
 }
 // 迭代版
+// left->right-root
 func postorderTraversal(root *TreeNode) []int {
     if root == nil {return nil}
     res := make([]int, 0)
@@ -283,6 +284,628 @@ func levelOrder(root *TreeNode) [][]int {
 
 如果一棵二叉树关于根结点左右对称，则称为对称二叉树，也称为镜像二叉树。
 
+
+
+---
+
+### Binary Indexed Tree \[二叉索引树\]
+
+  * 1.[结构介绍](#结构介绍)
+  * 2.[问题定义](#问题定义)
+  * 3.[表面形式](#表现形式)
+    * 3.1[更新操作](#更新操作)
+    * 3.2[求和操作](#求和操作)
+  * 4.[工作原理](#BIT工作原理)
+  * 5.[代码实现](#代码实现)
+
+#### 结构介绍
+
+二叉索引树，Binary Indexed Tree，又名树状数组，或者Fenwick Tree，因为本算法由Fenwick创造。
+
+#### 问题定义
+
+给定一个数组array[0....n-1]，实现两个函数：1）求取前i项和；2）更新第i项值。
+
+分析：
+
+其中一个比较简单的解法就是通过循环累计(0-i-1)求和(需要O(n)时间)，根据下标更新值(需要O(1)时间)。另一种解法是创建一个前n项和数组(即，第i项存储前i项的和)，这样求和需要O(1)时间，更新需要O(n)时间。
+
+而使用BIT数据结构，可以在O(Logn)时间内进行求和操作和更新操作。下面具体介绍一下。
+
+#### 表现形式
+
+BIT这种数据结构使用一般数组进行存储，每个节点存储 **部分** 输入数组的元素之和。BIT数组的元素个数与输入数组的元素个数一致，均为n。BIT数组的初始值均为0，通过更新操作获取输入数组部分元素之和，并存储在相应的位置上。
+
+#### 更新操作
+
+更新操作是指根据输入数组的元素来更新BIT数组的元素，进而根据BIT数组求前i项和。
+
+```
+update(index, val): Updates BIT for operation arr[index] += val
+// Note that arr[] is not changed here.  It changes
+// only BI Tree for the already made change in arr[].
+1) Initialize index as index+1.
+2) Do following while index is smaller than or equal to n.
+...a) Add value to BITree[index]
+...b) Go to parent of BITree[index].  Parent can be obtained by removing
+     the last set bit from index, i.e., index = index + (index & (-index))
+```
+
+令BIT数组为：BIT[i] = Input[i-lowbit(i)+1] + Input[i-lowbit(i)+2] + ... + Input[i];
+
+即从最左边的孩子，到自身的和，如BIT[12]= A9+A10+A11+A12
+
+#### 求和操作
+
+求和操作是指利用BIT数组求原来输入数组的前i项和。
+
+```
+getSum(index): Returns sum of arr[0..index]
+// Returns sum of arr[0..index] using BITree[0..n].  It assumes that
+// BITree[] is constructed for given array arr[0..n-1]
+1) Initialize sum as 0 and index as index+1.
+2) Do following while index is greater than 0.
+...a) Add BITree[index] to sum
+...b) Go to parent of BITree[index].  Parent can be obtained by removing
+     the last set bit from index, i.e., index = index - (index & (-index))
+3) Return sum.
+```
+
+
+说明：
+
+1. 如果节点y是节点x的父节点，那么节点y可以由节点x通过移除Lowbit(x)获得。**Lowbit(natural)为自然数(即1,2,3…n)的二进制形式中最右边出现1的值**。即通过以下公式获得 $parent(i) = i - i & (-i)$。
+
+2. 节点y的子节点x(对BIT数组而言)存储从y(不包括y)到x(包括x)(对输入数组而言)的的元素之和。即BIT数组的值由输入数组两者之间下标的节点对应关系获得。
+
+
+计算前缀和Sum(i)的计算：顺着节点i往左走，边走边“往上爬”，把经过的BIT[i]累加起来即可。
+
+![bit演示图](http://on64c9tla.bkt.clouddn.com/Algorithm/bit.jpg)
+
+#### BIT工作原理
+
+BIT工作原理得益于所有的正整数，均可以表示为多个2的幂次方之和。例如，19 = 16 + 2 + 1。BIT的每个节点都存储n个元素的总和，其中n是2的幂。例如，在上面的getSum（）的第一个图中，前12个元素的和可以通过最后4个元素（从9到12） ）加上8个元素的总和（从1到8）。 数字n的二进制表示中的设置位数为O（Logn）。 因此，我们遍历getSum（）和update（）操作中最多的O（Logn）节点。 构造的时间复杂度为O（nLogn），因为它为所有n个元素调用update（）。
+
+#### 代码实现
+
+```
+void updateBIT(int BITree[], int n, int index, int val) {
+  index = index + 1;
+  while(index <= n) {
+    BITree[index] += val;
+    index += index & (-index);
+  }
+}
+
+int getSum(int BITree[], int index) {
+  int sum = 0;
+  index = index + 1;
+  while(index > 0) {
+    sum += BITree[index];
+    index -= index & (-index);
+  }
+  return sum;
+}
+
+int *conBIT(int arr[], int n) {
+  int *BITree = new int[n + 1];
+  for(int i = 0; i <= n; i++)
+    BITree[i] = 0;
+  for(int i = 0; i < n; i++)
+    updateBIT(BITree, n, i, arr[i]);
+  return BITree;
+}
+```
+
+
+
+
+
+---
+
+### 二叉搜索树
+
+顾名思义，二叉搜索树是以一棵二叉树来组织的，其满足一下条件：x为二叉树的一个节点，如果y是x左子树的一个节点，那么`y.Val <= x.Val`；如果y是x右子树的一个节点，则`y.Val >= x.Val`
+
+根据二叉树的性质可得知，二叉搜索树的中序遍历为升序序列，相反如果交换左右子树的遍历顺序亦可得到降序序列。
+
+```go
+// inorder伪代码
+func inOrder(root *TreeNode) []int {
+  res := make([]int, 0)
+  if root != nil {
+    res = append(res, inOrder(root.Left)...)
+    res = append(res, root.Val)
+    res = append(res, inOrder(root.Right)...)
+  }
+  return res
+}
+
+func decOrder(root *TreeNode) []int {
+  res := make([]int, 0)
+  if root != nil {
+    res = append(res, decOrder(root.Right)...)
+    res = append(res, root.Val)
+    res = append(res, decOrder(root.Left)...)
+  }
+  return res
+}
+```
+
+#### 二叉搜索树的基本操作
+
+二叉搜索树的基本操作包括查询，最小关键字元素，最大关键字元素，前继节点，后继节点，插入和删除，这些基本操作所花费的时间与二叉搜索树的高度成正比。
+
+**查询**
+
+如果二叉搜索树的高度为h，则查询的时间复杂度为O(h)。
+
+```go
+// 查询伪代码
+// 递归版
+func searchBST(root *TreeNode, key int) *TreeNode {
+  if root == nil || root.Val == key { return root }
+  if root.Val < key {
+    return searchBST(root.Right, key)
+  }
+  return searchBST(root.Left, key)
+}
+// 迭代版
+func searchBST(root *TreeNode, key int) *TreeNode {
+  for root != nil && root.Val != key {
+    if root.Val < key {
+      root = root.Right
+    } else {
+      root = root.Left
+    }
+  }
+  return root
+}
+```
+
+**最大关键字元素**
+
+如果二叉搜素树的高度为h，则最大关键字元素的操作时间复杂度为O(h)。
+
+```go
+// 最大关键字元素的伪代码
+func maximumBST(root *TreeNode) *TreeNode {
+  for root.Right != nil { root = root.Right }
+  return root
+}
+// 递归版
+func maximumBST(root *TeeNode) *TreeNode {
+  if root.Right != nil {
+    return maximumBST(root.Right)
+  }
+  return root
+}
+```
+
+**最小关键字元素**
+
+如果二叉搜素树的高度为h，则最大关键字元素的操作时间复杂度为O(h)。
+
+```go
+// 最小关键字元素的伪代码
+func minimumBST(root *TreeNode) *TreeNode {
+  for root.Left != nil { root = root.Left }
+  return root
+}
+// 递归版
+func minimumBST(root *TreeNode) *TreeNode {
+  if root.Left != nil {
+    return minimum(root.Left)
+  }
+  return root
+}
+```
+
+**前继节点**
+
+前继节点是指给定一个节点x，如果存在x的前继节点则返回前继节点，否则返回nil。
+
+如果二叉搜素树的高度为h，则查找前继节点的操作时间复杂度为O(h)。
+
+```go
+func predecessorBST(x *TreeNode) *TreeNode {
+  // x节点存在左子树，则返回左子树中最大的节点
+  if x.Left != nil {
+    return maximum(root.Left)
+  }
+  // 如果x节点没有左子树，则找到其父节点，且父节点的右子树包含x
+  y := x.Present
+  for y != nil && x == y.Left {
+    x = y
+    y = y.Present
+  }
+  return y
+}
+```
+
+**后继节点**
+
+后继节点是指给定一个节点x，如果存在x的后继节点则返回后继节点，否则返回nil。
+
+如果二叉搜素树的高度为h，则查找后继节点的操作时间复杂度为O(h)。
+
+```go
+// 后继节点的伪代码
+func successorBST(x *TreeNode) *TreeNode {
+  // x节点存在右子树，则返回右子树中最小的节点
+  if x.Right != nil {
+    return minimum(root.Right)
+  }
+  // 如果x节点没有右子树，则找到其父节点，且父节点的左子树包含x
+  y := x.Present
+  for y != nil && x == y.Right {
+    x = y
+    y = y.Present
+  }
+  return y
+}
+```
+
+**插入**
+
+插入和删除会引起二叉搜索树所表示的动态集合的变化。一定要修改数据结构来反映这种变化，单修改要保持二叉搜索树的性质不变。
+
+```go
+// x.Val = val, x.Right = x.Left = x.Present = nil
+// 插入的伪代码
+func insertBST(root, x *TreeNode) {
+  var y *TreeNode
+  for root != nil {
+    y = root
+    if x.Val < root.Val {
+      root = root.Left
+    } else {
+      root = root.Right
+    }
+  }
+  x.Present = y
+  if y == nil { // empty tree
+    root = x
+  } else if x.Val < y.Val {
+    y.Left = x
+  } else {
+    y.Right = x
+  }
+}
+// 没有父指针
+// 递归版
+func insertBST(root, x *TreeNode) *TreeNode {
+  if root == nil {
+    root = x
+    return root
+  }
+  if root.Val < x.Val {
+    return insertBST(root.Right)
+  }
+  return insertBST(root.Left)
+}
+// 迭代版
+func insertBST(root, x *TreeNode) *TreeNode {
+  if root == nil {
+    root == x
+    return root
+  }
+  pre, head := root, root
+  for head != nil {
+    pre = head
+    if root.Val < x.Val {
+      head = head.Right
+    } else {
+      head = head.Left
+    }
+  }
+  if y.Val < x.Val {
+    y.Right = x
+  } else {
+    y.Left = x
+  }
+  return root
+}
+```
+
+**删除**
+
+从一棵二叉搜索树中删除一个节点x的整个策略分为三个情况，分别是：
+
+1）如果x没有孩子节点，那么直接删除即可；
+
+2）如果x只有一个孩子节点，那么将该孩子节点提升到x即可；
+
+3）如果x有两个孩子，那么需要找到x的后继节点y（一定存在x的右子树中），让y占据x的位置，那么x原来的右子树部分称为y的右子树，x的左子树称为y的新的左子树。
+
+```go
+func deleteBST(root *TreeNode, key int) *TreeNode{
+  if root == nil { return root }
+  if root.Val < key {
+    return deleteBST(root.Right, key)
+  } else if root.Val > key {
+    return deleteBST(root.Left, key)
+  } else {
+    // no child node
+    if root.Left == nil && root.Right == nil {
+      root = nil
+    } else if root.Right != nil {
+      root.Val = postNodeVal(root.Right)
+      root.Right = deleteBST(root.Right, root.Val)
+    } else {
+      root.Val = preNodeVal(root.Left)
+      root.Left = deleteBST(root.Left, root.Val)
+    }
+  }
+  return root
+}
+
+// find post node val in right
+func postNodeVal(root *TreeNode) int {
+  for root.Left != nil { root = root.Left }
+  return root.Val
+}
+// find pre node val in left
+func preNodeVal(root *TreeNode) int {
+  for root.Right != nil { root = root.Right }
+  return root.Val
+}
+```
+
+### 二叉搜索树相关题目
+
+- 108 将有序数组转换为二叉搜索树【M】
+- 235 二叉搜素树的最近公共祖先
+- 230 二叉搜索树中第K小的元素
+- 450 删除二叉搜索树中的节点
+- 1038 从二叉搜索树到更大和树【M】
+- 1214 查找两棵二叉搜索树之和【M】
+- 面试题 17.12 BiNode【E】
+- 面试题54 二叉搜索树的第K大节点
+
+#### 108 将有序数组转换为二叉搜索树
+
+题目要求：给定一个升序数据，返回一棵高度平衡二叉树。
+
+思路分析：
+
+二叉搜索树的定义：
+
+1）若任意节点的左子树不为空，则左子树上所有的节点值均小于它的根节点值；
+
+2）若任意节点的右子树不为空，则右子树上所有的节点值均大于它的根节点值；
+
+3）任意节点的左，右子树均为二叉搜索树；
+
+4）没有键值相等的点。
+
+如何构造一棵树，可拆分成无数个这样的子问题：构造树的每个节点，以及节点之间的关系。对于每个节点来说，都需要：
+
+1）选取节点；
+
+2）构造该节点的左子树；
+
+3）构造该节点的右子树。
+
+算法一：对于升序序列，可以选择中间的节点作为根节点，然后递归调用。因为每个节点只遍历一遍，所以时间复杂度为O(n)；因为递归调用，空间复杂度为O(log(n))。
+
+```go
+//date 2020/02/20
+// 算法一：递归版
+func sortedArrayToBST(nums []int) *TreeNode {
+  if len(nums) == 0 { return nil }
+  // 选择根节点
+  mid := len(nums) >> 1
+  // 构造左子树和右子树
+  left := nums[:mid]
+  right := nums[mid+1:]
+  
+  return &TreeNode{
+    Val: nums[mid],
+    Left: sortedArrayToBST(left),
+    Right: sortedArrayToBST(right),
+  }
+}
+```
+
+#### 230 二叉搜索树中第K小的元素
+
+题目要求：给定一个二叉搜索树，返回其第K小的元素，你可以假设K总是有效的，即1<=k<=n。
+
+算法：因为是二叉搜索树，先得到其中序遍历结果，然后直接返回k-1所在的元素。
+
+```go
+// date 2020/01/11
+func kthSmallest(root *TreeNode) int {
+  data := inOrder(root)
+  if len(data) < k {return 0}
+  return data[k-1]
+}
+
+func inOrder(root *TreeNode) []int {
+  if root == nil {return nil}
+  res := make([]int, 0)
+  if root.Left != nil { res = append(res, inOrder(root.Left)...) }
+  res = append(res, root.Val)
+  if root.Right != nil { res = append(res, inOrder(root.Right)...) }
+}
+```
+
+
+#### 235 二叉搜索树的最近公共祖先
+
+题目要求：给定一个二叉搜素树和两个节点，返回其最近公共祖先。
+
+算法：递归，并充分利用二叉搜索树的性质`left.Val < root.Val < right.Val`。
+
+```go
+// date 2020/02/18
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+  if root == nil || root == p || root == q {return root }
+  if p == nil { return q }
+  if q == nil { return p }
+  if root.Val > q.Val && root.Val > p.Val { return lowestCommonAncestor(root.Left) }
+  if root.Val < q.Val && root.Val < p.Val { return lowestCommonAncestor(root.Right) }
+  return root
+}
+```
+
+
+
+#### 450 删除二叉搜索树中的节点
+
+题目要求：给定一个二叉搜索树和key，删除key节点，并返回树的根节点
+
+算法一：二叉搜索树的中序遍历序列是个升序序列，则欲要删除的节点需要用其前驱节点或后驱节点来代替。
+
+1）如果为叶子节点，则直接删除；
+
+2）如果不是叶子节点且有右子树，则用后驱节点代替。后驱节点为右子树中的较低位置；
+
+3）如果不是叶子节点且有左子树，则用前驱节点代替。前驱节点为左子树中的较高位置；  
+
+```go
+func deleteBST(root *TreeNode, key int) *TreeNode{
+  if root == nil { return root }
+  if root.Val < key {
+    return deleteBST(root.Right, key)
+  } else if root.Val > key {
+    return deleteBST(root.Left, key)
+  } else {
+    // no child node
+    if root.Left == nil && root.Right == nil {
+      root = nil
+    } else if root.Right != nil {
+      root.Val = postNodeVal(root.Right)
+      root.Right = deleteBST(root.Right, root.Val)
+    } else {
+      root.Val = preNodeVal(root.Left)
+      root.Left = deleteBST(root.Left, root.Val)
+    }
+  }
+  return root
+}
+
+// find post node val in right
+func postNodeVal(root *TreeNode) int {
+  for root.Left != nil { root = root.Left }
+  return root.Val
+}
+// find pre node val in left
+func preNodeVal(root *TreeNode) int {
+  for root.Right != nil { root = root.Right }
+  return root.Val
+}
+```
+
+#### 1038 从二叉搜索树到更大和树
+
+题目要求：给出二叉**搜索**树的根节点，该二叉树的节点值各不相同，修改二叉树，使每个节点 `node` 的新值等于原树中大于或等于 `node.val` 的值之和
+
+思路分析：
+
+`root.Val = root.Val + root.Right.Val`
+
+`root.Left.Val = root.Left.Val + root.Val`
+
+首先得到二叉搜索树的中序遍历序列的逆序列，然后从序列的第一个开始，将累加值记录到当前树的节点上。
+
+```go
+// date 2020/02/23
+func bsttoGST(root *TreeNode) *TreeNode{
+  array := decOrder(root)
+  val := 0
+  for i := 0; i < len(array); i++ {
+    val += array[i]
+    setNewVal(root, array[i], val)
+  }
+}
+func decOrder(root *TreeNode) []int {
+  res := make([]int, 0)
+  if root != nil {
+    res = append(res, decOrder(root.Right)...)
+    res = append(res, root.Val)
+    res = append(res, decOrder(root.Left)...)
+  }
+  return res
+}
+
+func setNewVal(root *TreeNode, key, val int) {
+  if root != nil {
+    if root.Val == key {
+      root.Val = val
+    } else if root.Val > key {
+      setNewVal(root.Left, key, val)
+    } else {
+      setNewVal(root.Right, key, val)
+    }
+  }
+}
+```
+
+#### 面试题 BiNode
+
+题目要求：将一颗二叉搜索树转换成单链表，Right指针指向下一个节点。
+
+思路分析：
+
+要求返回头节点，所以先转换left。
+
+```go
+// date 2020/02/19
+func convertBiNode(root *TreeNode) *TreeNode {
+  if root == nil { return nil }
+  // 左子树不为空，需要转换
+  if root.Left != nil {
+    // 得到左子树序列，并找到最后一个节点
+    left :=  convertBiNode(root.Left)
+    pre := left
+    for pre.Right != nil { pre = pre.Right }
+    // 将最后一个节点right指向root
+    pre.Right = root
+    root.Left = nil
+    // 得到右子树序列
+    root.Right = convertBiNode(root.Right)
+    return left
+  }
+  root.Right = convertBiNode(root.Right)
+  return root
+}
+```
+
+#### 面试题54 二叉搜索树的第K大节点
+
+题目要求：给定一个二叉搜索树，找出其中第k大节点。
+
+算法一：二叉搜索树的中序遍历为升序序列，按照Right->root->Left的顺序遍历可得到降序序列，然后返回第k节点。
+
+```go
+// date 2020/02/18
+func kthLargest(root *TreeNode, k int) int {
+  if root == nil || k < 0 { return -1 }
+  nums := decOrder(root)
+  if len(nums) < k {return -1}
+  return nums[k-1]
+}
+
+// right->root->left
+func decOrder(root *TreeNode) []int {
+  if root == nil { return []int{} }
+  res := make([]int, 0)
+  if root.Right != nil {
+    res = append(res, decOrder(root.Right)...)
+  }
+  res = append(res, root.Val)
+  if root.Left != nil {
+    res = append(res, decOrder(root.Left)...)
+  }
+  return res
+}
+```
+
+
+
 ### [相关题目](leetcode_bt.md)
 
 #### 95 不同的二叉搜索树 II【中等】
@@ -303,7 +926,7 @@ func generateTrees(n int) []*TreeNode {
   return generateTreesWithNode(1, n)
 }
 
-func generateTreesWithNode(start end int) []*TreeNode {
+func generateTreesWithNode(start, end int) []*TreeNode {
     res := make([]*TreeNode, 0)
     if start > end {
       // 表示空树
