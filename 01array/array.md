@@ -30,6 +30,10 @@ Array[数组]是用于在相邻位置存储均匀元素的数据结构。 必须
 
 如果知道的数组的长度，可从尾部按照某种规则依次插入元素，例如[88 合并两个有序数组](# 88 合并两个有序数组)
 
+#### 就地替换
+
+in-place操作是指在不申请额外空间的情况下，通过索引找到目标值并进行就地替换的操作，该操作可以极大地减少时间和空间复杂度。
+
 ### 相关题目
 
 #### 1两数之和
@@ -137,6 +141,29 @@ func findDiagonalOrder(matrix [][]int) []int {
     bXFlag = !bXFlag
   }
   return res
+}
+```
+
+#### 27 移除元素【简单】
+
+题目链接：https://leetcode-cn.com/problems/remove-element/
+
+题目要求：给你一个数组 `nums` 和一个值 `val`，你需要 **[原地](https://baike.baidu.com/item/原地算法)** 移除所有数值等于 `val` 的元素，并返回移除后数组的新长度。
+
+思路分析：
+
+```golang
+// date 2021/03/13
+// index作为新的索引，只记录符合条件的(不等于val)的元素
+func removeElement(nums []int, val int) int {
+    var index int
+    for i := 0; i < len(nums); i++ {
+        if nums[i] != val {
+            nums[index] = nums[i]
+            index++
+        }
+    }
+    return index
 }
 ```
 
@@ -667,6 +694,31 @@ func findLengthOfLCIS(nums []int) int {
 }
 ```
 
+#### 283 [移动零](https://leetcode-cn.com/problems/move-zeroes/)
+
+题目要求：给定一个数组nums，将其所有的零移动至数组的末尾，其他非零元素保持相对位置不变。
+
+思路分析：
+
+维护好非零元素应该使用的索引，遍历数组，将非零元素放在其索引。
+
+```go
+// date 2021/03/13
+func moveZeros(nums []int) {
+  index_nzero := 0
+  for i := 0; i < len(nums); i++ {
+    if nums[i] != 0 {
+      // 只要当前面有零的时候才操作
+      if index_nzero < i {
+        nums[index_nzero] = nums[i]
+        nums[i] = 0
+      }
+      index_nzero++
+    }
+  }
+}
+```
+
 #### 485 最大连续1的个数[简单]
 
 题目要求：https://leetcode.com/problems/max-consecutive-ones/
@@ -690,34 +742,55 @@ func findMaxConsecutiveOnes(nums []int) int {
 }
 ```
 
-#### 977 排序数组的平方[简单]
+#### 905 [按奇偶排序数组](https://leetcode-cn.com/problems/sort-array-by-parity/) 【简单】
 
-题目要求：https://leetcode.com/problems/squares-of-a-sorted-array/
+题目要求：给定一个数组，通过就地修改使所有偶数位于所有基数的前面。你可以返回满足此条件的任何数组作为答案。
 
-思路分析：双指针
+思路分析：
 
 ```go
-// date 2020/04/19
-func sortedSquares(A []int) []int {
-    left, right := 0, len(A)-1
-    res := make([]int, len(A))
-    index, x, y := len(A)-1, 0, 0
-    for left <= right {
-        x, y = square(A[left]), square(A[right])
-        if x > y {
-            res[index] = x
-            left++
+// date 2021/03/13
+func sortArrayByParity(A []int) []int {
+    i, j := 0, len(A)-1
+    for i < j {
+        if A[i] & 0x1 == 0 { i++; continue }
+        if A[j] & 0x1 == 1 { j--; continue }
+        A[i], A[j] = A[j], A[i]
+        i++
+        j--
+    }
+    return A
+}
+```
+
+#### 977 [有序数组的平方](https://leetcode-cn.com/problems/squares-of-a-sorted-array/)【简单】
+
+题目要求：给定一个非递增的有序数组，返回其非递增的平方数组
+
+思路要求：
+
+```golang
+// date 2021/03/13
+func sortedSquares(nums []int) []int {
+    total := len(nums)
+    index, res := total-1, make([]int, total)
+    i, j := 0, len(nums)-1
+    for i <= j {
+        if i == j {
+            res[index] = nums[i] * nums[i]
+            break
+        }
+        si, sj := nums[i] * nums[i], nums[j] * nums[j]
+        if si > sj {
+            res[index] = si
+            i++
         } else {
-            res[index] = y
-            right--
+            res[index] = sj
+            j--
         }
         index--
     }
     return res
-}
-
-func square(x int) int {
-    return x * x
 }
 ```
 
@@ -774,4 +847,31 @@ func isEvenDigitsOfNumber(num int) bool {
 }
 ```
 
-### [连续最大子序列和问题](largest_sum_contiguous_subarray.md)
+#### 1299 [将每个元素替换为右侧最大元素](https://leetcode-cn.com/problems/replace-elements-with-greatest-element-on-right-side/)
+
+题目要求：
+
+给你一个数组 `arr` ，请你将每个元素用它右边最大的元素替换，如果是最后一个元素，用 `-1` 替换。
+
+完成所有替换操作后，请你返回这个数组。
+
+思路分析：
+
+```go
+// date 2021/03/13
+func replaceElements(arr []int) []int {
+    cur, right_max := -1, -1
+    for i := len(arr)-1; i >= 0; i-- {
+        // 保存当前值
+        cur = arr[i]
+        // 将当前值赋值为右侧最大值
+        arr[i] = right_max
+        // 更新右侧最大值
+        if cur > right_max {
+            right_max = cur
+        }
+    }
+    return arr
+}
+```
+
