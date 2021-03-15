@@ -90,7 +90,7 @@ int fib(int n) {
 
 ### 相关题目
 
-#### 62 不同路径
+#### 62 [不同路径](https://leetcode-cn.com/problems/unique-paths/)【中等】
 
 题目要求：给定一个二维数组m x n，返回机器人从二维数组的左上角->右下角的所有不同路径。
 
@@ -119,7 +119,7 @@ func uniquePaths(m, n int) int {
 }
 ```
 
-#### 64 最小路径和
+#### 64 [最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)【中等】
 
 题目要求：https://leetcode-cn.com/problems/minimum-path-sum/
 
@@ -161,7 +161,7 @@ func min(x, y int) int {
 }
 ```
 
-#### 70 爬楼梯
+#### 70 [ 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)【简单】
 
 题目要求：https://leetcode-cn.com/problems/climbing-stairs/
 
