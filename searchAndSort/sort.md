@@ -45,7 +45,7 @@ $T(n) = T(k) + T(n-k-1) + \theta(n)$
 
 递归形式的快速排序的伪代码如下：
 
-```
+```golang
 // low-起始索引；high-结束索引
 quicksort(arry[], low, high) {
   if(low < high) {
@@ -321,6 +321,22 @@ func swap(nums []int, i, j int) {
     nums[i] = nums[j]
     nums[j] = t
 }
+// 第二种写法
+// partition选最右边的值作为基准值
+func partition(nums []int, left, right int) int {
+  // index维护小于基准值的下标
+  index, p := left-1, nums[right]
+  for left < right {
+    if nums[left] < p {
+      index++
+      swap(nums, index, left)
+    }
+    left++
+  }
+  // 将基准值放在index+1上
+  swap(nums, index+1, right)
+  return index+1
+}
 ```
 
 
@@ -341,9 +357,7 @@ func selectSort(nums []int) {
   }
 }
 func swap(nums []int, i, j int) {
-  t := nums[i]
-  nums[i] = nums[j]
-  nums[j] = t
+  nums[i], nums[j] = nums[j], nums[i]
 }
 ```
 
@@ -438,7 +452,7 @@ func merge(a1, a2 []int) []int {
 
 算法思想：使用大顶堆
 
-```go
+```golang
 func sortArray(nums []int) []int {
     makeMaxHeap(nums)
     n := len(nums)
@@ -462,11 +476,15 @@ func maxHeapify(nums []int, start, end int) {
     if start > end { return }
     temp, l, r := nums[start], start << 1 + 1, start << 1 + 2
     for l < end {
+        // 找到左右结点的最大值，并记录在l中
         r = l + 1
         if r < end && nums[r] > nums[l] { l++ }
+        // 如果父节点大于左右中的最大节点，则跳出
         if nums[start] > nums[l] { break }
+        // 否则将最大值更新到父节点
         nums[start] = nums[l]
         nums[l] = temp
+        // 接着往下调整
         start = l
         l = start << 1 + 1
     }

@@ -257,7 +257,7 @@ func min(x, y int) int {
 
 
 
-#### 121 买卖股票的最佳时机
+#### 121 [买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)【简单】
 
 题目要求：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/
 
@@ -268,6 +268,7 @@ func min(x, y int) int {
 ```go
 // date 2020/03/14
 // 时间复杂度O(N),空间复杂度O(1)
+// 非动态规划题解
 func maxProfit(prices []int) int {
   if 0 == len(prices) { return 0 }
   res, cur_min := 0, prices[0]
@@ -279,7 +280,7 @@ func maxProfit(prices []int) int {
 }
 ```
 
-#### 122 买卖股票的最佳时机II
+#### 122 [买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)【简单】
 
 题目要求：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/
 
@@ -301,7 +302,7 @@ func maxProfit(prices []int) int {
 }
 ```
 
-#### 123 买卖股票的最佳时机III
+#### 123 [买卖股票的最佳时机 III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)【困难】
 
 题目要求：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/
 
@@ -312,7 +313,7 @@ func maxProfit(prices []int) int {
 ```go
 // date 2020/03/14
 // 时间复杂度O(N^2),空间复杂度O(1)
-func maxProfix(prices []int) int {
+func maxProfit(prices []int) int {
   res, v1, v2 := 0, 0, 0
   for i := 0; i < len(prices); i++ {
     v1 = maxProfitOnce(prices[:i])
@@ -331,6 +332,27 @@ func maxProfitOnce(prices []int) int {
   }
   return res
 }
+// 官方题解
+// 思路2
+func maxProfit(prices []int) int {
+    if 0 == len(prices) { return 0 }
+    // 代表当前所拥有的钱数
+    // buy1 第一次买入, sell1 第一次卖出, buy2 第二次买入, sell2 第二次卖出
+    buy1, sell1 := -prices[0], 0
+    buy2, sell2 := -prices[0], 0
+    for i := 1; i < len(prices); i++ {
+        buy1 = max(buy1, -prices[i]) // 保持不变，或者买入
+        sell1 = max(sell1, buy1+prices[i]) // 保持不变，或者卖出
+        buy2 = max(buy2, sell1-prices[i]) // 保持不变，或者在第一次卖出的情况下买入
+        sell2 = max(sell2, buy2+prices[i]) // 保持不变，或者在第二次买入的情况卖出
+    }
+    return sell2
+}
+
+func max(x, y int) int {
+    if x > y { return x }
+    return y
+}
 ```
 
 #### 188 买卖股票的最佳时机IV
@@ -339,9 +361,7 @@ func maxProfitOnce(prices []int) int {
 
 思路分析：
 
-#### 322 Coin Change \[零钱兑换\]
-
-题目链接：https://leetcode-cn.com/problems/coin-change/
+#### 322 [零钱兑换](https://leetcode-cn.com/problems/coin-change/)【中等】
 
 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
 
@@ -354,15 +374,17 @@ func maxProfitOnce(prices []int) int {
 同时，需要边界条件，当无法找到解时，需要返回-1。
 
 ```golang
+// date 2021/03/16
 func coinChange(coins []int, amount int) int {
+    // opt[i]表示金额i的最优解，也就是凑成i金额的最少硬币个数
     opt := make([]int, amount+1)
     for i := 0; i <= amount; i++ { opt[i] = amount+1 }
+    // 金额0的最优解是0
     opt[0] = 0
-    for target := 0; target <= amount; i++ {
+    for target := 1; target <= amount; target++ {
         for _, coin := range coins {
             if target < coin { continue }
-            // 递推公式
-            opt[target] = min(opt[target], 1 + opt[target-coin])
+            opt[target] = min(opt[target], 1+opt[target-coin])
         }
     }
     // 判断是否有解
@@ -381,6 +403,36 @@ func min(x, y int) int {
 给定一个int数组A，数组中元素互不重复，给定一个数x，求所有求和能得到x的数字组合，组合中的元素来自A，可重复使用 【字节面试题】
 
 思路分析：类似零钱兑换，求其有多少种可能。
+
+```golang
+// date 2021/03/16
+// 字节面试题
+// 回溯算法
+func getSet(nums []int, target int) [][]int {
+  if 0 == len(nums) { return nil }
+  sort.Slice(nums, func(i, j int) bool {
+    return nums[i] < nums[j]
+  })
+  getSet2(nums, target, 0)
+  return res
+}
+
+res := make([][]int, 0, 16)
+temp := make([]int, 0, 16)
+
+func getSet2(nums []int, target int, index int) {
+  if 0 == target { res = append(res, temp) }
+  for i := index, i < len(nums); i++ {
+    if target < v { break }
+    n := len(temp)
+    temp = append(temp, v)
+    getSet2(nums, target-v, i)
+    temp = temp[:n]
+  }
+}
+```
+
+
 
 #### 746 使用最小花费爬楼梯
 
