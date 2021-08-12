@@ -99,6 +99,35 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 }
 ```
 
+第二种解法的C++版本
+
+```c++
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* res = new ListNode(-1);
+        ListNode* head = res;
+        int carry = 0;
+        while (l1 != NULL || l2 != NULL || carry > 0) {
+            auto sum = 0;
+            if (l1 != NULL) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            if (l2 != NULL) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+            sum += carry;
+            head->next = new ListNode(sum % 10);
+            head = head->next;
+            carry = (sum >= 10) ? 1 : 0;
+        }
+        return res->next;
+    }
+};
+```
+
 #### 19 Remove Nth Node From End of List【M】
 
 题目链接：https://leetcode.com/problems/remove-nth-node-from-end-of-list/
