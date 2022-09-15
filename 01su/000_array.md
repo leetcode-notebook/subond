@@ -1,10 +1,10 @@
-## Array【线性表】
+## Array
 
 Array[数组]是用于在相邻位置存储均匀元素的数据结构。 必须在存储数据之前提供数组的大小。
 
 [TOC]
 
-### 基本操作
+### 1、基本操作
 
 数组的性质决定了其基本操作的复杂度；
 
@@ -20,7 +20,7 @@ Array[数组]是用于在相邻位置存储均匀元素的数据结构。 必须
   + 插入：O(n)【最坏的情况下需要移动所有元素】
   + 删除：O(n)【最坏的情况下需要移动所有元素】
 
-### 常用技巧
+### 2、常用技巧
 
 #### 双指针技巧
 
@@ -33,213 +33,6 @@ Array[数组]是用于在相邻位置存储均匀元素的数据结构。 必须
 #### 就地替换
 
 in-place操作是指在不申请额外空间的情况下，通过索引找到目标值并进行就地替换的操作，该操作可以极大地减少时间和空间复杂度。
-
-### 相关题目
-
-#### 1两数之和
-
-题目要求：给定一个整数数组 `nums` 和一个整数目标值 `target`，请你在该数组中找出 **和为目标值** 的那 **两个** 整数，并返回它们的数组下标。
-
-```golang
-// date 2021/02/21
-// 解法一：直接两层循环
-func twoSum(nums []int, target int) []int {
-    res := make([]int, 2, 2)
-    n := len(nums)
-    for i := 0; i < n; i++ {
-        for j := i+1; j < n; j++ {
-            if nums[i] + nums[j] == target {
-                res[0], res[1] = i, j
-                return res
-            }
-        }
-    }
-    return res
-}
-// 解法二：因为题目中有提到每种输入只会对应一种输出，所以可以用map存储已经遍历过的元素和脚标，从而达到O(1)的查找
-func twoSum(nums []int, target int) []int {
-    res := make([]int, 2, 2)
-    set := make(map[int]int, len(nums))
-    n := len(nums)
-    for i := 0; i < n; i++ {
-        if j, ok := set[target-nums[i]]; ok {
-            res[0], res[1] = j, i
-            return res
-        } else {
-            set[nums[i]] = i
-        }
-    }
-    return res
-}
-```
-
-#### 扩展题目：两数之和
-
-**问题延伸：给定一个无序且元素可重复的数组a[],以及一个数sum，求a[]中是否存在两个元素的和等于sum，并输出这两个元素的下标。答案可能不止一种，请输出所有可能的答案结果集。**
-
-这是VMware面试中的一道题，以下是个人的解法。这个算法的时间复杂度为O(n)，但是需要辅助空间。
-
-```golang
-// data 2021/02/21
-// 解法一：两层循环
-func twoSum(nums []int, target int) [][]int {
-  res := make([][]int, 0, 16)
-  n := len(nums)
-  for i := 0; i < n; i++ {
-    for j := i+1; j < n; j++ {
-      if nums[i] + nums[j] == target {
-        res = append(res, []int{i,j})
-      }
-    }
-  }
-  return res
-}
-```
-
-
-
-#### 7 整数反转
-
-```go
-func reverse(x int) int {
-  mMAX, mMIN := 1 << 31 - 1, -1 << 31
-  res, flag := 0, 1
-  if x < 0 {
-    flag, x = -1, -x
-  }
-  for x > 0 {
-    res = res * 10 + x % 10
-    x /= 10
-  }
-  res *= flag
-  if res > 0 && res > mMAX || res < 0 && res < mMIN {return 0}
-  return res
-}
-```
-
-
-
-#### 11 盛最多水的容器【中等】
-
-思路分析:双指针
-
-```go
-// date 2019/12/28
-// 双指针
-func maxArea(height []int) int {
-  var res, temp int
-  i, j := 0, len(height) - 1
-  for i < j {
-    if height[i] < height[j] {
-      temp = height[i] * (j-i)
-      i++
-    } else {
-      temp = height[j] * (j-i)
-      j--
-    }
-    if temp > res {
-      res = temp
-    }
-  }
-  return res
-}
-```
-
-
-
-#### 26 从排序数组中删除重复项
-
-题目要求：给定一个排序数组，**原地**删除重复出现的元素，使得每个元素只出现一次，并返回新的数组长度。
-
-思路分析
-
-算法1：双指针，一个负责遍历元素，一个负责更新元素。
-
-```go
-func removeDuplicates(nums []int) int {
-  if len(nums) <= 1 {return len(nums)}
-  index, key := 1, nums[0]
-  for i := 1; i < len(nums); i++ {
-    if nums[i] != key {
-      key = nums[i]
-      nums[index] = key
-      index++
-    }
-  }
-  return index
-}
-// date 2019/12/28
-// 算法 nums[0...i]只维护不重复的元素
-func removeDuplicates(nums []int) int {
-  if len(nums) <= 1 {return len(nums)}
-  i, j := 0, 1  // 第一个元素肯定不重复
-  for j < len(nums) {
-    if nums[j] != nums[i] { // 出现不重复的元素
-      // 指向同一个元素，不需要更新
-      if i + 1 != j {
-        nums[i+1] = nums[j]
-      }
-      i++
-    }
-    j++
-  }
-  return i+1
-}
-// date 2019/12/28
-// 第二个算法的简洁版
-func removeDuplicates(nums []int) int {
-  if len(nums) <= 1 {return len(nums)}
-  index := 0
-  for i := 1; i < len(nums); i++ {
-    if nums[i] != nums[index] {
-      index++
-      nums[index] = nums[i]  // 即是指向同一个元素，更新也没问题
-    }
-  }
-  return index+1
-}
-```
-
-#### 27 移除元素【简单】
-
-题目链接：https://leetcode-cn.com/problems/remove-element/
-
-题目要求：给你一个数组 `nums` 和一个值 `val`，你需要 **[原地](https://baike.baidu.com/item/原地算法)** 移除所有数值等于 `val` 的元素，并返回移除后数组的新长度。
-
-算法1：
-
-```golang
-// date 2021/03/13
-// index作为新的索引，只记录符合条件的(不等于val)的元素
-func removeElement(nums []int, val int) int {
-    var index int
-    for i := 0; i < len(nums); i++ {
-        if nums[i] != val {
-            nums[index] = nums[i]
-            index++
-        }
-    }
-    return index
-}
-```
-
-算法2：交换的思想，将每个等于val的元素，交换至数组的尾部，维护尾部索引，返回新的尾部索引。时间复杂度O(n) 空间复杂度O(n)
-
-```go
-func removeElements(nums []int, val int) int {
-  i, tail := 0, len(nums)
-  for i < tail; {
-    if nums[i] == val {
-      tail--
-      nums[i] = nums[tail]
-      nums[tail] = val
-    } else {
-      i++
-    }
-  }
-  return tail
-}
-```
 
 
 
@@ -279,34 +72,7 @@ func total(n int) int {
 }
 ```
 
-#### 53 最大子序和
 
-题目链接：https://leetcode-cn.com/problems/maximum-subarray/
-
-题目要求：给定一个整数数组，找到一个具有最大和的连续子数组，并返回其值。
-
-思路分析：
-
-```go
-// date 2020/05/03
-func maxSubArray(nums []int) int {
-    if len(nums) == 0 { return 0 }
-    res := nums[0]
-    var temp, cur_max int
-    for _, v := range nums {
-        cur_max + v
-        // 如果当前结果小于零，则重新计算;否则将当前元素加入结果集
-        if 0 > cur_max {
-            cur_max = v
-        } else {
-            cur_max += v
-        }
-        // 当前结果集大于最终结果集时，更新最终结果集
-        if cur_max > res { res = cur_max }
-    }
-    return res
-}
-```
 
 #### 54 螺旋矩阵
 
@@ -397,32 +163,6 @@ func plusOne(digits []int) []int {
 ```
 
 
-
-#### 75 颜色分类【中等】
-
-思路分析：两个指针
-
-i维护元素为0的脚标，j维护元素为2的脚标
-
-```go
-func sortColors(nums []int) {
-  k, i, j := 0, 0, len(nums) - 1
-  for k <= j {
-    if nums[k] == 2 {
-      nums[k] = nums[j]
-      nums[j] = 2
-      j--
-    } else if nums[k] == 0 {
-      nums[k] = nums[i]
-      nums[i] = 0
-      i++
-      k++
-    } else {
-      k++
-    }
-  }
-}
-```
 
 
 

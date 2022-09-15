@@ -2,7 +2,33 @@
 
 [TOC]
 
-### 相关题目
+### 1、相关题目
+
+#### 7 整数反转
+
+给你一个 32 位的有符号整数 `x` ，返回将 `x` 中的数字部分反转后的结果。
+
+```go
+// date 2022-09-15
+func reverse(x int) int {
+    mMax, mMin := 1 << 31 - 1, -1 << 31
+    res, flag := 0, 1
+    if x < 0 {
+        flag, x = -1, -x
+    }
+    for x > 0 {
+        res = res * 10 + x % 10
+        x /= 10
+    }
+    res *= flag
+    if res > 0 && res > mMax || res < 0 && res <= mMin {
+        res = 0
+    }
+    return res
+}
+```
+
+
 
 #### 8 String to Integer
 
