@@ -85,42 +85,6 @@ func findPrefix(s1, s2 string) string {
 }
 ```
 
-#### 20 有效的字符串/有效的括号
-
-思路分析：stack数据结构，压栈及出栈
-
-算法如下：时间复杂度O(n) 空间复杂度O(1)
-
-```go
-// date 2020/01/06
-/* 算法：
- 0. 如果字符串长度为单数，直接返回false.
- 1. 遇到左括号，入栈
- 2. 遇到右括号，判断栈是否为空，如果为空，返回false
- 3. 如果不为空，出栈
- 4. 遍历结束后，判断栈是否为空。
-*/
-func isValid(s string) bool {
-  if len(s) & 0x1 == 1 {return false}
-  stack := make([]rune, 0)
-  var c rune
-  for _, v := range s {
-    if v == '(' || v == '{' || v == '[' {
-      stack = append(stack, v)
-    } else {
-      if len(stack) == 0 {return false}
-      c = stack[len(stack)-1]
-      if v == ')' && c == '(' || v == '}' && c == '{' || v == ']' && c == '[' {
-        stack = stack[:len(stack)-1]
-      } else {
-        return false
-      }
-    }
-  }
-  return len(stack) == 0
-}
-```
-
 #### 43 字符串相乘
 
 题目要求：
@@ -189,24 +153,6 @@ func addString(s1, s2 string) string {
 ```
 
 
-
-#### 有效的字母异位词
-
-思路分析
-
-算法1：题目中说明了只包含小写字母，因此可以用数组判断。
-
-```go
-func isAnagram(s string, t string) bool {
-  if len(s) != len(t) {return false}
-  ms, mt := [26]int{}, [26]int{}
-  for i := 0; i < len(s); i++ {
-    ms[s[i] - 'a']++
-    mt[t[i] - 'a']++
-  }
-  return ms == mt
-}
-```
 
 #### 实现strStr()
 
