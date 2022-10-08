@@ -4,9 +4,9 @@
 
 ### [基本操作](linkedlist_basic.md)
 
-### 常用技巧
+### 1.常用技巧
 
-#### 快慢指针
+#### 1.1 快慢指针
 
 在数组章节我们学习的双指针技巧，通常是两个指针从前后一起遍历，向中间逼近；或者读写指针维护不同的数据元素；而在链表的运用中，由于单向链表只能单向遍历，通过调整两个指针的遍历速度完成某种特定任务，因此也称为”快慢指针“技巧。
 
@@ -14,257 +14,24 @@
 
 回顾：运用双指针技巧的几点注意事项，1）在运用Next节点时一定要判断节点是否为空，举例`fast.Next.Next`一定要判断`fast != nil && fast.Next != nil`；2）注意循环结束的条件。
 
-#### 哑结点
 
-哑结点，也称为哨兵结点，主要应用与某些头节点不明确的场景，例如题目21合并两个有序链表。
 
-#### 经典题目
+#### 1.2 哑结点
+
+哑结点，也称为哨兵结点，主要应用与某些头节点不明确的场景。相关题目：
+
+1. [002两数相加](002.md)
+2. [021合并两个有序链表](021.md)
+
+
+
+
+
+#### 1.3 经典题目
 
 关于的链表的经典问题，主要包括题目206反转链表，203移除链表元素，234回文链表和328奇偶链表。
 
 ### 相关题目
-
-#### 2 两数相加
-
-题目要求：https://leetcode-cn.com/problems/add-two-numbers/
-
-思路分析：
-
-算法1：直接计算。将结果存入其中一个链表。
-
-```go
-// 算法1
-func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-    if l1 == nil { return l2 }
-    if l2 == nil { return l1 }
-    h1, h2 := l1, l2
-    var temp, carry int
-    for h1 != nil && h2 != nil {
-        temp = h1.Val + h2.Val + carry
-        carry = temp / 10
-        h1.Val = temp % 10
-        // 两个链表同时走到尾部，查看进位
-        if h1.Next == nil && h2.Next == nil {
-            if carry == 1 {
-                h1.Next = &ListNode{Val: 1}
-            }
-            return l1
-        }
-        // 默认l1走到尾部，查看l2的剩余结点
-        if h1.Next == nil && h2.Next != nil {
-            h1.Next = h2.Next
-            h1 = h1.Next
-            break
-        }
-        h1 = h1.Next
-        h2 = h2.Next
-    }
-    for h1 != nil {
-        temp = h1.Val + carry
-        carry = temp / 10
-        h1.Val = temp % 10
-        if h1.Next == nil {
-            if carry == 1 {
-                h1.Next = &ListNode{Val: 1}
-            }
-            return l1
-        }
-        h1 = h1.Next
-    }
-    return l1
-}
-// date 2020/03/29
-// 算法二：直接计算，并先开辟空间存储结果
-// 这个解法更好
-func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-    dummy := &ListNode{Val:-1}
-    pre := dummy
-    temp_res, n1, n2, carry := 0, 0, 0, 0
-    for l1 != nil || l2 != nil || carry > 0 {
-        n1, n2 = 0, 0
-        if l1 != nil {
-            n1 = l1.Val
-            l1 = l1.Next
-        }
-        if l2 != nil {
-            n2 = l2.Val
-            l2 = l2.Next
-        }
-        temp_res = n1 + n2 + carry
-        carry = temp_res / 10
-        pre.Next = &ListNode{Val: temp_res%10}
-        pre = pre.Next
-    }
-    return dummy.Next
-}
-```
-
-第二种解法的C++版本
-
-```c++
-class Solution {
-public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* res = new ListNode(-1);
-        ListNode* head = res;
-        int carry = 0;
-        while (l1 != NULL || l2 != NULL || carry > 0) {
-            auto sum = 0;
-            if (l1 != NULL) {
-                sum += l1->val;
-                l1 = l1->next;
-            }
-            if (l2 != NULL) {
-                sum += l2->val;
-                l2 = l2->next;
-            }
-            sum += carry;
-            head->next = new ListNode(sum % 10);
-            head = head->next;
-            carry = (sum >= 10) ? 1 : 0;
-        }
-        return res->next;
-    }
-};
-```
-
-#### 19 Remove Nth Node From End of List【M】
-
-题目链接：https://leetcode.com/problems/remove-nth-node-from-end-of-list/
-
-题目要求：
-
-思路分析：
-
-双指针slow和fast，fast快指针先走n步(n有效，所以最坏的情况是快指针走到表尾，即是删除表头元素)；然后slow指针和fast指针同走，当fast指针走到最后一个元素时，因为slow与fast慢指针差n步，slow刚好为欲删除节点的前驱节点。
-
-```go
-func removeNthFromEnd(head *ListNode, n int) *ListNode {
-    if head == nil {return nil}
-    slow, fast := head, head
-    for n > 0 && fast != nil {
-        fast = fast.Next
-        n--
-    }
-    // 保护逻辑，如果n大于零，说明欲要删除的节点超过链表长度
-    if n > 0 { return head }
-    // fast走到链表的尾部，则n刚好为链表的长度，即删除头节点
-    if fast == nil {
-        return head.Next
-    }
-    // fast指针继续走到链表的尾部，则slow指针刚好为欲要删除的节点的前继节点
-    for fast.Next != nil {
-        slow, fast = slow.Next, fast.Next
-    }
-    slow.Next = slow.Next.Next
-    return head
-}
-```
-
-#### 21 合并两个有序链表
-
-题目要求：https://leetcode-cn.com/problems/merge-two-sorted-lists/
-
-思路分析：利用哑结点
-
-```go
-// date 2020/03/29 2020/05/08
-func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
-    if l1 == nil {
-        return l2
-    }
-    if l2 == nil {
-        return l1
-    }
-    dummy := &ListNode{Val: -1}
-    pre := dummy
-    for l1 != nil || l2 != nil {
-        if l1 == nil {
-            pre.Next = l2
-            break
-        }
-        if l2 == nil {
-            pre.Next = l1
-            break
-        }
-        if l1.Val < l2.Val {
-            pre.Next = l1
-            l1 = l1.Next
-        } else {
-            pre.Next = l2
-            l2 = l2.Next
-        }
-        pre = pre.Next
-    }
-    return dummy.Next
-}
-```
-
-算法二：递归版
-
-每个节点只会访问一次，因此时间复杂度为O(n+m)；只有到达l1或l2的底部，递归才会返回，所以空间复杂度为O(n+m)
-
-```go
-// 递归版
-func mergeTwoLists(l1, l2 *ListNode) *ListNode {
-  if l1 == nil {return l2}
-  if l2 == nil {return l1}
-  var newHead *ListNode
-  if l1.Val < l2.Val {
-    newHead = l1
-    newHead.Next = mergeTwoLists(l1.Next, l2)
-  } else {
-    newHead = l2
-    newHead.Next = mergeTwoLists(l1, l2.Next)
-  }
-  return newHead
-}
-```
-
-
-
-#### 23 合并K个排序链表
-
-题目链接：https://leetcode.com/problems/merge-k-sorted-lists/submissions/
-
-题目要求：给定K个有序链表，返回合并后的排序链表。
-
-思路分析：复习递归算法，掌握自底向上和自上向下的递归方法。
-
-算法1：递归算法，自底向上的两两合并。每个链表遍历一遍，所示时间复杂度O(n*k)，空间复杂度O(1)。
-
-```go
-// date 2020/01/06; 2020/02/21
-func mergeKLists(lists []*ListNode) *ListNode {
-    if len(lists) == 0 { return nil }
-    if len(lists) == 1 { return lists[0] }
-    l1, l2 := mergeKLists(lists[:len(lists)-1]), lists[len(lists)-1]
-    dummy := &ListNode{Val: -1}
-    pre := dummy
-    for l1 != nil || l2 != nil {
-        if l1 == nil {
-            pre.Next = l2
-            break
-        }
-        if l2 == nil {
-            pre.Next = l1
-            break
-        }
-        if l1.Val < l2.Val {
-            pre.Next = l1
-            l1 = l1.Next
-        } else {
-            pre.Next = l2
-            l2 = l2.Next
-        }
-        
-        pre = pre.Next
-    }
-    return dummy.Next
-}
-```
-
-
 
 #### 24 两两交换链表中的节点
 
@@ -385,89 +152,6 @@ func rotateRight(head *ListNode, k int) *ListNode {
   head = pre.Next
   pre.Next = nil
   return head
-}
-```
-
-#### 82 Remove Duplicates From Sorted List II
-
-思路分析：
-
-**哑节点+快慢指针**
-
-fast：发现重复元素；slow：存放结果
-
-```go
-// 83升级版，所有重复元素都不要，只保留出现过一次的元素
-func deleteDuplicates(head *ListNode) *ListNode {
-    if head == nil || head.Next == nil {
-        return head
-    }
-    dummy := &ListNode{Val: -1}
-    dummy.Next = head
-    slow := dummy
-    fast := head
-    for fast.Next != nil {
-        if fast.Val != fast.Next.Val {
-            if slow.Next == fast {
-                // 说明slow和fast之间没有重复元素，更新slow节点
-                slow = fast
-            } else {
-                // 说明slow和fast之间有重复元素，更新slow的next节点
-                slow.Next = fast.Next
-            }
-        }
-        fast = fast.Next
-    }
-    // coner case
-    if slow.Next != nil && slow.Next != fast && slow.Next.Val == fast.Val {
-        slow.Next = nil
-    }
-    return dummy.Next
-}
-```
-
-#### 83 Remove Duplicates From Sorted List
-
-```go
-// 算法1：直观
-func deleteDuplicates(head *ListNode) *ListNode {
-  if head == nil || head.Next == nil {
-    return head
-  }
-  pre := head
-  for pre != nil && pre.Next != nil {
-      if pre.Val == pre.Next.Val {
-          pre.Next = pre.Next.Next
-          continue
-      }
-      pre = pre.Next
-  }
-  return head
-}
-```
-
-#### 86 Partition List
-
-```go
-// 算法：哑结点+两个指针
-func partition(head *ListNode, x int) *ListNode {
-  before := &ListNode{Val: -1}
-  after := &ListNode{Val: -1}
-  bhead := before
-  ahead := after
-  for head != nil {
-    if head.Val < x {
-      before.Next = head
-      before = before.Next
-    } else {
-      after.Next = head
-      after = after.Next
-    }
-    head = head.Next
-  }
-  after.Next = nil
-  before.Next = ahead.Next
-  return bhead.Next
 }
 ```
 
