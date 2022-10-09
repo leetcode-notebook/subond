@@ -49,6 +49,9 @@
   5. [082从排序链表中删除重复元素2](02linkedlist/082.md)
   6. [083从排序链表中删除重复元素](02linkedlist/083.md)
   7. [086分割链表](02linkedlist/086.md)
+  8. [141环形链表](02linkedlist/141.md)
+  9. [142环形链表2](02linkedlist/142.md)
+  10. [143重排链表](02linkedlist/143.md)
 
 
 ## 字符串部分
