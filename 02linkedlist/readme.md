@@ -33,52 +33,6 @@
 
 ### 相关题目
 
-#### 24 两两交换链表中的节点
-
-思路分析：
-
-算法1：先找出新的头节点，并保存两两交换后的第二个节点，用于更新其Next指针。
-
-```go
-func swapPairs(head *ListNode) *ListNode {
-    if head == nil || head.Next == nil {return head}
-    var newHead *ListNode
-    pre, p1, p2 := head, head, head.Next
-    after := p2.Next
-    p1.Next = after
-    p2.Next = p1
-    pre, p1 = p1, after
-    newHead = p2
-    for p1 != nil && p1.Next != nil {
-        p2 = p1.Next
-        after = p2.Next
-        p1.Next = after
-        p2.Next = p1
-        pre.Next = p2
-        pre, p1 = p1, after
-    }
-    return newHead
-}
-```
-
-算法2：递归实现两两交换
-
-```go
-func swapPairs(head *ListNode) *ListNode {
-  var nHead *ListNode
-  // basic case
-  if head == nil || head.Next == nil {
-    return head
-  } else {
-    n := head.Next.Next
-    nHead = head.Next
-    nHead.Next = head
-    head.Next = swapPairs(n)
-  }
-  return nHead
-}
-```
-
 #### 61 Rotate List【旋转链表】
 
 思路分析：
@@ -427,44 +381,6 @@ func removeElements(head *ListNode, val int) *ListNode {
     }
     pre.Next = nil
     return newHead
-}
-```
-
-#### 206 反转链表【E】
-
-题目要求：https://leetcode.com/problems/reverse-linked-list/
-
-思路分析：
-
-直接迭代，时间复杂度O(n)，空间复杂度O(1)。
-
-```go
-// 算法1：迭代
-func reverseList(head *ListNode) *ListNode {
-    var pre, after *ListNode
-    for head != nil {
-        after = head.Next
-        head.Next = pre
-        pre, head = head, after
-    }
-    return pre
-}
-```
-
-算法2：假设链表为n1->n2->...->nk-1->nk->nk+1->...nm；如果从节点nk+1到结点nm均已经反转，即
-
-n1->n2->...->nk-1->nk->nk+1<-...<-nm那么nk的操作则需要nk.Next.Next = nk
-
-时间复杂度O(n)，空间复杂度O(n)，因为递归会达到n层。
-
-```go
-// 算法2：递归
-func reverseList(head *ListNode) *ListNode {
-  if head == nil || head.Next == nil {return head}
-  pre := reverseList(head.Next)
-  head.Next.Next = head
-  head.Next = nil
-  return pre
 }
 ```
 
