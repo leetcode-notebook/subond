@@ -85,73 +85,6 @@ func findPrefix(s1, s2 string) string {
 }
 ```
 
-#### 43 字符串相乘
-
-题目要求：
-
-思路分析：任务拆解，把大任务拆解成一个一个的小任务。
-
-```go
-// date 2020/03/28
-/*
-1. 先实现两个字符串相加；2.实现单个数字的相乘，3.实现零的追加。
-*/
-func multiply(num1 string, num2 string) string {
-    if len(num1) == 0 { return num2 }
-    if len(num2) == 0 { return num1 }
-    if len(num1) == 1 && num1[0] == '0' { return "0" }
-    if len(num2) == 1 && num2[0] == '0' { return "0" }
-    var res string
-    for i := len(num2)-1; i >= 0; i-- {
-        t := product(num1, num2[i])
-        t = appendZeros(t, len(num2)-1-i)
-        res = addString(res, t)
-    }
-    return res
-}
-
-func appendZeros(s string, c int) string {
-    if c <= 0 { return s }
-    for c > 0 {
-        s += fmt.Sprintf("%d", 0)
-        c--
-    }
-    return s
-}
-
-func product(s1 string, s2 byte) string {
-    var res string
-    var carry, n1, t int
-    i, n2 := len(s1)-1, int(s2 - '0')
-    for i >= 0 || carry > 0 {
-        n1 = 0
-        if i >= 0 { n1 = int(s1[i]-'0') }
-        t = n1 * n2 + carry
-        carry = t / 10
-        res = fmt.Sprintf("%d", t%10) + res
-        i--
-    }
-    return res
-}
-
-func addString(s1, s2 string) string {
-    var res string
-    var carry, n1, n2, t int
-    i, j := len(s1)-1, len(s2)-1
-    for i >= 0 || j >= 0 || carry > 0 {
-        n1, n2 = 0, 0
-        if i >= 0 { n1 = int(s1[i] - '0') }
-        if j >= 0 { n2 = int(s2[j] - '0') } 
-        t = n1 + n2 + carry
-        carry = t / 10
-        res = fmt.Sprintf("%d", t%10) + res
-        i--
-        j--
-    }
-    return res
-}
-```
-
 
 
 #### 实现strStr()
@@ -174,41 +107,6 @@ func strStr(haystack, needle string) int {
     if string(haystack[i:i+n]) == needle {return i}
   }
   return -1
-}
-```
-
-#### 反转字符串
-
-思路分析
-
-算法1：双指针
-
-```go
-func reverseStrings(s []byte) {
-  i, j := 0, len(s)-1
-  for i < j {
-    t := s[i]
-    s[i] = s[j]
-    s[j] = t
-    i++
-    j--
-  }
-}
-```
-
-算法2：递归
-
-```go
-func reverseStrings(s []byte) {
-  // basic case
-  if len(s) <= 1 {
-      return
-  } else {
-      t := s[0]
-      s[0] = s[len(s)-1]
-      s[len(s)-1] = t
-      reverseString(s[1:len(s)-1])
-  }  
 }
 ```
 
@@ -296,83 +194,6 @@ func isStrobogrammatic(num string) bool {
 }
 ```
 
-
-
-#### 58 最后一个单词的长度
-
-题目要求： 给定一个字符串，返回其最后一个单词的长度。
-
-算法: 注意字符串末尾的空字符串。
-
-```go
-// date 2020/01/19
-func lengthOfLastWord(s string) int {
-  var res int
-  for i := len(s) - 1; i >= 0; i-- {
-    if res == 0 && s[i] == ' ' {continue}
-    if s[i] == ' ' {return res}
-    res++
-  }
-  return res
-}
-```
-
-#### 67 二进制求和
-
-题目要求：给定两个二进制字符串，返回其和，结果用字符串存储。
-
-算法1：直接操作。
-
-算法2：用0补齐较短的字符串。
-
-```go
-// date 2020/01/19
-func addBinary(a, b string) string {
-  var n int
-  if len(a) < len(b) {
-    n = len(b) - len(a)
-  } else {
-    n = len(a) - len(b)
-  }
-  var res string
-  for n > 0 {
-    res += "0"
-    n--
-  }
-  
-}
-```
-
-
-
-#### 验证回文串
-
-思路分析
-
-```go
-// date 2019/12/28
-// 
-func isPalindrome(s string) bool {
-  s = strings.ToLower(s)
-  var res string
-  for i := 0; i < len(s); i++ {
-    if 'a' <= s[i] && s[i] <= 'z' || '0' <= s[i] && s[i] <= '9' {
-      res += string(s[i])
-    }
-  }
-  i, j := 0, len(res) - 1
-  for i < j {
-    if res[i] != res[j] {
-      return false
-    } else {
-      i++
-      j--
-    }
-  }
-  return true
-}
-```
-
 #### 345 反转字符串中的元音字母
 
 ```go
@@ -409,32 +230,6 @@ func reverseVowels(s string) {
       i++
     }
   }
-}
-```
-
-#### 415 字符串相加
-
-题目要求：https://leetcode-cn.com/problems/add-strings/
-
-思路分析：思路并不难，关键是如何让自己的代码更优雅
-
-```go
-// date 2020/03/28
-func addStrings(num1 string, num2 string) string {
-    var res string
-    var carry, n1, n2, t int
-    i, j := len(num1)-1, len(num2)-1
-    for i >= 0 || j >= 0 || carry > 0 {
-        n1, n2 = 0, 0
-        if i >= 0 { n1 = int(num1[i] - '0') }
-        if j >= 0 { n2 = int(num2[j] - '0') } 
-        t = n1 + n2 + carry
-        carry = t / 10
-        res = fmt.Sprintf("%d", t%10) + res
-        i--
-        j--
-    }
-    return res
 }
 ```
 
