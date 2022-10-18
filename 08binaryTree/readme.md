@@ -97,7 +97,7 @@ func inorderTraversal(root *TreeNode) []int {
             root = root.Left
             continue
         }
-        // 去除当前结点，查看其右子树
+        // 取当前结点，查看其右子树
         if 0 != len(stack) {
             root = stack[len(stack)-1]
             res = append(res, root.Val)

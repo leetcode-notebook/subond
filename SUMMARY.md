@@ -56,11 +56,18 @@
   12. [206反转链表](02linkedlist/206.md)
 
 
+
 ## 字符串部分
 
 * [字符串](05string/string.md)
 
 
+
+## 树
+
+- [树的介绍](08binaryTree/readme.md)
+  1. 哈哈
+  2. 合和
 
 ## 堆算法
 
