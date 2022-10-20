@@ -77,6 +77,7 @@
 
 - [树的介绍](08binaryTree/readme.md)
   1. [094二叉树的中序遍历](08binaryTree/094.md)
+  1. [098验证二叉树搜索树](08binaryTree/098.md)
 
 
 
