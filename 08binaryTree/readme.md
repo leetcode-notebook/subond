@@ -2,15 +2,22 @@
 
 [TOC]
 
-### 什么是二叉树
+### 1.什么是二叉树
 
-树是一种数据结构，树中的每个节点都包含一个键值和所有子节点的列表，对于二叉树来说，每个节点最多有两个子树结构，分别称为左子树和右子树。
+​		树是一种数据结构，树中的每个节点都包含一个键值和所有子节点的列表，对于二叉树来说，每个节点最多有两个子树结构，分别称为左子树和右子树。
 
 #### 二叉树的深度
 
-二叉树的深度是指二叉树的根结点到叶子结点的距离，最大深度即根结点到叶子结点的最大距离；最小深度即根结点到叶子结点的最小距离；常见的问题包括求取二叉树的最大/最大深度，一般可以使用递归算法或者DFS。
+​		二叉树的深度是指二叉树的根结点到叶子结点的距离，最大深度即根结点到叶子结点的最大距离；最小深度即根结点到叶子结点的最小距离。
 
-### 二叉树的遍历
+​		常见的问题包括求取二叉树的最大/最大深度，一般可以使用递归算法或者DFS。
+
+相关题目：
+
+		- [二叉树的最大深度](104.md)
+		- [二叉树的最小深度](111.md)
+
+### 2.二叉树的遍历
 
 根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想就很好写；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈。
 
@@ -223,7 +230,7 @@ func levelOrder(root *TreeNode) [][]int {
 
 **注意**，从上面两种实现的方式来看，层序遍历既可以使用广度优先搜索，也可以使用深度优先搜索。
 
-### 递归解决树的问题
+### 3.递归解决树的问题
 
 递归通常是解决树的相关问题最有效和最常用的方法之一，分为**自顶向下**和**自底向上**两种。
 
@@ -1006,74 +1013,6 @@ func isSymmetric(root *TreeNode) bool {
 }
 ```
 
-#### 104 二叉树的最大深度【简单】
-
-题目链接：https://leetcode.com/problems/maximum-depth-of-binary-tree/
-
-题目要求：给定一棵二叉树，找出其最大深度。
-
-思路分析
-
-算法：递归，递归调用分别得到左子树和右子树的深度，然后比较取最大值，并+1返回结果
-
-```go
-// 算法一: 递归，采用自底向上的递归思想
-// 时间复杂度O(N)，空间复杂度O(NlogN)
-// 自底向上的递归
-func maxDepth(root *TreeNode) int {
-    if root == nil { return 0 }
-    l, r := maxDepth(root.Left), maxDepth(root.Right)
-    if l > r { return l+1 }
-    return r + 1
-}
-
-// 算法二
-// bfs广度优先搜索
-// 时间复杂度O(N)，空间复杂度O(N)
-func maxDepth(root *TreeNode) int {
-  if root == nil {return 0}
-  queue := make([]*TreeNode, 0)
-  queue = append(queue, root)
-  depth, n := 0, 0
-  for len(queue) != 0 {
-    n = len(queue)
-    for i := 0; i < n; i++ {
-      if queue[i].Left != nil {
-        queue = append(queue, queue[i].Left)
-      }
-      if queue[i].Right != nil {
-        queue = append(queue, queue[i].Right)
-      }
-    }
-    queue = queue[n:]
-    depth++
-  }
-  return depth
-}
-
-// 算法三 dfs深度优先搜索
-// 时间复杂度O(N)，空间复杂度O(NlogN)
-// 自顶向下的递归
-func maxDepth(root *TreeNode) int {
-    // dfs
-    var dfs func(root *TreeNode, level int) int
-    dfs = func(root *TreeNode, level int) int {
-        if root == nil { return level }
-        if root.Left == nil && root.Right == nil { return level+1 }
-        if root.Left == nil {
-            return dfs(root.Right, level+1)
-        }
-        if root.Right == nil {
-            return dfs(root.Left, level+1)
-        }
-        l, r := dfs(root.Left, level+1), dfs(root.Right, level+1)
-        if l > r { return l }
-        return r
-    }
-    return dfs(root, 0)
-}
-```
-
 #### 105 从前序与中序遍历序列构造二叉树【中等】
 
 算法分析：1）从中序序列中找到根节点，递归左右子树。
@@ -1168,110 +1107,7 @@ func getHeight(root *TreeNode) int {
 }
 ```
 
-#### 111 二叉树的最小深度【简单】
 
-题}要求：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
-
-算法分析
-
-```go
-// date 2020/03/21
-// 递归算法
-func minDepth(root *TreeNode) int {
-    if root == nil { return 0 }
-    if root.Left == nil { return 1 + minDepth(root.Right) }
-    if root.Right == nil { return 1 + minDepth(root.Left) }
-    l, r := minDepth(root.Left), minDepth(root.Right)
-    if l > r { return r+1 }
-    return l+1
-}
-// bfs广度优先搜索
-func minDepth(root *TreeNode) int {
-    if root == nil { return 0 }
-    queue := make([]*TreeNode, 0)
-    queue = append(queue, root)
-    var n, depth int
-    for len(queue) != 0 {
-        n = len(queue)
-        for i := 0; i < n; i++ {
-            if queue[i].Left == nil && queue[i].Right == nil { return depth+1 }
-            if queue[i].Left != nil {
-                queue = append(queue, queue[i].Left)
-            }
-            if queue[i].Right != nil {
-                queue = append(queue, queue[i].Right)
-            }
-        }
-        depth++
-        queue = queue[n:]
-    }
-    return depth
-}
-// dfs深度优先搜索
-func minDepth(root *TreeNode) int {
-    var dfs func(root *TreeNode, depth int) int
-    dfs = func(root *TreeNode, depth int) int {
-        // 空结点直接返回
-        if root == nil { return depth }
-        // 叶子结点
-        if root.Left == nil && root.Right == nil { return depth+1 }
-        if root.Left == nil {
-            return dfs(root.Right, depth+1)
-        }
-        if root.Right == nil {
-            return dfs(root.Left, depth+1)
-        }
-        l, r := dfs(root.Left, depth+1), dfs(root.Right, depth+1)
-        if l < r { return l }
-        return r
-    }
-    return dfs(root, 0)
-}
-```
-
-#### 112 路径总和Path Sum【简单】
-
-思路分析
-
-算法1：自顶向下的递归思想
-
-```go
-// 自顶向下递归
-func hasPathSum(root *TreeNode, sum int) bool {
-  if root == nil {return false}
-  sum -= root.Val
-  if root.Left == nil && root.Right == nil {return sum == 0}
-  return hasPathSum(root.Left, sum) || hasPathSum(root.Right, sum)
-}
-```
-
-算法2：迭代，利用queue保存当前结果，类型层序遍历。
-
-```go
-func hasPathSum(root *TreeNode, sum int) bool {
-    if root == nil {return false}
-    queue, csum := make([]*TreeNode, 0), make([]int, 0)
-    queue = append(queue, root)
-    csum = append(csum, sum - root.Val)
-    for 0 != len(queue) {
-        n := len(queue)
-        for i := 0; i < n; i++ {
-            if queue[i].Left == nil && queue[i].Right == nil && csum[i] == 0 {return true}
-            if queue[i].Left != nil {
-                queue = append(queue, queue[i].Left)
-                csum = append(csum, csum[i] - queue[i].Left.Val)
-            }
-            if queue[i].Right != nil {
-                queue = append(queue, queue[i].Right)
-                csum = append(csum, csum[i] - queue[i].Right.Val)
-            }
-        }
-        queue = queue[n:]
-        csum = csum[n:]
-    }
-    return false
-}
-```
 
 #### 156 上下翻转二叉树【中等】
 

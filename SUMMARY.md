@@ -78,6 +78,9 @@
 - [树的介绍](08binaryTree/readme.md)
   1. [094二叉树的中序遍历](08binaryTree/094.md)
   1. [098验证二叉树搜索树](08binaryTree/098.md)
+  1. [104二叉树的最大深度](08binaryTree/104.md)
+  1. [111二叉树的最小深度](08binaryTree/111.md)
+  1. [112路径总和](08binaryTree/112.md)
 
 
 
