@@ -19,7 +19,13 @@
 
 ### 2.二叉树的遍历
 
-根据访问root节点的先后顺序，可分为前序遍历，中序遍历和后序遍历。递归版本的遍历，只要理解其思想就很好写；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈。
+​		按照root节点访问顺序，可分为前序遍历，中序遍历和后序遍历。其 root 节点访问顺序如下：
+
+		- 前序遍历：按「根-左-右」依次访问各节点
+		- 中序遍历：按「左-根-右」依次访问各节点
+		- 后序遍历：按「左-右-根」依次访问各节点
+
+递归版本的遍历，只要理解其思想就很好写；而对于非递归版本的遍历，需要深入理解其结点的遍历顺序，并记录下来之前经过的结点，所以一定会用到栈。
 
 从广度搜索和深度搜索的角度来讲，层序遍历属于广度优先搜索，而前序，中序，后序遍历均为深度优先搜索。
 
@@ -229,6 +235,15 @@ func levelOrder(root *TreeNode) [][]int {
 ```
 
 **注意**，从上面两种实现的方式来看，层序遍历既可以使用广度优先搜索，也可以使用深度优先搜索。
+
+#### 相关题目
+
+- [105从前序与中序遍历序列构造二叉树](105.md)
+- [106从后续与中序遍历序列构造二叉树](106.md)
+
+
+
+
 
 ### 3.递归解决树的问题
 
@@ -958,82 +973,6 @@ func generateTreesWithNode(start, end int) []*TreeNode {
 ```
 
 
-
-#### 101 对称二叉树【简单】
-
-题目链接：https://leetcode.com/problems/symmetric-tree/
-
-思路分析
-
-算法1：
-
-如果一个树的左子树和右子树对称，那么这个树就是对称的。那么两个树在什么情况下互为镜像呢？
-
-> 如果两个树同时满足两个条件，则互为镜像。
->
-> 1.它们的根节点具有相同的值；
->
-> 2.每个树的右子树和另一个树的左子树对称。
-
-```go
-// 算法一:递归
-func isSymmetrics(root *TreeNode) bool {
-  var isMirror func(r1, r2 *TreeNode) bool
-  isMirror = func(r1, r2 *TreeNode) bool {
-    if r1 == nil && r2 == nil { return true }
-    if r1 == nil || r2 == nil { return false }
-    return r1.Val == r2.Val && isMirror(r1.Left, r2.Right) && isMirror(r1.Right, r2.Left)
-  }
-  return isMirror(root, root)
-}
-```
-
-算法2：类似层序遍历，将子树的左右结点依次放入队列，通过判断队列中的连续的两个值是否相同来确认是否对称。
-
-```go
-// 算法二:迭代
-func isSymmetric(root *TreeNode) bool {
-    if root == nil { return true }
-    queue := make([]*TreeNode, 0)
-    queue = append(queue, root, root)
-    var n int
-    var t1, t2 *TreeNode
-    for len(queue) != 0 {
-        n = len(queue)
-        for i := 0; i < n; i += 2 {
-            t1, t2 = queue[i], queue[i+1]
-            if t1 == nil && t2 == nil { continue }
-            if t1 == nil || t2 == nil { return false }
-            if t1.Val != t2.Val { return false }
-            queue = append(queue, t1.Left, t2.Right, t1.Right, t2.Left)
-        }
-        queue = queue[n:]
-    }
-    return true
-}
-```
-
-#### 105 从前序与中序遍历序列构造二叉树【中等】
-
-算法分析：1）从中序序列中找到根节点，递归左右子树。
-
-```go
-// date 2020/02/26
-func buildTree(preorder []int, inorder []int) *TreeNode {
-  if len(preorder) == 0 { return nil }
-  root := &TreeNode{Val: preorder[0]}
-  index := 0
-  for i, v := range inorder {
-    if v == preorder[0] {
-      index = i
-      break
-    }
-  }
-  root.Left = buildTree(preorder[1:index+1], inorder[:index])
-  root.Right = buildTree(preorder[index+1:], inorder[index+1:])
-  return root
-}
-```
 
 ####  106 从中序和后序遍历序列构造二叉树【中等】
 
