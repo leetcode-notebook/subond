@@ -1344,36 +1344,6 @@ func containsOne(root *TreeNode) bool {
 }
 ```
 
-#### 993 二叉树的堂兄弟节点【简单】
-
-题目链接：https://leetcode-cn.com/problems/cousins-in-binary-tree/
-
-题目要求：给定一个二叉树和两个节点元素值，判断两个节点值是否是堂兄弟节点。
-
-堂兄弟节点的定义：两个节点的深度一样，但父节点不一样。
-
-算法分析：
-
-使用findFatherAndDepth函数递归找到每个节点的父节点和深度，并进行比较。
-
-```go
-// date 2020/02/25
-func isCousins(root *TreeNode, x, y int) bool {
-  xf, xd := findFatherAndDepth(root, x)
-  yf, yd := findFatherAndDepth(root, y)
-  return xd == yd && xf != yf
-}
-func findFatherAndDepth(root *TreeNode, x int) (*TreeNode, int) {
-  if root == nil || root.Val == x { return nil, 0 }
-  if root.Left != nil && root.Left.Val == x { return root, 1 }
-  if root.Right != nil && root.Right.Val == y { return root, 1 }
-  l, lv := findFatherAndDepth(root.Left, x)
-  r, rv := findFatherAndDepth(root.Right, x)
-  if l != nil { return l, lv+1 }
-  return r, rv+1
-}
-```
-
 #### 1104 二叉树寻路【中等】
 
 题目要求：https://leetcode-cn.com/problems/path-in-zigzag-labelled-binary-tree/

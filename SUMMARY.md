@@ -106,7 +106,10 @@
   1. [589N叉树的前序遍历](08binaryTree/589.md)
   1. [590N叉树的后序遍历](08binaryTree/590.md)
   1. [637二叉树的层平均值](08binaryTree/637.md)
+  1. [662二叉树的最大宽度](08binaryTree/662.md)
+  1. [814二叉树的剪枝](08binaryTree/814.md)
   1. [987二叉树的垂序遍历](08binaryTree/987.md)
+  1. [993二叉树的堂兄弟节点](08binaryTree/993.md)
   1. [1302层数最深叶子节点的和](08binaryTree/1302.md)
   1. [1161最大层内元素和](08binaryTree/1161.md)
 
