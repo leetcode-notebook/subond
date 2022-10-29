@@ -1058,27 +1058,6 @@ func closestValue(root *TreeNode, target float64) int {
 }
 ```
 
-#### 538 把二叉树转换成累加树【简单】
-
-算法：逆序的中序遍历，查找。
-
-```go
-// date 2020/02/26
-func convertBST(root *TreeNode) *TreeNode {
-  var sum int
-  decOrder(root, &sum)
-  return root
-}
-
-func decOrder(root *TreeNode, sum *int) {
-  if root == nil { return }
-  decOrder(root.Right, sum)
-  *sum += root.Val
-  root.Val = *sum
-  decOrder(root.Left, sum)
-}
-```
-
 #### 543 二叉树的直径【简单】
 
 题目要求：给定一棵二叉树，返回其直径。
@@ -1105,90 +1084,6 @@ func findDepth(root *TreeNode) (int, int) {
   if l+r > v { v = l+r }
   if l > r { return v, l+1}
   return v, r+1
-}
-```
-
-#### 617 合并二叉树【简单】
-
-给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。
-
-你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点。
-
-```go
-// date 2020/02/23
-// 递归
-func mergeTrees(t1, t2 *TreeNode) *TreeNode {
-  if t1 == nil { return t2 }
-  if t2 == nil { return t1 }
-  t1.Val += t2.Val
-  t1.Left = mergeTrees(t1.Left, t2.Left)
-  t1.Right = mergeTrees(t1.Right, t2.Right)
-  return t1
-}
-```
-
-#### 654 最大二叉树【中等】
-
-题目要求：
-
-给定一个不含重复元素的整数数组。一个以此数组构建的最大二叉树定义如下：
-
-二叉树的根是数组中的最大元素。
-			左子树是通过数组中最大值左边部分构造出的最大二叉树。
-			右子树是通过数组中最大值右边部分构造出的最大二叉树。
-			通过给定的数组构建最大二叉树，并且输出这个树的根节点。
-
-算法分析：
-
-找到数组中的最大值，构建根节点，然后递归调用。
-
-```go
-// date 2020/02/25
-// 递归版
-func constructMaximumBinaryTree(nums []int) *TreeNode {
-  if len(nums) == 0 { return nil }
-  if len(nums) == 1 { return &TreeNode{Val: nums[0]} }
-  p := 0
-  for i, v := range nums {
-    if v > nums[p] { p = i }
-  }
-  root := &TreeNode{Val: nums[p]}
-  root.Left = constructMaximumBinaryTree(nums[:p])
-  root.Right = constructMaximumBinaryTree(nums[p+1:])
-  return root
-}
-```
-
-#### 655 输出二叉树【中等】
-
-题目要求：将二叉树输出到m*n的二维字符串数组中。
-
-算法思路：先构建好res，然后逐层填充。
-
-```go
-// date 2020/02/25
-func printTree(root *TreeNode) [][]string {
-  depth := findDepth(root)
-  length := 1 << depth - 1
-  res := make([][]string, depth)
-  for i := 0; i < depth; i++ {
-    res[i] = make([]string, length)
-  }
-  fill(res, root, 0, 0, length)
-}
-
-func fill(res [][]string, t *TreeNode, i, l, r int) {
-  if t == nil { return }
-  res[i][(l+r)/2] = fmt.Sprintf("%d", root.Val)
-  fill(res, t.Left, i+1, l, (l+r)/2)
-  fill(res, t.Right, i+1, (l+r+1)/2, r)
-}
-
-func findDepth(root *TreeNode) int {
-  if root == nil { return 0 }
-  l, r := findDepth(root.Left), findDepth(root.Right)
-  if l > r { return l+1 }
-  return r+1
 }
 ```
 
