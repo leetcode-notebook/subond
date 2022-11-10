@@ -80,6 +80,7 @@
   1. [095不同的二叉搜索树2](08binaryTree/095.md)
   1. [096不同的二叉搜索树](08binaryTree/096.md)
   1. [098验证二叉树搜索树](08binaryTree/098.md)
+  1. [099恢复二叉树](08binaryTree/099.md)
   1. [100相同的树](08binaryTree/100.md)
   1. [101对称二叉树](08binaryTree/101.md)
   1. [102二叉树的层序遍历](08binaryTree/102.md)
