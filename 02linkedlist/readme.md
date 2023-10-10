@@ -31,83 +31,13 @@
 
 关于的链表的经典问题，主要包括题目206反转链表，203移除链表元素，234回文链表和328奇偶链表。
 
-### 相关题目
 
-#### 61 Rotate List【旋转链表】
 
-思路分析：
 
-算法1：直接操作。先求出链表长度L，k = k % L；然后让表头移动step(L-k-1)步到达新的尾节点tail，tail继续走到表尾，并指向表头。
 
-```go
-/*
-type ListNode {
-  Val int
-  Next *ListNode
-}
-  输入: 1->2->3->4->5->NULL, k = 2
-  输出: 4->5->1->2->3->NULL
-*/
-// 算法1：直接操作
-func rotateRight(head *ListNode, k int) *ListNode {
-    if head == nil || head.Next == nil {return head}
-    // find the len of linkedlist
-    len := 0
-    pre := head
-    for pre != nil {
-        len++
-        pre = pre.Next
-    }
-    // k = k % len
-    k = k % len
-    step := len - k - 1
-    pre = head
-    for step > 0 {
-        pre = pre.Next
-        step--
-    }
-    tail := pre
-    for tail.Next != nil {
-        tail = tail.Next
-    }
-    tail.Next = head
-    head = pre.Next
-    pre.Next = nil
-    return head
-}
-```
+### 2. 相关题目
 
-思路分析：
-
-算法2：计算链表长度的同时将线性链表组织成环形链表(优势：相比算法1省去了重新将表尾元素指向表头的操作)；此时，找到新的表尾L-k-1，新表头L-k。【**推荐使用该算法**】
-
-```go
-// 算法2
-func rotateRight(head *ListNode, k int) *ListNode {
-  if head == nil || head.Next == nil {
-    return head
-  }
-  pre := head
-  l := 1
-  for pre.Next != nil {
-    pre = pre.Next
-    l++
-  }
-  k = k % l
-  // 将链表形成环，然后表头走Len-k-1步到达新的尾部，然后断开。
-  // -1是因为当前节点也算一个
-  pre.Next = head
-  pre = head
-  step := l - k - 1
-  for step > 0 {
-    pre = pre.Next
-    step--
-  }
-  head = pre.Next
-  pre.Next = nil
-  return head
-}
-```
+---
 
 #### 92 反转链表II
 
