@@ -10,7 +10,14 @@
 
 在数组章节我们学习的双指针技巧，通常是两个指针从前后一起遍历，向中间逼近；或者读写指针维护不同的数据元素；而在链表的运用中，由于单向链表只能单向遍历，通过调整两个指针的遍历速度完成某种特定任务，因此也称为”快慢指针“技巧。
 
-参见题目19, 141, 142, 160。
+参见题目
+
+- 19—删除链表中的倒数第N个节点
+- 141—判断链表是否有环
+- 142—判断链表是否有环，如果有，返回环入口
+- 160—
+
+
 
 回顾：运用双指针技巧的几点注意事项，1）在运用Next节点时一定要判断节点是否为空，举例`fast.Next.Next`一定要判断`fast != nil && fast.Next != nil`；2）注意循环结束的条件。
 
@@ -159,55 +166,6 @@ func merge(h1, h2 *ListNode) *ListNode {
     pre.Next = h2
   }
   return dummy.Next
-}
-```
-
-#### 160 Intersection of Two Linked List【E】
-
-题目要求：https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
-
-思路分析：两个指针走过相同的节点数，如果能够相遇，则即为交点。
-
-```go
-// 算法：双指针 len a + b = b + a
-func getIntersectionNode(headA, headB *ListNode) *ListNode {
-    if headA == nil || headB == nil {return nil}
-    pa, pb := headA, headB
-    for pa != pb {
-        pa, pb = pa.Next, pb.Next
-        if pa == nil && pb == nil {
-            return nil
-        }
-        if pa == nil {
-            pa = headB
-        }
-        if pb == nil {
-            pb = headA
-        }
-    }
-    return pa
-}
-// date 2020/03/29
-// 第二版
-func getIntersectionNode(headA, headB *ListNode) *ListNode {
-    if headA == nil || headB == nil { return nil }
-    var res *ListNode
-    p1, p2 := headA, headB
-    for p1 != nil || p2 != nil {
-        if p1 == nil {
-            p1 = headB
-        }
-        if p2 == nil {
-            p2 = headA
-        }
-        if p1 == p2 {
-            res = p1
-            break
-        }
-        p1 = p1.Next
-        p2 = p2.Next
-    }
-    return res
 }
 ```
 
