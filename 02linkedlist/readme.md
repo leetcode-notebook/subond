@@ -37,53 +37,6 @@
 
 ### 2. 相关题目
 
----
-
-#### 92 反转链表II
-
-题目要求：1<= m <= n <= len(LinkedList),一趟扫描完成反转。
-
-思路分析：
-
-1. 找到m节点及其前驱节点
-2. 反转m->n的所有节点
-3. 更新m节点的下一跳，更新头节点
-
-```go
-func reverseBetween(head *ListNode, m int, n int) *ListNode {
-    if head == nil || head.Next == nil || m >= n {return head}
-    var mpre, mnode, mtail *ListNode
-    pre := head
-    for m > 1 && pre != nil {
-        mpre, pre = pre, pre.Next
-        m--
-        n--
-    }
-    if pre == nil {return head}
-    mnode, mtail = pre, pre
-    pre = pre.Next
-    n--
-    for n > 1 && pre != nil {
-        after := pre.Next
-        pre.Next = mtail
-        mtail = pre
-        pre = after
-        n--
-    }
-    // update m node
-    mnode.Next = pre.Next
-    // update n node
-    pre.Next = mtail
-    // update head
-    if mpre == nil {
-        head = pre
-    } else {
-        mpre.Next = pre
-    }
-    return head
-}
-```
-
 #### 147 Insertion Sort List【对链表进行插入排序】【M】
 
 思路分析
