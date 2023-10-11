@@ -1,31 +1,44 @@
 ## 19 删除链表的倒数第N个结点-中等
 
-> 给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
->
-> https://leetcode.cn/problems/remove-nth-node-from-end-of-list/
+题目：
+
+给你一个链表，删除链表的**倒数**第 `n` 个结点，并且返回链表的头结点。
 
 
 
-算法分析：快慢指针
+分析：快慢指针
 
 双指针slow和fast，fast快指针先走n步(n有效，所以最坏的情况是快指针走到表尾，即是删除表头元素)；然后slow指针和fast指针同走，当fast指针走到最后一个元素时，因为slow与fast慢指针差n步，slow刚好为欲删除节点的前驱节点。
 
 ```go
-// date 2022/10/08
+// date 2023/10/11
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
-    if head == nil {return nil}
+    if head == nil {
+        return head
+    }
     slow, fast := head, head
     for n > 0 && fast != nil {
         fast = fast.Next
         n--
     }
-    // 保护逻辑，如果n大于零，说明欲要删除的节点超过链表长度
-    if n > 0 { return head }
-    // fast走到链表的尾部，则n刚好为链表的长度，即删除头节点
+    // 到这里，我们期望 n 为零，表示链表中存在要删除的点
+    // 如果 n > 0 表示已经超出要删除的点了，直接返回 head
+    if n > 0 {
+        return head
+    }
+    // n 为零，如果 fast 为空 表示要删除 头节点
     if fast == nil {
+        // delete the head
         return head.Next
     }
-    // fast指针继续走到链表的尾部，则slow指针刚好为欲要删除的节点的前继节点
+
     for fast.Next != nil {
         slow, fast = slow.Next, fast.Next
     }
@@ -33,3 +46,5 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
     return head
 }
 ```
+
+![image](images/image019.png)
