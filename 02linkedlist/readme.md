@@ -182,39 +182,6 @@ func removeElements(head *ListNode, val int) *ListNode {
 }
 ```
 
-#### 234 回文链表【E】
-
-题目要求：https://leetcode.com/problems/palindrome-linked-list/
-
-思路分析：快慢指针，找到中间结点，反转前半段链表
-
-```go
-// 算法：快慢指针，找到中间点；反转前半段的链表
-func isPalindrome(head *ListNode) bool {
-    if head == nil || head.Next == nil { return true }
-    pre, slow, fast := head, head, head
-    // 反转前半段链表
-    var tail *ListNode
-    for fast != nil && fast.Next != nil {
-        pre = slow
-        slow = slow.Next
-        fast = fast.Next.Next
-        pre.Next = tail
-        tail = pre
-    }
-    // 奇数个结点
-    if fast != nil {
-        slow = slow.Next
-    }
-    for pre != nil && slow != nil {
-        if pre.Val != slow.Val {return false }
-        pre = pre.Next
-        slow = slow.Next
-    }
-    return true
-}
-```
-
 #### 328 奇偶链表【M】
 
 题目链接：https://leetcode.com/problems/odd-even-linked-list/
