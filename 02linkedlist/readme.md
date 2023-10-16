@@ -44,49 +44,6 @@
 
 ### 2. 相关题目
 
-#### 147 Insertion Sort List【对链表进行插入排序】【M】
-
-思路分析
-
-直接按插入排序操作即可，注意已排序的链表的表尾一定要指向nil。
-
-```go
-func insertionSortList(head *ListNode) *ListNode {
-  if head == nil || head.Next == nil { return head }
-  pre, newHead := head.Next, head
-  // newHead为已排序的链表，置表尾为nil
-  newHead.Next = nil
-  for pre != nil {
-    // 保存当前节点的下一个节点
-    after := pre.Next
-    // 如果当前节点比已排序节点的表头还小，则更新已排序的表头
-    if newHead.Val > pre.Val {
-      pre.Next = newHead
-      newHead = pre
-      pre = after
-      continue
-    }
-    // 将当前节点插入已排序的链表中
-    p1, p1pre := newHead.Next, newHead
-    for p1 != nil {
-      if p1.Val > pre.Val {
-        pre.Next = p1
-        p1pre.Next = pre
-        break
-      }
-      p1pre, p1 = p1, p1.Next
-    }
-    // 如果当前节点大于所有已排序链表，插入已排序链表的表尾
-    if p1 == nil {
-      pre.Next = nil
-      p1pre.Next = pre
-    }
-    pre = after
-  }
-  return newHead
-}
-```
-
 #### 148 排序链表
 
 题目要求在O(nlogn)时间复杂度和常数级空间复杂度完成对链表的排序。
