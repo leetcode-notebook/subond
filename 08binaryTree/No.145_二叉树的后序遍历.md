@@ -1,12 +1,12 @@
 ## 145 二叉树的后序遍历-简单
 
-> 给你一棵二叉树的根节点 `root` ，返回其节点值的 **后序遍历** 。
->
-> 题目链接：https://leetcode.cn/problems/binary-tree-postorder-traversal/
+题目：
+
+给你一棵二叉树的根节点 `root` ，返回其节点值的 **后序遍历** 。
 
 
 
-算法分析：
+分析：
 
 算法1：递归
 
@@ -30,7 +30,7 @@ func postorderTraversal(root *TreeNode) []int {
 
 
 
-算法2：迭代
+算法2：迭代【推荐该算法】
 
 迭代遍历的时候依然需要 stack 结构来保存已经遍历过的节点；同时借助 pre 指针保存上次出栈的节点，用于判断当前节点是否同时具有左右子树，还是只有单个子树。
 
@@ -42,6 +42,7 @@ func postorderTraversal(root *TreeNode) []int {
 
 ```go
 // 迭代版
+// date 2023/10/18
 // left->right-root
 func postorderTraversal(root *TreeNode) []int {
     if root == nil {return nil}

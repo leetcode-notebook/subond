@@ -1,12 +1,12 @@
 ## 144 二叉树的前序遍历-简单
 
-> 给你二叉树的根节点 `root` ，返回它节点值的 **前序** 遍历。
->
-> 题目链接：https://leetcode.cn/problems/binary-tree-preorder-traversal/
+题目：
+
+给你二叉树的根节点 `root` ，返回它节点值的 **前序** 遍历。
 
 
 
-算法分析：
+分析：
 
 算法1：递归
 
@@ -40,7 +40,7 @@ func preorderTraversal(root *TreeNode) []int {
 2. 出栈一次，检查最后一个左子树的右子树，重复1,2
 
 ```go
-// 
+// date 2023/10/18
 func preorderTraversal(root *TreeNode) []int {
     if root == nil {
         return []int{}

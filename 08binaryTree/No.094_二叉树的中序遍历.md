@@ -1,12 +1,12 @@
 ## 94 二叉树的中序遍历-简单
 
-> 给定一个二叉树的根节点 `root` ，返回 *它的 **中序** 遍历* 。
->
-> 题目链接：https://leetcode.cn/problems/binary-tree-inorder-traversal/
+题目：
+
+给定一个二叉树的根节点 `root` ，返回 *它的 **中序** 遍历* 。
 
 
 
-算法分析：
+分析：
 
 算法1：递归版
 
@@ -40,6 +40,7 @@ func inorderTraversal(root *TreeNode) []int {
 2. 出栈一次，并取根节点值加入结果集，然后检查最后一个左子树的右子树，重复1,2
 
 ```go
+// date 2023/10/18
 // 迭代版
 // 需要stack结构
 // left->root->right
