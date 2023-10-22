@@ -354,6 +354,11 @@ func levelOrder(root *TreeNode) [][]int {
 5. return the answer if needed                      // answer <-- left_ans, right_ans
 ```
 
+参见题目
+
+- No.95—不同的二叉搜索数2，生成所有的二叉搜索数
+- No.113—路径总和2，求满足条件的所有路径
+
 
 
 **自底向上**的解决方案
