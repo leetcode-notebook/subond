@@ -1,11 +1,17 @@
 ## 199 二叉树的右视图-中等
 
-算法分析：
+题目：
+
+给定一个二叉树的根节点 root，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+
+
+
+分析：
 
 层序遍历的最后一个节点值。
 
 ```go
-// date 2020/02/26
+// date 2023/10/23
 func rightSideView(root *TreeNode) []int {
   res := make([]int, 0)
   if root == nil { return res }
