@@ -45,7 +45,7 @@ func isValidSerialization(preorder string) bool {
 
 
 
-算法2：
+算法2：【推荐该算法】
 
 从出度和入度的角度重新理解树。
 
