@@ -1,32 +1,42 @@
 ## 637 二叉树的层平均值-简单
 
-> 给定一个非空二叉树的根节点 `root` , 以数组的形式返回每一层节点的平均值。与实际答案相差 `10-5` 以内的答案可以被接受。
->
-> 题目链接：https://leetcode.cn/problems/average-of-levels-in-binary-tree/
+题目：
+
+给定一个非空二叉树的根节点 `root` , 以数组的形式返回每一层节点的平均值。与实际答案相差 `10-5` 以内的答案可以被接受。
 
 
 
-算法分析：
+分析：
 
-这里是层序遍历，得到每层的结果后求平均值即可。
+没啥好说的，就是算它。
 
 ```go
-// date 2022/10/19
+// date 2023/10/25
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
 func averageOfLevels(root *TreeNode) []float64 {
     res := make([]float64, 0, 16)
     if root == nil {
         return res
     }
-    ls := float64(0)
+
     queue := make([]*TreeNode, 0, 16)
     queue = append(queue, root)
-    n := len(queue)
+
     for len(queue) != 0 {
-        n = len(queue)
-        ls = float64(0)
+        n := len(queue)
+        levelSum := 0
         for i := 0; i < n; i++ {
             cur := queue[i]
-            ls += float64(cur.Val)
+
+            levelSum += cur.Val
+
             if cur.Left != nil {
                 queue = append(queue, cur.Left)
             }
@@ -34,9 +44,11 @@ func averageOfLevels(root *TreeNode) []float64 {
                 queue = append(queue, cur.Right)
             }
         }
-        res = append(res, ls / float64(n))
+        res = append(res, float64(levelSum) / float64(n))
+
         queue = queue[n:]
     }
+
     return res
 }
 ```
