@@ -168,6 +168,7 @@ func inorderTraversal(root *TreeNode) []int {
 参见题目：
 
 - 106—从中序和后序遍历序列构造二叉树
+- 538—把二叉搜索树转换为累加树，递归中序遍历解法
 
 
 
@@ -407,6 +408,12 @@ func levelOrder(root *TreeNode) [][]int {
 3. right_ans = bottom_up(root.right)        // call function recursively for right child
 4. return answers                           // answer <-- left_ans, right_ans, root.val
 ```
+
+参见题目：
+
+- 543—二叉树的直径，求左右深度之和。
+
+
 
 
 
