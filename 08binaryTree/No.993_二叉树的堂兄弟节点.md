@@ -43,7 +43,7 @@ func findFatherAndDepth(root *TreeNode, v int) (*TreeNode, int) {
 
 
 
-算法2：
+算法2：【推荐该算法】
 
 这里用深度优先搜索只遍历一次，搜索过程中记录x,y的深度和父结点。
 
@@ -81,6 +81,59 @@ func isCousins(root *TreeNode, x int, y int) bool {
     xf, ok1 := f[x]
     yf, ok2 := f[y]
     return ok1 && ok2 && xf != yf && xd == yd
+}
+```
+
+另一个写法
+
+```go
+// date 2023/10/28
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isCousins(root *TreeNode, x int, y int) bool {
+    // 深度一样，且父结点不同
+
+    xd, yd := 0, 0
+    var xf, yf *TreeNode
+
+    var dfs func(root *TreeNode, depth int)
+    dfs = func(root *TreeNode, depth int) {
+        if root == nil {
+            return
+        }
+        if root.Left != nil {
+            if root.Left.Val == x {
+                xd = depth+1
+                xf = root
+            }
+            if root.Left.Val == y {
+                yd = depth+1
+                yf = root
+            }
+        }
+        if root.Right != nil {
+            if root.Right.Val == x {
+                xd = depth+1
+                xf = root
+            }
+            if root.Right.Val == y {
+                yd = depth+1
+                yf = root
+            }
+        }
+        dfs(root.Left, depth+1)
+        dfs(root.Right, depth+1)
+    }
+
+    dfs(root, 0)
+
+    return xd == yd && xf != nil && yf != nil && xf != yf
 }
 ```
 
