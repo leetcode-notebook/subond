@@ -55,57 +55,6 @@ func closestValue(root *TreeNode, target float64) int {
 }
 ```
 
-#### 655 输出二叉树【中等】
-
-题目要求：将二叉树输出到m*n的二维字符串数组中。
-
-算法思路：先构建好res，然后逐层填充。
-
-```go
-// date 2020/02/25
-func printTree(root *TreeNode) [][]string {
-  depth := findDepth(root)
-  length := 1 << depth - 1
-  res := make([][]string, depth)
-  for i := 0; i < depth; i++ {
-    res[i] = make([]string, length)
-  }
-  fill(res, root, 0, 0, length)
-}
-
-func fill(res [][]string, t *TreeNode, i, l, r int) {
-  if t == nil { return }
-  res[i][(l+r)/2] = fmt.Sprintf("%d", root.Val)
-  fill(res, t.Left, i+1, l, (l+r)/2)
-  fill(res, t.Right, i+1, (l+r+1)/2, r)
-}
-
-func findDepth(root *TreeNode) int {
-  if root == nil { return 0 }
-  l, r := findDepth(root.Left), findDepth(root.Right)
-  if l > r { return l+1 }
-  return r+1
-}
-```
-
-#### 669 修剪二叉搜索树【简单】
-
-题目要求：给定一个二叉搜索树，同时给定最小边界L 和最大边界 R。通过修剪二叉搜索树，使得所有节点的值在[L, R]中 (R>=L) 。你可能需要改变树的根节点，所以结果应当返回修剪好的二叉搜索树的新的根节点。
-
-算法分析：
-
-```go
-// date 2020/02/25
-func trimBST(root *TreeNode, L, R int) *TreeNode {
-  if root == nil { return nil }
-  if root.Val < L { return trimBST(root.Right, L, R) }
-  if root.Val > R { return trimBST(root.Left, L, R) }
-  root.Left = trimBST(root.Left, L, R)
-  root.Right = trimBST(root.Right, L, R)
-  return root
-}
-```
-
 #### 703 数据流中第K大元素【简单】
 
 解题思路：
