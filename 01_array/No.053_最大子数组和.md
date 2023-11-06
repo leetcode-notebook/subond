@@ -1,22 +1,14 @@
 ## 53 最大子数组和-中等
 
-> 给你一个整数数组 `nums` ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
->
-> **子数组** 是数组中的一个连续部分。
->
-> 题目链接：https://leetcode-cn.com/problems/maximum-subarray/
+题目：
 
-示例1：
+给你一个整数数组 `nums` ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
 
-> ```
-> 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
-> 输出：6
-> 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
-> ```
+**子数组** 是数组中的一个连续部分。
 
 
 
-算法分析：
+分析：
 
 典型的动态规划题。
 
@@ -41,7 +33,7 @@
 当遍历到v时，如果之前的结果 `curMax` 小于零；那么不如另起炉灶，重新计算 `curMax`；如果大于等于零，才考虑增加当前元素。
 
 ```go
-// date 2020/05/03
+// date 2023/11/04
 func maxSubArray(nums []int) int {
     if len(nums) == 0 {
         return 0
@@ -49,17 +41,16 @@ func maxSubArray(nums []int) int {
     res := nums[0]
     curMax := 0
     for _, v := range nums {
-        //如果当前最大值小于零，则重新计算，否则添加当前元素
         if curMax < 0 {
             curMax = v
         } else {
             curMax += v
         }
-        // 更新最终结果集
         if curMax > res {
             res = curMax
         }
     }
+
     return res
 }
 ```
