@@ -18,7 +18,7 @@
 func minDistance(word1 string, word2 string) int {
     m, n := len(word1), len(word2)
     dp := make([][]int, m+1)
-    // dp[i][j] 表示将 word[0...i] 变成 word2[0...j] 所需要的最小编辑数
+    // dp[i][j] 表示将 word1[0...i-1] 变成 word2[0...j-1] 所需要的最小编辑数
     for i := 0; i <= m; i++ {
         dp[i] = make([]int, n+1)
         dp[i][0] = i  // j = 0, word2 is empty, delete all word1 elem
@@ -55,3 +55,5 @@ func min(x, y int) int {
     return y
 }
 ```
+
+![image](images/image72.png)
