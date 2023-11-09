@@ -496,10 +496,15 @@ func lengthOfLIS(nums []int) int {
   for i := 1; i < n; i++ {
     // 在lis数组找到第一个比nums[i]大的元素，并替换它，否则进行追加
     m := len(lis)
+    // nums[i] > lis[m-1]
+    // nums[i] 直接参与最长上升序列
     if nums[i] > lis[m-1] {
       lis = append(lis, nums[i])
       continue
     }
+    // 替换的必要性
+    // 1. 保证 nums[i] 有机会参与最长上升序列,为后面更大的值剔除障碍
+    // 2. 因为不要求连续性，lis 中的大值没有意义，替换相对于变相删除
     for j := 0; j < m; j++ {
       if nums[i] <= lis[j] {
         lis[j] = nums[i]
