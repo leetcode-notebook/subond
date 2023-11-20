@@ -1,31 +1,35 @@
 ## 219 存在重复元素2-简单
 
-题目要求：给定一个数组nums和整数k，判断是否存在两个不同的下标，使得`nums[i] == nums[j]`，同时`abs(i-j) <= k`，如果存在返回true，否则返回false。
+题目：
 
-题目链接：https://leetcode.cn/problems/contains-duplicate-ii/
+给定一个数组nums和整数k，判断是否存在两个不同的下标，使得`nums[i] == nums[j]`，同时`abs(i-j) <= k`，如果存在返回true，否则返回false。
 
 
 
-算法分析：
+分析：
 
-算法1：滑动窗口
+推荐该算法，滑动窗口。
 
 这里滑动窗口的技巧在与题目中所要求的`abs(i-j) <= k`，所以只判断连续的k个元素即可。
 
 ```go
 // date 2022/09/27
 func containsNearbyDuplicate(nums []int, k int) bool {
-    i, j, n := 0, 0, len(nums)
-    for i < n {
-        j = i+1
-        for j - i <=k && j < n {
-            if nums[i] == nums[j] {
+    size := len(nums)
+
+    start, end := 0, 0
+
+    for start < size {
+        end = start+1
+        for end - start <= k && end < size {
+            if nums[start] == nums[end] {
                 return true
             }
-            j++
+            end++
         }
-        i++
+        start++
     }
+    
     return false
 }
 ```
