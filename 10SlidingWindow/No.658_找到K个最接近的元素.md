@@ -28,30 +28,15 @@
 ```go
 // date 2023/11/21
 func findClosestElements(arr []int, k int, x int) []int {
-    ans := make([]int, 0, 64)
     n := len(arr)
-    if n == 0 {
-        return ans
-    }
-
-    if k >= n {
+    if n == 0 || k >= n {
         return arr
     }
 
     if x <= arr[0] {
-        i := 0
-        for i < k {
-            ans = append(ans, arr[i])
-            i++
-        }
-        return ans
+        return arr[0:k]
     } else if x >= arr[n-1] {
-        j := n-k 
-        for j < n {
-            ans = append(ans, arr[j])
-            j++
-        }
-        return ans
+        return arr[n-k:n]
     }
     left, right := 0, 0
     for i := 0; i < n; i++ {
