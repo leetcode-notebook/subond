@@ -63,8 +63,8 @@ func windowWithSize() {
 
 
 
-### 常见题目：
+### 相关题目：
 
-1. [239 滑动窗口的最大值](https://leetcode.cn/problems/sliding-window-maximum/)
-1. [1208 尽可能使字符串相等](https://leetcode.cn/problems/get-equal-substrings-within-budget)
-1. [1456 定长子串中元音的最大数目](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)
+1. No.239 滑动窗口最大值
+   1. 固定窗口大小，维护最大值列表
+2. 
