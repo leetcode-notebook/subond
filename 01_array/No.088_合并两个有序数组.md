@@ -1,12 +1,14 @@
 ## 88 合并两个有序数组-简单
 
-题目要求：将两个非递减数组nums1和nums2，按非递减顺序合并到nums1
+题目：
 
-题目链接：https://leetcode.cn/problems/merge-sorted-array/
+将两个非递减数组nums1和nums2，按非递减顺序合并到nums1
 
 
 
-算法分析：从后往前充填，可以节省nums1中元素的挪动
+分析：
+
+从后往前充填，可以节省nums1中元素的挪动
 
 ```go
 // date 2022/09/24
