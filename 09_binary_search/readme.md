@@ -327,3 +327,33 @@ func searchLastSmaller(nums []int, key int) int {
 }
 ```
 
+
+
+## 二分查找的模板
+
+**模板1**
+
+1. 查找等于目标值 key 的索引
+
+```go
+func searchEqual(nums []int, key int) int {
+  n := len(nums)
+  if n == 0 {
+    return -1
+  }
+  left, right := 0, n-1
+  for left <= right {
+    // 为了避免 left + right 溢出，使用 left + (right - left) / 2 的方式求中心点
+    mid := left + (right - left) / 2
+    if nums[mid] == key {
+      return mid
+    } else if nums[mid] < key {
+      left = mid +1
+    } else {
+      right = mid - 1
+    }
+  }
+  return -1
+}
+```
+
