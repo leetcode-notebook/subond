@@ -16,63 +16,43 @@
 
 根据归并算法的原理，很容易想到利用递归的方式进行实现，如下所示：
 
-* C++
-
-```cpp
-// 将两个有序序列合并成一个序列
-// 需要使用辅助空间
-void merge(vector<int> &data, int first, int mid, int last) {
-  int i = first, j = mid + 1;
-  vector<int> temp;
-  while(i <= mid && j <= last) {
-    if(data[i] <= data[j])
-      temp.push_back(data[i++]);
-    else
-      temp.push_back(data[j++]);
-  }
-  while(i <= mid)
-    temp.push_back(data[i++]);
-  while(j <= last)
-    temp.push_back(data[j++]);
-  for(int k = 0; k < temp.size(); k++)
-    data[first + k] = temp[k];
-  return;
+```go
+// merge sort
+// 递归
+// 不断地对半拆分，直到子序列长度小于2（即有序）
+func mergeSort(nums []int) []int {
+	n := len(nums)
+	if n < 2 {
+		return nums
+	}
+	mid := n / 2
+	left := nums[0:mid]
+	right := nums[mid:n]
+	return merge(mergeSort(left), mergeSort(right))
 }
-void mergesort(vector<int> &data, int first, int last) {
-  if(first < last) {
-    int mid = first + (last - first) / 2;
-    mergesort(data, first, mid);
-    mergesort(data, mid + 1, last);
-    mergedata(data, first, mid, last);
-  }
-  return;
+
+// 将两个有序的数组合并成一个有序数组
+func merge(nums1, nums2 []int) []int {
+	n1, n2 := len(nums1), len(nums2)
+	ans := make([]int, 0, n1+n2)
+	i, j := 0, 0
+	for i < n1 && j < n2 {
+		if nums1[i] <= nums2[j] {
+			ans = append(ans, nums1[i])
+			i++
+		} else {
+			ans = append(ans, nums2[j])
+			j++
+		}
+	}
+	if i < n1 {
+		ans = append(ans, nums1[i:]...)
+	}
+	if j < n2 {
+		ans = append(ans, nums2[j:]...)
+	}
+	return ans
 }
-```
-
-* python
-
-```python
-def merge(left,right):
-    result=[]
-    i,j=0,0
-    while i<len(left) and j<len(right):
-        if left[i]<=right[j]:
-            result.append(left[i])
-            i+=1
-        else:
-            result.append(right[j])
-            j+=1
-    result+=left[i:]
-    result+=right[j:]
-    return result
-
-def mergesort(arr):
-    if len(arr)<=1:
-        return arr
-    mid=int(len(arr)/2)
-    left=mergesort(arr[:mid])
-    right=mergesort(arr[mid:])
-    return merge(left,right)
 ```
 
 ### 复杂度分析
