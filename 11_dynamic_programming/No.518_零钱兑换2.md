@@ -24,6 +24,8 @@ dp[i] = dp[i] + dp[i-coin]
 
 以下面的图为例，coin = 3，i = 6 为例，coin 提供一个解，再加上 coin = 2 所提供的 i = 6 的一个解，所以 dp[6] = 2。
 
+![image](images/image518.png)
+
 所以，整个解法的代码里，外层循环是 coins，对特定coin，求所有 amount 下的解，包含两部分：
 
 1. `amount` 是当前 `coin` 整数倍的，肯定提供一个解
@@ -59,7 +61,7 @@ func change(amount int, coins []int) int {
 
 
 
-![image](images/image518.png)
+
 
 ---
 
