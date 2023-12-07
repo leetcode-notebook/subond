@@ -7,6 +7,36 @@
 如果限制换来的纸币数量不超过 N 张，有多少中换法？
 
 
+
+分析：
+
+求组合数，详见第 518 题。
+
+```go
+func change(coins []int, total int) int {
+	//coins := []int{1, 2, 5, 10, 20, 50}
+	//total := 100
+	dp := make([]int, total+1)
+	dp[0] = 1
+	for _, coin := range coins {
+		for i := 1; i <= total; i++ {
+			if i < coin {
+				continue
+			}
+			dp[i] = dp[i] + dp[i-coin]
+		}
+	}
+	return dp[total]
+}
+```
+
+
+
+
+
+
+
+
 题目2：
 
 要求构造一个函数，实现以下功能：
