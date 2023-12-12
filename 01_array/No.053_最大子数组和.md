@@ -35,10 +35,7 @@
 ```go
 // date 2023/11/04
 func maxSubArray(nums []int) int {
-    if len(nums) == 0 {
-        return 0
-    }
-    res := nums[0]
+    ans := nums[0]
     curMax := 0
     for _, v := range nums {
         if curMax < 0 {
@@ -46,11 +43,10 @@ func maxSubArray(nums []int) int {
         } else {
             curMax += v
         }
-        if curMax > res {
-            res = curMax
+        if curMax > ans {
+            ans = curMax
         }
     }
-
-    return res
+    return ans
 }
 ```
