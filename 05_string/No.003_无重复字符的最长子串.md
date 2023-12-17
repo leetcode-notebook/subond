@@ -1,8 +1,8 @@
 ## 3 无重复字符的最长子串
 
-题目要求：给定一个字符串 `s` ，请你找出其中不含有重复字符的 **最长子串** 的长度。
+题目：
 
-题目链接：https://leetcode.cn/problems/longest-substring-without-repeating-characters/
+给定一个字符串 `s` ，请你找出其中不含有重复字符的 **最长子串** 的长度。
 
 
 
