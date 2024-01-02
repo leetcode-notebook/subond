@@ -31,7 +31,6 @@ func loudAndRich(richer [][]int, quiet []int) []int {
         ans[i] = i
     }
 
-    // in, and out
     in := make([]int, n)
     out := make(map[int][]int, 4)
     for _, v := range richer {
@@ -43,6 +42,7 @@ func loudAndRich(richer [][]int, quiet []int) []int {
         out[v[0]] = append(out[v[0]], v[1])
     }
 
+    // aov 网 拓扑排序
     queue := make([]int, 0, 16)
     for i, v := range in {
         if v == 0 {
@@ -51,22 +51,23 @@ func loudAndRich(richer [][]int, quiet []int) []int {
     }
 
     for len(queue) != 0 {
-        nq := make([]int, 0, 16)
-        for _, p := range queue {
-            ov, ok := out[p]
-            if ok && len(ov) != 0 {
+        n := len(queue)
+        for i := 0; i < n; i++ {
+            u := queue[i]
+            if ov, ok := out[u]; ok && len(ov) != 0 {
                 for _, v := range ov {
                     in[v]--
-                    if quiet[ans[v]] > quiet[ans[p]] {
-                        ans[v] = ans[p]
+                    if quiet[ans[v]] > quiet[ans[u]] {
+                        ans[v] = ans[u]
                     }
                     if in[v] == 0 {
-                        nq = append(nq, v)
+                        queue = append(queue, v)
                     }
                 }
             }
         }
-        queue = nq
+
+        queue = queue[n:]
     }
 
     return ans
