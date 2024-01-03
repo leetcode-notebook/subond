@@ -183,57 +183,6 @@ func lastStoneWeight(stones []int) int {
 }
 ```
 
-#### 215 数组中第K个最大元素
-
-题目要求：https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
-
-思路分析：
-
-算法一：排序，返回第k个元素
-
-算法二：小顶堆
-
-```go
-// date 2020/02/29
-// 算法二 使用小顶堆
-func findKthLargest(nums []int, k int) int {
-  res, size := make([]int, k), 0
-  for _, v := range nums {
-    if size < k {
-      res[size] = v
-      size++
-      if size == k {
-        makeMinHeap(res)
-      }
-    } else if v > res[0] {
-      res[0] = v
-      minHeapify(res, 0)
-    }
-  }
-  return res[0]
-}
-// 建立小顶堆，堆顶元素即为结果
-func makeMinHeap(nums []int) {
-  for i := len(nums) >> 1 - 1; i >= 0; i-- {
-    minHeapify(nums, i)
-  }
-}
-func minHeapify(nums []int, i int) {
-  if i > len(nums) { return }
-  temp, n := nums[i], len(nums)
-  l, r := i << 1 + 1, i << 1 + 2
-  for l < n {
-    r = l+1
-    if r < n && nums[r] < nums[l] { l++ }
-    if nums[i] < nums[l] { break }
-    nums[i] = nums[l]
-    nums[l] = temp
-    i = l
-    l = i << 1 + 1
-  }
-}
-```
-
 #### 面试题40 最小的k个数
 
 题目要求：https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/
