@@ -65,3 +65,73 @@ func (u *UnionFind) Find(x int) int {
 func (u *UnionFind) GetCount() int {
 	return u.count
 }
+
+type (
+	// UnionFindCount define
+	// 计算每个集合中的元素个数，以及最大元素集合个数
+	UnionFindCount struct {
+		parent   []int
+		count    []int
+		maxCount int
+	}
+)
+
+// NewUnionFindCount define
+func NewUnionFindCount(n int) *UnionFindCount {
+	c := &UnionFindCount{
+		parent:   make([]int, n),
+		count:    make([]int, n),
+		maxCount: 1,
+	}
+	// init
+	// 每个元素都是一个集合，根节点指向自身
+	// 每个根节点的集合元素个数都是1
+	for i := 0; i < n; i++ {
+		c.parent[i] = i
+		c.count[i] = 1
+	}
+	return c
+}
+
+// Union define
+func (c *UnionFindCount) Union(x, y int) {
+	xp, yp := c.Find(x), c.Find(y)
+	if xp == yp {
+		return
+	}
+	// always merge to n-1
+	root := len(c.parent) - 1
+	if xp == root {
+		// xp is root
+	} else if yp == root {
+		xp, yp = yp, xp
+	} else if c.count[xp] > c.count[yp] {
+		xp, yp = yp, xp
+	}
+	// merge tree_y to tree_x
+	c.parent[yp] = xp
+	c.count[xp] += c.count[yp]
+	if c.count[xp] > c.maxCount {
+		c.maxCount = c.count[xp]
+	}
+}
+
+// Find define
+func (c *UnionFindCount) Find(x int) int {
+	root := x
+	for root != c.parent[root] {
+		root = c.parent[root]
+	}
+	// compress path
+	for x != c.parent[x] {
+		ox := c.parent[x]
+		c.parent[x] = root
+		x = ox
+	}
+	return root
+}
+
+// MaxCount define
+func (c *UnionFindCount) MaxCount() int {
+	return c.maxCount
+}
