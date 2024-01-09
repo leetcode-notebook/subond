@@ -19,48 +19,46 @@
  *     Next *ListNode
  * }
  */
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
 func insertionSortList(head *ListNode) *ListNode {
     if head == nil || head.Next == nil {
         return head
     }
-    pre := head.Next
+    
+    cur := head.Next
 
-    nHead := head
-    nHead.Next = nil
+    newHead := head
+    newHead.Next = nil
 
-    for pre != nil {
-        after := pre.Next
-        pre.Next = nil
-        nHead = insertOneNode(nHead, pre)
-        pre = after
+    for cur != nil {
+        after := cur.Next
+        cur.Next = nil
+        newHead = insertOneNode(newHead, cur)
+        cur = after
     }
-    return nHead
+    return newHead
 }
 
 func insertOneNode(head, node *ListNode) *ListNode {
-    if head == nil || node == nil {
-        return head
-    }
-    if head.Val > node.Val {
+    if node.Val < head.Val {
         node.Next = head
         head = node
         return head
     }
-    pre, pp := head, head
-    for pre != nil {
-        if pre.Val <= node.Val {
-            pp = pre
-            pre = pre.Next
-            continue
-        }
-        node.Next = pre
-        pp.Next = node
-        return head
+    pre := head
+    cur := head.Next
+    for cur != nil && cur.Val <= node.Val {
+        pre = cur
+        cur = cur.Next
     }
-    if pre == nil {
-        node.Next = nil
-        pp.Next = node
-    }
+    node.Next = cur
+    pre.Next = node
     return head
 }
 ```
