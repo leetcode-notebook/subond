@@ -11,7 +11,7 @@ type (
 	}
 	// LFUList define
 	LFUList struct {
-		size       int
+		size       int // the total nodes in lfu list
 		head, tail *LFUNode
 	}
 	// LFUCache define
