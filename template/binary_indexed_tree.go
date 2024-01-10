@@ -6,7 +6,8 @@ type (
 	// BinaryIndexedTree define
 	BinaryIndexedTree struct {
 		capacity int
-		tree     []int
+		data     []int // array A
+		tree     []int // array B
 	}
 )
 
@@ -15,9 +16,11 @@ func NewBinaryIndexedTree(arr []int) *BinaryIndexedTree {
 	n := len(arr)
 	b := &BinaryIndexedTree{
 		capacity: n + 1,
+		data:     make([]int, n+1),
 		tree:     make([]int, n+1), // 为了计算方便，初始化为n+1
 	}
 	for i := 1; i <= n; i++ {
+		b.data[i] = arr[i-1]
 		b.tree[i] = arr[i-1]
 		for j := i - 2; j >= i-lowbit(i); j-- {
 			b.tree[i] += arr[j]
@@ -28,7 +31,33 @@ func NewBinaryIndexedTree(arr []int) *BinaryIndexedTree {
 
 // Query define
 // 求区间和，返回原始数组中[0, index] 的区间和
-func (b *BinaryIndexedTree) Query(index int) int {
+// 输入index 为原始数组的下标，需要+1
+func (b *BinaryIndexedTree) Query(i int) int {
+	return b.queryWithBIT(i + 1)
+}
+
+// SumRange define
+// 对任意区间求和，返回原始数组 A [start, end]区间和
+func (b *BinaryIndexedTree) SumRange(left, right int) int {
+	s1 := b.Query(left - 1)
+	s2 := b.Query(right)
+	return s2 - s1
+}
+
+// Add define
+// 增量更新，即对原始数组A index下标的值 增加 val
+func (b *BinaryIndexedTree) Add(i, val int) {
+	b.addWithBit(i+1, val)
+}
+
+// Set define
+func (b *BinaryIndexedTree) Set(i, val int) {
+	// old := b.data[i+1]
+	// dt := val - old
+	b.Add(i, val-b.data[i+1])
+}
+
+func (b *BinaryIndexedTree) queryWithBIT(index int) int {
 	sum := 0
 	for index >= 1 {
 		sum += b.tree[index]
@@ -37,25 +66,16 @@ func (b *BinaryIndexedTree) Query(index int) int {
 	return sum
 }
 
-// RangeSum define
-// 对任意区间求和，返回A[start, end]区间和
-func (b *BinaryIndexedTree) RangeSum(start, end int) int {
-	s1 := b.Query(start - 1)
-	s2 := b.Query(end)
-	return s2 - s1
-}
-
-// Add define
-// 增量更新，即对原始数组A index下标的值 增加 val
-func (b *BinaryIndexedTree) Add(index, val int) {
-	// parent = son + 2^k
-	for index <= b.capacity {
-		b.tree[index] += val
-		index += lowbit(index)
+func (b *BinaryIndexedTree) addWithBit(idx int, val int) {
+	b.data[idx] += val
+	for idx <= b.capacity {
+		b.tree[idx] += val
+		idx += lowbit(idx)
 	}
 }
 
 func (b *BinaryIndexedTree) Show() {
+	fmt.Printf("data = %d\n", b.data)
 	fmt.Printf("tree = %d\n", b.tree)
 }
 
