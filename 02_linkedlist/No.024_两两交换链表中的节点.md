@@ -6,11 +6,11 @@
 
 
 
+**解题思路**
 
+这道题有2种解法。一种是先交换前两个，然后递归交换后面的，详见解法1。
 
-分析：
-
-算法1：递归实现，更加巧妙，【推荐该算法】
+第二种解法是迭代版本，思路一样。
 
 ```go
 // date 2023/10/17
@@ -21,6 +21,7 @@
  *     Next *ListNode
  * }
  */
+// 解法1
 func swapPairs(head *ListNode) *ListNode {
     // basic case
     if head == nil || head.Next == nil {
@@ -37,12 +38,11 @@ func swapPairs(head *ListNode) *ListNode {
 
 
 
-算法2：
-
 先找出新的头节点，并保存两两交换后的第二个节点，用于更新其Next指针。
 
 ```go
 // date 2022/10/09
+// 解法2
 func swapPairs(head *ListNode) *ListNode {
     if head == nil || head.Next == nil {
         return head

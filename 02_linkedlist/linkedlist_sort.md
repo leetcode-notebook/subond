@@ -1,11 +1,6 @@
 ## 单链表的排序算法
 
-  * 1.[插入排序](#插入排序)
-  * 2.[选择排序](#选择排序)
-  * 3.[快速排序](#快速排序)
-  * 4.[归并排序](#归并排序)
-
-### 插入排序
+### 1、插入排序
 
 插入排序可以通过直接交换节点得到。
 
@@ -21,8 +16,10 @@
 func InsertSort(head *ListNode) *ListNode {
   if head == nil || head.Next == nil { return head }
   var pre, p, start, end *ListNode
+  
   p, start, end, pre = head.Next, head, head, head
   var next *ListNode
+  
   for p != nil {
     next, pre = p.Next, start
     for next != p && p.Val >= next.Val {
@@ -43,7 +40,7 @@ func InsertSort(head *ListNode) *ListNode {
 }
 ```
 
-### 选择排序
+### 2、选择排序
 
 ```
 /*
@@ -69,7 +66,7 @@ Node *SelectSort(Node *phead) {
 }
 ```
 
-### 快速排序
+### 3、快速排序
 
 ```
 /*
@@ -107,7 +104,7 @@ Node *QuickSort(Node *phead) {
 }
 ```
 
-### 归并排序
+### 4、归并排序
 
 ```
 /*
