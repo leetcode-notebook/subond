@@ -229,6 +229,8 @@ Node *KReverse(Node *phead, int k) {
 
 解法：先将链表反转，这样程序的逻辑就变为如果后一个节点小于前一个节点，则删除后一个节点。这样做的目的是 **确定新链表的头部**。原来的程序逻辑不太容易确定链表的头部，但是尾部相对容易确定，
 
+这就是第 2487 题。
+
 ```go
 func (l *LinkedList) DeleteSmallerRight() {
 	if l.size > 1 {
