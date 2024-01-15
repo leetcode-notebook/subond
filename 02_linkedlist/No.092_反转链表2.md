@@ -24,50 +24,53 @@
  *     Next *ListNode
  * }
  */
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
 func reverseBetween(head *ListNode, left int, right int) *ListNode {
-    if head == nil || head.Next == nil || left >= right {
+    // leftpre, left, right, rightpost
+    // leftpre.Next = right
+    // left.Next = rightpost
+    if head == nil || head.Next == nil {
         return head
     }
-    var lpre, lnode, ltail *ListNode
-    pre := head
-    // find the left node and the pre of left node 
-    for left > 1 && pre != nil {
-        lpre = pre
-        pre = pre.Next
+    // 区间内没有节点，不需要反转
+    if left == right {
+        return head
+    }
+
+    var leftPre, tail, cur *ListNode
+    cur = head
+    for left > 1 {
+        leftPre = cur
+        cur = cur.Next
         left--
         right--
     }
-    // for left = right = n
-    if pre == nil {
-        return head
-    }
-    // save left node
-    lnode = pre
-    // save tail for new list [left, right]
-    ltail = pre
-    
-    // find the right node and the post of right node
-    pre = pre.Next
-    right--
-    for right > 1 && pre != nil {
-        after := pre.Next
-        pre.Next = ltail
-        ltail = pre
-        pre = after
+    // now cur is the left node
+    // save it
+    l := cur
+    for right > 1 {
+        after := cur.Next
+        cur.Next = tail
+        tail = cur
+        cur = after
         right--
     }
-    // update left node point to post of right
-    lnode.Next = pre.Next
-    // update right node point to left tail
-    pre.Next = ltail
-
-    // left = 1, the new head is orginal right node
-    if lpre == nil {
-        head = pre
-    } else {
-        lpre.Next = pre
+    // now cur is the right node
+    l.Next = cur.Next
+    cur.Next = tail
+    // when left > 1, the head is newHead
+    if leftPre != nil {
+        leftPre.Next = cur
+        return head
     }
-    return head
+    // when left = 1, the right is new head
+    return cur
 }
 ```
 
