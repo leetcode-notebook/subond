@@ -28,17 +28,9 @@
 
 **解题思路**
 
-这道题可用前缀乘积和后缀乘积解决，详见解法1。具体为，初始化两个数组 left 和 right，分别表示前缀乘积和后缀乘积。
+这道题可用前缀乘积和后缀乘积解决，详见解法1。具体为，初始化两个变量 left 和 right，分别表示前缀乘积和后缀乘积，初始值为1。
 
-`left[i]` 表示前`i-1`个元素的乘积，`right[i]`表示后`[i+1, n-1]`个元素的乘积，那么对应每个元素除自身的乘积就是`ans[i] = left[i] * right[i]`。
-
-时间复杂度`O(N)`，空间复杂度`O(N)`。
-
-
-
-仔细观察，你会发现，上面的解法1可以优化，即计算前缀乘积的时候，直接保存在结果数组中；然后使用变量后序遍历数组计算后缀乘积 right，直接更新结果数组也可以。详见解法2。
-
-
+先从前向后遍历，left 负责记录前缀乘积，并更新 ans；在从后向前遍历，right 记录后缀乘积，并更新 ans。
 
 ```go
 // date 2024/01/16
@@ -46,42 +38,16 @@
 // 前缀乘积 * 后缀乘积
 func productExceptSelf(nums []int) []int {
     n := len(nums)
-    left := make([]int, n)
-    right := make([]int, n)
-    for i := 0; i < n; i++ {
-        if i == 0 {
-            left[i] = 1
-        } else {
-            left[i] = left[i-1] * nums[i-1]
-        }
-    }
-    for i := n-1; i >= 0; i-- {
-        if i == n-1 {
-            right[i] = 1
-        } else {
-            right[i] = nums[i+1] * right[i+1]
-        }
-    }
-    ans := make([]int, n)
-    for i := 0; i < n; i++ {
-        ans[i] = left[i] * right[i]
-    }
-    return ans
-}
-
-// 解法2
-// 对解法1的优化
-func productExceptSelf(nums []int) []int {
-    n := len(nums)
     if n < 2 {
         return nums
     }
 
     ans := make([]int, n)
-    ans[0] = 1
+    left := 1
     // fill left
-    for i := 1; i < n; i++ {
-        ans[i] = ans[i-1] * nums[i-1]
+    for i := 0; i < n; i++ {
+        ans[i] = left 
+        left *= nums[i]
     }
 
     // fill right
