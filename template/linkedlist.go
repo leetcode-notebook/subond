@@ -148,6 +148,60 @@ func (l *LinkedList) DeleteSmallerRight() {
 	}
 }
 
+// ReverseBetween define
+// 92. 区间反转
+// 单链表一个共有 n 的节点，反转闭区间[left, right]中的节点，其中
+// 1 <= left <= right <= n
+func (l *LinkedList) ReverseBetween(left, right int) {
+	// 只有一个节点的时候，不存在反转
+	for l.size > 2 {
+		// 必须区间只有一个节点，反转之后，原链表不变，直接返回即可
+		if left == right {
+			return
+		}
+		// 参数校验
+		if left < 1 || left > l.size {
+			return
+		}
+		if right < 1 || right > l.size {
+			return
+		}
+		if left > right {
+			return
+		}
+		// leftpre, left, right, post
+		// leftpre.Next = right, if leftpre is nil, right is the new head
+		// left.Next = post
+		var leftPre *Node
+		cur := l.head.next
+		for left > 1 {
+			leftPre = cur
+			cur = cur.next
+			left--
+			right--
+		}
+		// now the cur is left node
+		leftNode := cur
+		tail := leftNode
+		for right > 1 {
+			after := cur.next
+			cur.next = tail
+			tail = cur
+			cur = after
+			right--
+		}
+		// now cur is the right node
+		rightNode := cur
+		leftNode.next = rightNode.next
+		rightNode.next = tail
+		if leftPre != nil {
+			leftPre.next = rightNode
+			return
+		}
+		l.head.next = rightNode
+	}
+}
+
 func (l *LinkedList) Show() {
 	if l.size > 0 {
 		str := make([]string, 0, l.size)

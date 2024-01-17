@@ -134,3 +134,34 @@ func TestLinkedList_DeleteSmallerRight(t *testing.T) {
 		t.Fatalf("fail")
 	}
 }
+
+func TestLinkedList_ReverseBetween(t *testing.T) {
+	n1 := &Node{1, nil}
+	n2 := &Node{2, nil}
+	n3 := &Node{3, nil}
+	n4 := &Node{4, nil}
+	n5 := &Node{5, nil}
+
+	list := NewLinkedList()
+	list.AddRear(n1)
+	list.AddRear(n2)
+	list.AddRear(n3)
+	list.AddRear(n4)
+	list.AddRear(n5)
+	list.Show() // 1,2,3,4,5
+
+	list.ReverseBetween(1, 5)
+	list.Show() // 5,4,3,2,1
+
+	list.ReverseBetween(3, 3)
+	list.Show() // 5,4,3,2,1
+
+	list.ReverseBetween(1, 3)
+	list.Show() // 3,4,5,2,1
+
+	list.ReverseBetween(4, 5)
+	list.Show() // 3,4,5,1,2
+
+	list.ReverseBetween(2, 4)
+	list.Show() // 3,1,5,4,2
+}
