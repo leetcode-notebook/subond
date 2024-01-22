@@ -6,7 +6,10 @@
 
 
 
-分析：
+**解题思路**
+
+- 数组，双指针，详见解法1。遍历链表，将元素存入数组，然后判断数组是否回文。时间复杂度`O(N)`，空间复杂度`O(N)`。
+- 双指针，快慢指针，详见解法2。利用快慢指针找到链表的中点，同时反转前半段，然后比较快慢指针的元素。时间复杂度`O(N)`，空间复杂度`O(1)`。
 
 快慢指针，找到中间节点，反转前半段。
 
@@ -19,30 +22,50 @@
  *     Next *ListNode
  * }
  */
+// 解法1
+// 数组
 func isPalindrome(head *ListNode) bool {
-    if head == nil || head.Next == nil {
-        return true
+    nums := make([]int, 0, 16)
+    cur := head
+    for cur != nil {
+        nums = append(nums, cur.Val)
+        cur = cur.Next
     }
-    pre, slow, fast := head, head, head
-    var tail *ListNode
+    left, right := 0, len(nums)-1
+    for left < right {
+        if nums[left] != nums[right] {
+            return false
+        }
+        left++
+        right--
+    }
+    return true
+}
+
+// 解法2
+// 快慢指针
+func isPalindrome(head *ListNode) bool {
+    var leftTail *ListNode
+    slow, fast := head, head
     for fast != nil && fast.Next != nil {
-        pre = slow
-        slow = slow.Next
         fast = fast.Next.Next
 
-        pre.Next = tail
-        tail = pre
+        slowNext := slow.Next
+        slow.Next = leftTail
+        leftTail = slow
+        slow = slowNext
     }
-		// 计数个节点
+    // 奇数个节点
     if fast != nil {
         slow = slow.Next
     }
-    for pre != nil && slow != nil {
-        if pre.Val != slow.Val {
+    // now slow is the right part
+    for slow != nil && leftTail != nil {
+        if slow.Val != leftTail.Val {
             return false
         }
-        pre = pre.Next
         slow = slow.Next
+        leftTail = leftTail.Next
     }
     return true
 }
