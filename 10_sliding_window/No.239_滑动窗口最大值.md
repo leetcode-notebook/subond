@@ -7,7 +7,10 @@
 返回 滑动窗口中的最大值 。
 
 
-分析：
+
+**解题思路**
+
+这道题可用滑动窗口解，且辅助优先队列。优先队列用于求窗口内的最大值。
 
 这个问题是固定窗口大小，所以形成窗口不难，难在如何对窗口内的元素求最大值。
 
@@ -20,19 +23,20 @@
 // date 2023/11/20
 func maxSlidingWindow(nums []int, k int) []int {
     left, right := 0, 0
+    n := len(nums)
     ans := make([]int, 0, 64)
-    list := make([]int, 0, 64)
+    priQueue := make([]int, 0, 16)
 
-    for right < len(nums) {
-        for len(list) != 0 && nums[right] > list[len(list)-1] {
-            list = list[:len(list)-1]
+    for right < n {
+        for len(priQueue) != 0 && nums[right] > priQueue[len(priQueue)-1] {
+            priQueue = priQueue[:len(priQueue)-1]
         }
-        list = append(list, nums[right])
+        priQueue = append(priQueue, nums[right])
         right++
-        if right-left >= k {
-            ans = append(ans, list[0])
-            if list[0] == nums[left] {
-                list = list[1:]
+        if right - left >= k {
+            ans = append(ans, priQueue[0])
+            if priQueue[0] == nums[left] {
+                priQueue = priQueue[1:]
             }
             left++
         }
