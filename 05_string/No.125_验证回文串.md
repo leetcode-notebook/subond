@@ -10,7 +10,7 @@
 
 
 
-分析：
+**解题思路**
 
 去除不需要比较的字符，然后双指针首尾对撞。
 
@@ -33,6 +33,37 @@ func isPalindrome(s string) bool {
         j--
     }
     return true
+}
+// 写法2
+// 双指针，直接在原字符串上操作，只判断字母和数字字符
+func isPalindrome(s string) bool {
+    s = strings.ToLower(s)
+    left, right := 0, len(s)-1
+
+    for left < right {
+        if !isCharNum(s[left]) {
+            left++
+            continue
+        }
+        if !isCharNum(s[right]) {
+            right--
+            continue
+        }
+        if s[left] != s[right] {
+            return false
+        }
+        left++
+        right--
+    }
+
+    return true
+}
+
+func isCharNum(x uint8) bool {
+    if x >= 'a' && x <= 'z' || x >= '0' && x <= '9' {
+        return true
+    }
+    return false
 }
 ```
 

@@ -20,6 +20,8 @@
 
 双指针，逐位判断。如果相同，继续匹配下一位，否则指向 t 的指针右移下一位。
 
+这就是贪心算法。
+
 ```go
 // date 2023/12/11
 func isSubsequence(s string, t string) bool {
