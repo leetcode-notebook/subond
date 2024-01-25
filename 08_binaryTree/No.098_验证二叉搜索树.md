@@ -12,9 +12,11 @@
 
 
 
-分析：
+**解题思路**
 
-迭代版本的中序遍历。【推荐该算法】
+- 迭代版本的中序遍历，详见解法1。二叉搜索树的中序遍历为递增序列。
+- 递归得到中序遍历数组，然后判断数组，详见解法2。
+- 带区间值的DFS，详见解法3。
 
 ```go
 // date 2023/10/22
@@ -26,6 +28,8 @@
  *     Right *TreeNode
  * }
  */
+// 解法1
+// 迭代 中序遍历
 func isValidBST(root *TreeNode) bool {
     stack := make([]*TreeNode, 0, 16)
     preVal := math.Inf(-1)
@@ -44,15 +48,10 @@ func isValidBST(root *TreeNode) bool {
     }
     return true
 }
-```
 
-
-
-算法1：遍历其中序遍历序列，并判断其序列是否为递增
-
-```go
 // date 2020/03/21
-// 算法1：遍历其中序遍历序列，并判断其序列是否为递增
+// 解法2
+// 遍历其中序遍历序列，并判断其序列是否为递增
 func isValidBST(root *TreeNode) bool {
     nums := inOrder(root)
     for i := 0; i < len(nums)-1; i++ {
@@ -69,14 +68,8 @@ func inOrder(root *TreeNode) []int {
     if root.Right != nil { res = append(res, inOrder(root.Right)...) }
     return res
 }
-```
 
-
-
-算法2：
-
-```go
-// 算法2：递归
+// 解法3：递归
 // 递归判断当前结点的值是否位于上下边界之中
 // 时间复杂度O(N)
 func isValidBST(root *TreeNode) bool {
@@ -88,38 +81,6 @@ func isValidBST(root *TreeNode) bool {
     return isValid(root.Left, min, float64(root.Val)) && isValid(root.Right, float64(root.Val), max)
   }
   return isValid(root, math.Inf(-1), math.Inf(0))
-}
-```
-
-
-
-算法3：
-
-```go
-// 算法3
-// 其思想是迭代版的中序遍历，因为栈中已经保留所有的结点，只需要出栈判断即可
-// 时间复杂度O(N)，空间复杂度O(1),最优解
-func isValidBST(root *TreeNode) bool {
-    if root == nil { return true }
-    stack := make([]*TreeNode, 0)
-    preValue := math.Inf(-1)
-
-    for len(stack) != 0 || root != nil {
-        // 将左子树全部放入栈
-        for root != nil {
-            stack = append(stack, root)
-            root = root.Left
-        }
-        // 出栈，即取出左子树的最后一个节点
-        root = stack[len(stack)-1]
-        stack = stack[:len(stack)-1]
-        // 判断其是否大于前继结点
-        if float64(root.Val) <= preValue { return false }
-        // 更新前继节点和前继节点的值
-        preValue = float64(root.Val)
-        root = root.Right
-    }
-    return true
 }
 ```
 

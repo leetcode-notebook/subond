@@ -30,9 +30,6 @@
      if root == nil || root == p || root == q {
          return root
      }
-     if p == q {
-         return p
-     }
      left := lowestCommonAncestor(root.Left, p, q)
      right := lowestCommonAncestor(root.Right, p, q)
      if left != nil && right != nil {

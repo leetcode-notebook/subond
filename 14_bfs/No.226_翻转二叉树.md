@@ -6,9 +6,10 @@
 
 
 
-**分析：**
+**解题思路**
 
-算法1：直接递归
+- DFS，详见解法1。具体是直接深度优先搜索，修改每个节点的左右指针。
+- BFS，详见解法2。将节点加入队列，依次翻转队列中每个节点的左右指针。
 
 ```go
 // date 2023/12/28
@@ -20,6 +21,7 @@
  *     Right *TreeNode
  * }
  */
+// 解法1 dfs
 func invertTree(root *TreeNode) *TreeNode {
 
     var dfs func(root *TreeNode)
@@ -39,24 +41,9 @@ func invertTree(root *TreeNode) *TreeNode {
 
     return root
 }
-```
 
-
-
-算法2：
-
-广度优先搜索，依次交换队列中的每个节点。
-
-```go
-// date 2023/12/28
-/**
- * Definition for a binary tree node.
- * type TreeNode struct {
- *     Val int
- *     Left *TreeNode
- *     Right *TreeNode
- * }
- */
+// 解法2
+// BFS
 func invertTree(root *TreeNode) *TreeNode {
     if root == nil {
         return root
@@ -90,4 +77,3 @@ func invertTree(root *TreeNode) *TreeNode {
     return root
 }
 ```
-
