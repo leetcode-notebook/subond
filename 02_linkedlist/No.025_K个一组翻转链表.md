@@ -61,7 +61,7 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 
 // reverse [first, last) then return new head
 // not contains the last node
-func reverse(first, last *ListNode) *ListNode {
+func reverseBetween(first, last *ListNode) *ListNode {
     prev := last
     for first != last {
         tmp := first.Next
@@ -73,3 +73,4 @@ func reverse(first, last *ListNode) *ListNode {
 }
 ```
 
+![image](images/img025.svg)
